@@ -44,7 +44,7 @@
                     if($_SESSION["FoodistEmail"]) echo "<a href='logout/'>".$_SESSION["FoodistEmail"]."</a>";
                     else echo "<a href='login/'>Přihlášení</a>";
             ?></span>
-            <icon>account_circle</icon>
+            <icon style="font-size:25px;margin-left:8px;">account_circle</icon>
         </div>
 
 
