@@ -1,0 +1,3 @@
+ErrorDocument 403 https://martinWeiss.cz/app/foodist/
+ErrorDocument 404 https://martinWeiss.cz/app/foodist/
+ErrorDocument 500 https://martinWeiss.cz/app/foodist/

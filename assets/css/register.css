@@ -1,0 +1,6 @@
+/*
+    register.css
+    © Copyright 2020 Martin Weiss (martinweiss.cz)
+*/
+
+.sexSwitchGroup{display:flex;align-items:center;width:60%;display:flex;justify-content:space-between;font-size:21px}.sexSwitchGroup *{cursor:pointer}.sexSwitchGroup icon{font-size:43px}.sexSwitchGroup span{font-weight:700;text-transform:uppercase;letter-spacing:3px}.sexSwitchGroup[data-value='1'] > #genderMale,.sexSwitchGroup[data-value='1'] > #sexSwitch{color:var(--sex-male);text-shadow:0 0 5px var(--sex-male)}.sexSwitchGroup[data-value='2'] > #genderFemale,.sexSwitchGroup[data-value='2'] > #sexSwitch{color:var(--sex-female);text-shadow:0 0 5px var(--sex-female)}.sexSwitchGroup[data-value='1'] > #genderFemale,.sexSwitchGroup[data-value='2'] > #genderMale{color:#75757538}

@@ -1,0 +1,160 @@
+/*
+    admin.css
+    © Copyright 2020 Martin Weiss (martinweiss.cz)
+*/
+
+html {height:100%;overflow:hidden;}
+body {margin: 0;padding:0;height: 100%;width:100%;}
+* {outline:none;}
+
+.container-fluid {
+    height: 100%;
+    width: 100%;
+    background: white;
+    display:flex;
+    flex-direction: row;
+}
+
+.container-left, .container-right {width:100%;display:flex;}
+.col-2 {width:20%;}
+
+.container-left {background:whitesmoke;flex-direction: column;}
+.container-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.records-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.record {
+    margin: 8px 12px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    border: 1px solid #e0e0e094;
+    padding: 0 7px;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+
+.record:hover {background-color: #f5f5f5;}            
+.record-sub {
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.restaurant-name {font-size:15px;padding:12px 8px;}
+.record-sub icon {font-size:24px;padding: 9px 12px;}
+.record-sub icon:last-of-type {padding: 9px 8px 9px 12px;}
+.record-sub icon:hover {transform: translateY(-2px);transition: .15s;}
+
+.overlay-modal {
+    display:none;
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:1;
+    background: rgba(0,0,0,0.86);
+}
+
+.overlay-modal.active {display:block;}
+
+.container-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: white;
+    padding: 3rem 0;
+    min-width: 17rem;
+    max-width: 33rem;
+    width: 33rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box.h1 {
+    margin: 0 0 1.6rem;
+}
+
+/* Editing Modal - FoodList */
+.row {display:flex;flex-direction: row;}
+
+.foodlist {width: 100%;}
+.foodName {font-size:16px;}
+.foodPriceRow {font-size:13px;}
+.food-record icon:not(last-child) {margin-right:10px;}
+.food-record icon {color:var(--muted-col);font-size: 25px;cursor: pointer;transition:.4s;}
+.food-record icon.delete:hover, .food-record icon.delete[changed] {color: var(--fail);transition:.4s;}
+.food-record icon.restore:hover {color: var(--sex-male);transition:.4s;}
+
+.food-record {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.foodInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 65%;
+}
+
+.buttons-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 26px;
+}
+
+.buttons-group button {
+    padding: 11px 33px;
+    border: none;
+    transition: .4s;
+    letter-spacing: 2px;
+}
+
+.modal-confirm {
+    color: white;
+    background: #e42323;
+}
+
+.add-record {
+    display: flex;
+    font-size: 17px;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-record icon {
+    border: 2px solid black;
+    border-radius: 5rem;
+    margin-right: 5px;
+    transition: .3s;
+}
+
+.add-record:hover icon {
+    background: black;
+    color: white;
+    transition: .3s;
+}
