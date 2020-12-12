@@ -44,8 +44,6 @@
         <meta name="msapplication-TileImage" content="../images/brand/icons/mstile-144x144.png">
         <meta name="msapplication-config" content="../images/brand/icons/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
-
-        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     </head>
 
     <body>
@@ -56,8 +54,8 @@
                 <div class="nav-right">
                     <div class="user">
                         <?php
-                            if($_SESSION["FoodistEmail"]) echo "<a href='logout/'><span id='userprofile'>".$_SESSION["FoodistEmail"]." <icon>expand_more</icon></span>";
-                            else echo "<a href='login/'><span id='userprofile'>Přihlášení</span>";
+                            if($_SESSION["FoodistEmail"]) echo "<a href='/logout'><span id='userprofile'>".$_SESSION["FoodistEmail"]." <icon>expand_more</icon></span>";
+                            else echo "<a href='/login'><span id='userprofile'>Přihlášení</span>";
                             echo '<img src="https://foodist.store/images/avatars/'.$_SESSION["FoodistID"].'.jpg" onerror="this.src=\'https://foodist.store/images/avatars/default.svg\';"></a>';
                         ?>
                     </div>
@@ -95,12 +93,7 @@
             </main>
 
             <footer>Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
-            
-            <div id="shoppingCart" class="shopping-cart">
-                <div id="containerCart" class="container-cart empty-cart">
-                    Váš nákupní košík je prázdný
-                </div>
-            </div>
+            <div id="shoppingCart" class="shopping-cart"><div id="containerCart" class="container-cart empty-cart">Váš nákupní košík je prázdný</div></div>
         </div>
     </body>
 
@@ -109,44 +102,41 @@
         const shoppingCartBox = document.getElementById("shoppingCart");
         const cartContainer = document.getElementById("containerCart");
         const mainContainer = document.getElementById("root");
+        const DEBUG = true;
 
         function addToCart(e) {actionCart(1, `&fid=${e}`);}
         function checkCart() {actionCart(2);}
         function updateCart(e, c) {actionCart(3, `&fid=${e}&count=${c}`);}
 
         function actionCart(actionid, params = "") {
-            $.ajax({
-                url: '../admin/controllers/cart.php', type: 'post',
-                data: `action=${actionid}${params}`,
-                success: function(output) {parseCart(output);},
-                error: function(output) {console.log("[!] Při komunikaci na serveru došlo k chybě.");}
-            });
+            fetch("../admin/controllers/cart.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `action=${actionid}${params}`})
+            .then(response => {
+                if(DEBUG) console.log(`Response: ${response}`);
+                if(response.ok) return response.json();
+                return Promise.reject(response);
+            })
+            .then(data => {
+                if(DEBUG) console.log(`Data: ${data}`);
+                parseCart(data);
+            })
+            .catch((error) => {console.log(`Při zpracovávání košíku došlo k chybě: ${error}`);});
         }
 
-        function parseCart(scart){
-            let cart = JSON.parse(scart);
+        function parseCart(cart){
             cartContainer.innerHTML = null;
             if(Object.keys(cart).length != 0) {
-                cartContainer.classList.remove("empty-cart")
-                for(let i = 0; i < Object.keys(cart).length; i++) {
-                    let newItem = document.createElement("div");
-                    newItem.setAttribute("data-fid", cart[Object.keys(cart)[i]][0]);
-                    newItem.setAttribute("data-fcount", cart[Object.keys(cart)[i]][1]);
-                    newItem.setAttribute("data-fprice", cart[Object.keys(cart)[i]][2]);
-                    newItem.classList.add("cartItem");
-                    newItem.innerHTML = `<div class="itemLeft"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="itemRight"><icon class="remove" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" onclick="itemCountChange(this, 1)">add</icon></div>`;
-                    cartContainer.appendChild(newItem);
-                }
-            } else {
-                cartContainer.classList.add("empty-cart")
-                cartContainer.innerText = "Váš nákupní košík je prázdný";
-            }
+                let newContent = `<h1 id="cartTitle">Váš košík</h1><div id="containerCart" class="container-cart">`;
+                for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="itemLeft"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="itemRight"><icon class="remove" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
+                newContent += `</div>`;
+                shoppingCartBox.innerHTML = newContent;
+            } else shoppingCartBox.innerHTML = `<div id="containerCart" class="container-cart empty-cart">Váš nákupní košík je prázdný</div>`;
         }
 
         function itemCountChange(e, i = 0) {
             let carIt = e.parentElement.parentElement;
             if(i == 0) carIt.dataset.fcount--;
-            else carIt.dataset.fcount++;
+            else if(carIt.dataset.fcount < 15) carIt.dataset.fcount++;
+            else return;
 
             updateCart(carIt.dataset.fid, carIt.dataset.fcount);
         }
