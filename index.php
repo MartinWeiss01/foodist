@@ -24,6 +24,8 @@
         <link rel="stylesheet" href="assets/css/home.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="assets/css/home.css"></noscript>
 
         <!-- Icons & OG -->
+        <script>(function(b,c,d,e,f,g){b.hj=b.hj||function(){(b.hj.q=b.hj.q||[]).push(arguments)},b._hjSettings={hjid:2115839,hjsv:6},f=c.getElementsByTagName("head")[0],g=c.createElement("script"),g.async=1,g.src=d+b._hjSettings.hjid+e+b._hjSettings.hjsv,f.appendChild(g)})(window,document,"https://static.hotjar.com/c/hotjar-",".js?sv=");</script>
+        <script data-ad-client="ca-pub-1867183900148372" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <link rel="apple-touch-icon" sizes="180x180" href="images/brand/icons/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="images/brand/icons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="194x194" href="images/brand/icons/favicon-194x194.png">

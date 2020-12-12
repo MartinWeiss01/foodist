@@ -58,6 +58,7 @@ footer {
     font-weight: 700;
     font-size: 13px;
     letter-spacing: -1px;
+    text-align:center;
 }
 
 @media only screen and (max-width: 860px) {

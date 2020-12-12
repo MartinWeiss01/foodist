@@ -2,3 +2,256 @@
     viewDetail.css
     © Copyright 2020 Martin Weiss (martinweiss.cz)
 */
+* {box-sizing: border-box;}
+main{background: #fbfbfb;} /* DEL */
+
+.nav-right {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+}
+
+.user, .user a {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    flex-direction: row;
+    height: 100%;
+}
+
+.user img {
+    height: 40px;
+    border-radius: 35px;
+    margin-left: 10px;
+    box-shadow:  5px 5px 18px #e6e6e6, 
+             -5px -5px 18px #ffffff;
+    margin-right: 1.5rem;
+}
+
+.user a {
+    text-decoration: none;
+    color: black;
+}
+
+.user span {
+    display: flex;
+    align-items: center;
+}
+
+.user icon {
+    margin: 0 10px;
+}
+
+.cart {
+    display: flex;
+    align-items: center;
+    border-left: 1px solid #e4e4e4;
+    height: 100%;
+    cursor: pointer;
+}
+
+.cart img {
+    margin: 0 26px;
+    width: 27px;
+}
+
+.cartItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+.itemLeft {
+    display: flex;
+    flex-direction: column;
+}
+
+.itemRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.restaurant-details {
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto 21rem;
+    grid-template-rows: 21rem auto;
+    grid-template-areas:
+        "rdHeader rdHeader"
+        "rdBody rdBody";
+}
+
+.restaurant-detailed-header {
+    grid-area: rdHeader;
+    background: url("https://images.unsplash.com/photo-1605654940299-cd48a4bda742?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=mariah-hewines-88aMFDKdv6E-unsplash.jpg&w=1920") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.restaurant-detailed-body {
+    grid-area: rdBody;
+    padding: 2rem;
+}
+
+
+.foodList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.foodRecord {
+    background: #ffffff;
+    width: 14rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 4rem 0;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 0px #00000005;
+}
+
+.foodRecordImage {
+    margin: -60px 0 20px;
+    height: 120px;
+}
+
+.foodRecordName {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.foodRecordPrice {
+    margin: 5px 0 20px;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.addToCart {
+    background: white;
+    border: 1px solid #1a1a1a;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    transition: .3s;
+    cursor: pointer;
+}
+.addToCart > img {
+    height: 28px;
+    filter: invert(100%);
+    transition: .3s;
+}
+
+.addToCart:hover {
+    background: #1a1a1a;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    transition: .3s;
+}
+
+.addToCart:hover > img {
+    filter: invert(0%);
+    transition: .3s;
+}
+
+.shopping-cart {
+    display:none;
+}
+
+.shopping-cart.active {display:block;}
+
+.empty-cart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+icon.add, icon.remove {
+    cursor: pointer;
+    padding: 4px;
+    border: 1px solid whitesmoke;
+    border-radius: 5px;
+    transition: .3s;
+}
+
+icon.add:hover, icon.remove:hover {
+    color:white;
+    transition: .3s;
+}
+icon.add {border-color: green;color:green;}
+icon.add:hover {background-color: green;}
+icon.remove {border-color: red;color:red;}
+icon.remove:hover {background-color:red;}
+/* 
+    * Layout
+    * © Copyright 2020 Martin Weiss (martinweiss.cz) 
+*/
+body {margin:0;padding:0;}
+
+.container {
+    display:grid;
+    width: 100vw;
+    min-height: 100vh;
+    grid-template-columns: auto 20rem;
+    grid-template-rows: 5rem auto 5rem;
+    grid-template-areas:
+        "nav nav"
+        "main main"
+        "footer footer";
+}
+
+.container[carton] {
+    grid-template-areas:
+        "nav nav"
+        "main cart"
+        "footer footer";
+}
+
+nav {grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 0 0 4rem;box-shadow: 0px 1px 20px 0px #0000001a;position: relative;}
+main {grid-area:main;}
+.shopping-cart {grid-area:cart;}
+footer {grid-area:footer;display:flex;justify-content:center;align-items:center;color:#1a1a1a2e;font-weight:700;font-size:13px;letter-spacing:-1px;text-align:center;}
+
+@media only screen and (max-width: 671px) {
+    #userprofile {
+        display:none;
+    }
+}
+
+@media only screen and (max-width: 986px) {
+    .container {
+        grid-template-columns: auto;
+        grid-template-rows: 5rem auto 5rem;
+        grid-template-areas:
+            "nav"
+            "main"
+            "footer";
+    }
+
+    .container[carton] > .shopping-cart {
+        position: absolute;
+    }
+}
