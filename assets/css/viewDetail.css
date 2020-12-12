@@ -12,6 +12,12 @@ main{background: #fbfbfb;} /* DEL */
     height: 100%;
 }
 
+.nav-right > * {
+    border-left: 1px solid #e4e4e4;
+    height: 100%;
+}
+.nav-right > *:first-child {border-left: none;}
+
 .user, .user a {
     display: flex;
     align-items: center;
@@ -48,8 +54,6 @@ main{background: #fbfbfb;} /* DEL */
 .cart {
     display: flex;
     align-items: center;
-    border-left: 1px solid #e4e4e4;
-    height: 100%;
     cursor: pointer;
 }
 
@@ -176,17 +180,19 @@ main{background: #fbfbfb;} /* DEL */
     transition: .3s;
 }
 
-.shopping-cart {
-    display:none;
-}
+.shopping-cart {display:none;}
 
-.shopping-cart.active {display:block;}
+.shopping-cart.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .empty-cart {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 100%;    
 }
 
 icon.add, icon.remove {
@@ -205,6 +211,10 @@ icon.add {border-color: green;color:green;}
 icon.add:hover {background-color: green;}
 icon.remove {border-color: red;color:red;}
 icon.remove:hover {background-color:red;}
+
+.container-cart {
+    width: 100%;
+}
 /* 
     * Layout
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
