@@ -36,8 +36,6 @@
         <meta name="msapplication-TileImage" content="../images/brand/icons/mstile-144x144.png">
         <meta name="msapplication-config" content="../images/brand/icons/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
-
-        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     </head>
 
     <body>
@@ -140,12 +138,15 @@
 
                     if(DEBUG) addNewRecord(newID*200, recordName);
                     else {
-                        $.ajax({
-                            url: 'controllers/addrecord.php', type: 'post',
-                            data: `city=${chosencity}&account=${chosenaccount}&name=${recordName}&address=${address}&cuisines=${cuis}`,
-                            success: function(output) {if(parseInt(output) > 0) addNewRecord(parseInt(output), recordName);},
-                            error: function(output) {console.log("[!] Při komunikaci na serveru došlo k chybě.");}
-                        });
+                        fetch("controllers/addrecord.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `city=${chosencity}&account=${chosenaccount}&name=${recordName}&address=${address}&cuisines=${cuis}`})
+                        .then(response => {
+                            if(response.ok) return response.json();
+                            return Promise.reject(response);
+                        })
+                        .then(data => {
+                            if(parseInt(data) > 0) addNewRecord(parseInt(data), recordName);
+                        })
+                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                     }
                 }
             } else if(overlayModalBox.dataset.mode == 2) {
@@ -207,12 +208,13 @@
                 finalJSON = JSON.stringify(JSON.parse(finalJSON));
                 if(!DEBUG) {
                     if(finalJSON.length != 2) {
-                        $.ajax({
-                            url: 'controllers/editrecords.php', type: 'post',
-                            data: `rid=${restaurantID}&data=${finalJSON}`,
-                            success: function(output) {console.log(`[!] Dunno? 0xFD${output}.`);},
-                            error: function(output) {console.log(`[!] Při komunikaci se serverem došlo k chybě. | ${output} | ${finalJSON}`);}
-                        });
+                        fetch("controllers/editrecords.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${restaurantID}&data=${finalJSON}`})
+                        .then(response => {
+                            if(response.ok) return response.json();
+                            return Promise.reject(response);
+                        })
+                        .then(data => {console.log(`[!] Dunno? 0xFD${data}.`);})
+                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě. | ${err} | ${finalJSON}`);});
                     } else console.log(`[?] Vypadá to, že nedošlo k žádné změně. Délka JSONu: ${finalJSON.length} | ${finalJSON}`);
                 } else console.log(finalJSON);
             } else if(overlayModalBox.dataset.mode == 3) {
@@ -221,15 +223,16 @@
 
                 if(DEBUG) deleteRecord(currentRecord);
                 else {
-                    $.ajax({
-                        url: 'controllers/removerecord.php', type: 'post',
-                        data: `rid=${rID}`,
-                        success: function(output) {
-                            if(parseInt(output) == 1) deleteRecord(currentRecord);
-                            else console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${output} | rid=${rID}.`);
-                        },
-                        error: function(output) {console.log("[!] Při komunikaci se serverem došlo k chybě.");}
-                    });
+                    fetch("controllers/removerecord.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}`})
+                    .then(response => {
+                        if(response.ok) return response.json();
+                        return Promise.reject(response);
+                    })
+                    .then(data => {
+                        if(parseInt(data) == 1) deleteRecord(currentRecord);
+                        else console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
+                    })
+                    .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                 }
             } else if(overlayModalBox.dataset.mode == 4) {
                 let accountName = document.getElementById("insertAccountName").value;
@@ -239,12 +242,13 @@
                 
                 if(accountName != "" && accountIN != "" && accountEmail != "" && accountPwd != "") {
                     if(!DEBUG) {
-                        $.ajax({
-                            url: 'controllers/addaccount.php', type: 'post',
-                            data: `name=${accountName}&accountin=${accountIN}&email=${accountEmail}&pwd=${accountPwd}`,
-                            success: function(output) {if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${output}.`);},
-                            error: function(output) {console.log("[!] Při komunikaci na serveru došlo k chybě.");}
-                        });
+                        fetch("controllers/addaccount.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${accountName}&accountin=${accountIN}&email=${accountEmail}&pwd=${accountPwd}`})
+                        .then(response => {
+                            if(response.ok) return response.json();
+                            return Promise.reject(response);
+                        })
+                        .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
+                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                     } else console.log("[!] Webová aplikace se nachází v debuging módu, účet nebyl přidán.");
                 }
             } else if(overlayModalBox.dataset.mode == 5) {
@@ -253,14 +257,13 @@
                 
                 if(cuisineName != "" && cuisineIcon != "") {
                     if(!DEBUG) {
-                        $.ajax({
-                            url: 'controllers/addcuisine.php', type: 'post',
-                            data: `name=${cuisineName}&icon=${cuisineIcon}`,
-                            success: function(output) {
-                                if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${output}.`);
-                            },
-                            error: function(output) {console.log("[!] Při komunikaci na serveru došlo k chybě.");}
-                        });
+                        fetch("controllers/addcuisine.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cuisineName}&icon=${cuisineIcon}`})
+                        .then(response => {
+                            if(response.ok) return response.json();
+                            return Promise.reject(response);
+                        })
+                        .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
+                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                     }
                 }
             } else if(overlayModalBox.dataset.mode == 6) {
@@ -268,14 +271,13 @@
                 
                 if(cityName != "") {
                     if(!DEBUG) {
-                        $.ajax({
-                            url: 'controllers/addcity.php', type: 'post',
-                            data: `name=${cityName}`,
-                            success: function(output) {
-                                if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${output}.`);
-                            },
-                            error: function(output) {console.log("[!] Při komunikaci na serveru došlo k chybě.");}
-                        });
+                        fetch("controllers/addcity.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cityName}`})
+                        .then(response => {
+                            if(response.ok) return response.json();
+                            return Promise.reject(response);
+                        })
+                        .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
+                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                     }
                 }
             }
@@ -291,25 +293,27 @@
         });
 
         document.getElementById("add-new-record").addEventListener("click", function() {
-            $.ajax({
-                dataType: "json", url: 'controllers/getavailableaccounts.php', type: 'post',
-                success: function(output) {
-                    if(parseInt(output) == -2) alert("[!] Neexistují žádné společnosti.");
-                    else if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${output}.`);
-                    else {  
-                        let content = '<h1>Přidat restauraci</h1><input id="insertRecordName" placeholder="Název restaurace"><input id="insertRecordAddress" placeholder="Ulice">';
-                        let accountsList = '<select name="accounts" id="accounts">';
-                        for(let i = 0; i < output.length; i++) accountsList += `<option value="${output[i][0]}">${output[i][1]}</option>`;
-                        accountsList += '</select>';
+            fetch("controllers/getavailableaccounts.php", {method: 'POST', credentials: 'same-origin'})
+            .then(response => {
+                if(response.ok) return response.json();
+                return Promise.reject(response);
+            })
+            .then(data => {
+                if(parseInt(data) == -2) alert("[!] Neexistují žádné společnosti.");
+                else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data}.`);
+                else {  
+                    let content = '<h1>Přidat restauraci</h1><input id="insertRecordName" placeholder="Název restaurace"><input id="insertRecordAddress" placeholder="Ulice">';
+                    let accountsList = '<select name="accounts" id="accounts">';
+                    for(let i = 0; i < data.length; i++) accountsList += `<option value="${data[i][0]}">${data[i][1]}</option>`;
+                    accountsList += '</select>';
 
-                        content += accountsList;
-                        if(citiesList != -1) content += citiesList;
-                        if(cuisinesList != -1) content += cuisinesList;
-                        showModal(content, -1, "Přidat", 1);
-                    }
-                },
-                error: function(output) {console.log("[!] Při komunikaci se serverem došlo k chybě.");}
-            });
+                    content += accountsList;
+                    if(citiesList != -1) content += citiesList;
+                    if(cuisinesList != -1) content += cuisinesList;
+                    showModal(content, -1, "Přidat", 1);
+                }
+            })
+            .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
         });
 
         document.getElementById("add-new-account").addEventListener("click", function() {
@@ -327,25 +331,27 @@
 
         function modalMode_Editing(j) {
             let rID = document.getElementById("record-"+j).dataset.restaurantId;
-            $.ajax({
-                dataType: "json", url: 'controllers/getfoodlist.php', type: 'post',
-                data: `rid=${rID}`,
-                success: function(output) {
-                    let rName = document.getElementById("restaurant-"+j).innerText;
-                    let content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
-                    
-                    if(parseInt(output) == -2) console.log(`[!] Restaurade ${rID} nemá žádné jídlo.`);
-                    else if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${output} | rid=${rID}.`);
-                    else {
-                        let foodList = '<div id="foodlist-editable" class="foodlist">';
-                        for(let i = 0; i < output.length; i++) foodList += `<div id="foodID-${output[i][0]}" data-fid="${output[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${output[i][0]}" data-default="${output[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${output[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${output[i][0]}" data-default="${output[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${output[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
-                        foodList += '</div>';
-                        content += foodList;
-                    }
-                    showModal(content, j, "Uložit", 2);
-                },
-                error: function(output) {console.log("[!] Při komunikaci se serverem došlo k chybě.");}
-            });
+
+            fetch("controllers/getfoodlist.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}`})
+            .then(response => {
+                if(response.ok) return response.json();
+                return Promise.reject(response);
+            })
+            .then(data => {
+                let rName = document.getElementById("restaurant-"+j).innerText;
+                let content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
+                
+                if(parseInt(data) == -2) console.log(`[!] Restaurade ${rID} nemá žádné jídlo.`);
+                else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
+                else {
+                    let foodList = '<div id="foodlist-editable" class="foodlist">';
+                    for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
+                    foodList += '</div>';
+                    content += foodList;
+                }
+                showModal(content, j, "Uložit", 2);
+            })
+            .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
         }
 
         function foodrecordChanging(e) {

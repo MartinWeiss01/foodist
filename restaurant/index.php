@@ -38,8 +38,6 @@
         <meta name="msapplication-TileImage" content="../images/brand/icons/mstile-144x144.png">
         <meta name="msapplication-config" content="../images/brand/icons/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
-
-        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     </head>
 
     <body>
@@ -129,21 +127,22 @@
         }
 
         function getRestaurantFoodList(j) {
-            $.ajax({
-                dataType: "json", url: '../admin/controllers/getfoodlist.php', type: 'post',
-                data: `rid=${j}`,
-                success: function(output) {
-                    console.log(output);
-                    let content = `<span>Toto je obsah restaurace s ID: ${j}</span><div data-restaurant-id="${j}" id="addNewFoodButton-${j}" onclick="addNewFood(this)">Přidat nové jídlo</div>`;
-                    content += `<div id="foodlistRestaurantID-${j}" class="foodlist">`;
-                    if(parseInt(output) == -2) console.log(`[!] Restaurant ${j} nemá žádné jídlo.`);
-                    else if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${output} | rid=${j}.`);
-                    else for(let i = 0; i < output.length; i++) content += `<div id="foodID-${output[i][0]}" data-fid="${output[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${output[i][0]}" data-default="${output[i][1]}" class="foodName">${output[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${output[i][0]}" data-default="${output[i][2]}" class="foodPrice">${output[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="edit">edit</icon><icon class="delete" onclick="modalMode_Deleting(${output[i][0]})">delete_outline</icon></div></div>`;
-                    content += '</div>';
-                    document.getElementById("restaurantBodyID-"+j).innerHTML = content;
-                },
-                error: function(output) {console.log("[!] Při komunikaci se serverem došlo k chybě.");}
-            });
+            fetch("../admin/controllers/getfoodlist.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${j}`})
+            .then(response => {
+                if(response.ok) return response.json();
+                return Promise.reject(response);
+            })
+            .then(data => {
+                if(DEBUG) console.log(data);
+                let content = `<span>Toto je obsah restaurace s ID: ${j}</span><div data-restaurant-id="${j}" id="addNewFoodButton-${j}" onclick="addNewFood(this)">Přidat nové jídlo</div>`;
+                content += `<div id="foodlistRestaurantID-${j}" class="foodlist">`;
+                if(parseInt(data) == -2) console.log(`[!] Restaurant ${j} nemá žádné jídlo.`);
+                else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${j}.`);
+                else for(let i = 0; i < data.length; i++) content += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="edit">edit</icon><icon class="delete" onclick="modalMode_Deleting(${data[i][0]})">delete_outline</icon></div></div>`;
+                content += '</div>';
+                document.getElementById("restaurantBodyID-"+j).innerHTML = content;
+            })
+            .catch(err => {console.log(`[!][downloadingFoodList] ${err}`);});
         }
 
         function appendFoodToList(rID, fID, fName, fPrice) {
@@ -164,15 +163,16 @@
 
                 if(foodName != "" && foodPrice != "") {
                     if(!DEBUG) {
-                        $.ajax({
-                            url: '../admin/controllers/addfood.php', type: 'post',
-                            data: `rid=${rID}&foodname=${foodName}&foodprice=${foodPrice}`,
-                            success: function(output) {
-                                if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${output}.`);
-                                else appendFoodToList(rID, parseInt(output), foodName, foodPrice);
-                            },
-                            error: function(output) {console.log("[!] Při komunikaci na serveru došlo k chybě.");}
-                        });
+                        fetch("../admin/controllers/addfood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}&foodname=${foodName}&foodprice=${foodPrice}`})
+                        .then(response => {
+                            if(response.ok) return response.json();
+                            return Promise.reject(response);
+                        })
+                        .then(data => {
+                            if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);
+                            else appendFoodToList(rID, parseInt(data), foodName, foodPrice);
+                        })
+                        .catch(err => {console.log(`[!][overlayModalBox.mode ${overlayModalBox.dataset.mode}] ${err}`);});
                     } else console.log("[!] Webová aplikace se nachází v debuging módu, jídlo nebylo přidán.");
                 }
             } else if(overlayModalBox.dataset.mode == 2) {
@@ -180,15 +180,16 @@
 
                 if(DEBUG) deleteRecord(currentFood);
                 else {
-                    $.ajax({
-                        url: '../admin/controllers/removefood.php', type: 'post',
-                        data: `fid=${overlayModalBox.dataset.obj}`,
-                        success: function(output) {
-                            if(parseInt(output) == 1) deleteRecord(currentFood);
-                            else console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${output} | fid=${overlayModalBox.dataset.obj}.`);
-                        },
-                        error: function(output) {console.log("[!] Při komunikaci se serverem došlo k chybě.");}
-                    });
+                    fetch("../admin/controllers/removefood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `fid=${overlayModalBox.dataset.obj}`})
+                    .then(response => {
+                        if(response.ok) return response.json();
+                        return Promise.reject(response);
+                    })
+                    .then(data => {
+                        if(parseInt(data) == 1) deleteRecord(currentFood);
+                        else console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | fid=${overlayModalBox.dataset.obj}.`);
+                    })
+                    .catch(err => {console.log(`[!][overlayModalBox.mode ${overlayModalBox.dataset.mode}] ${err}`);});
                 }
             }
             hideModal();
@@ -230,30 +231,5 @@
             overlayModalBox.classList.remove("active");
             document.getElementsByClassName("container")[0].removeAttribute("modon");
         }
-
-        /*
-                function modalMode_Editing(j) {
-            let rID = document.getElementById("record-"+j).dataset.restaurantId;
-            $.ajax({
-                dataType: "json", url: 'controllers/getfoodlist.php', type: 'post',
-                data: `rid=${rID}`,
-                success: function(output) {
-                    let rName = document.getElementById("restaurant-"+j).innerText;
-                    let content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
-                    
-                    if(parseInt(output) == -2) console.log(`[!] Restaurade ${rID} nemá žádné jídlo.`);
-                    else if(parseInt(output) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${output} | rid=${rID}.`);
-                    else {
-                        let foodList = '<div id="foodlist-editable" class="foodlist">';
-                        for(let i = 0; i < output.length; i++) foodList += `<div id="foodID-${output[i][0]}" data-fid="${output[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${output[i][0]}" data-default="${output[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${output[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${output[i][0]}" data-default="${output[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${output[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
-                        foodList += '</div>';
-                        content += foodList;
-                    }
-                    showModal(content, j, "Uložit", 2);
-                },
-                error: function(output) {console.log("[!] Při komunikaci se serverem došlo k chybě.");}
-            });
-        }
-        */
     </script>
 </html>

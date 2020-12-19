@@ -102,7 +102,7 @@
         const shoppingCartBox = document.getElementById("shoppingCart");
         const cartContainer = document.getElementById("containerCart");
         const mainContainer = document.getElementById("root");
-        const DEBUG = true;
+        const DEBUG = false;
 
         function addToCart(e) {actionCart(1, `&fid=${e}`);}
         function checkCart() {actionCart(2);}
