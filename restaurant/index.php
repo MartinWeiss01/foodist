@@ -133,6 +133,7 @@
                 dataType: "json", url: '../admin/controllers/getfoodlist.php', type: 'post',
                 data: `rid=${j}`,
                 success: function(output) {
+                    console.log(output);
                     let content = `<span>Toto je obsah restaurace s ID: ${j}</span><div data-restaurant-id="${j}" id="addNewFoodButton-${j}" onclick="addNewFood(this)">Přidat nové jídlo</div>`;
                     content += `<div id="foodlistRestaurantID-${j}" class="foodlist">`;
                     if(parseInt(output) == -2) console.log(`[!] Restaurant ${j} nemá žádné jídlo.`);
