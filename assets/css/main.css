@@ -1,6 +1,6 @@
 /* main.css © Copyright 2020 Martin Weiss (martinweiss.cz) */
 
-:root {
+html {
     --main-col: #FFC400;
     --alt-col: #d91c1c;
     --alt-col-light: #d91c1c9a;
@@ -16,6 +16,33 @@
 
     --success: #4CAF50;
     --fail: #D91C1C;
+
+    /* Gen2.0 */
+    /* Dashboard */
+    --main-col: #03A9F4;
+
+    --background-default: hsl(0, 0%, 100%);
+    --color-primary: hsl(0, 0%, 10%);
+    --border-primary: hsla(0, 0%, 88%, 0.58);
+    --table-striped: hsla(0, 0%, 98%, 0.58);
+    --table-hover: hsl(0, 0%, 96%);
+    
+    --color-secondary: hsla(0, 0%, 10%, 0.18);
+    --nav-shadow: hsla(0, 0%, 0%, 0.129);
+    --scrollbar-thumb: hsla(0, 0%, 0%, 0.31);
+}
+
+html[dark] {
+    --background-default: hsl(216, 28%, 7%);
+    --color-primary: hsl(0, 0%, 100%);
+    --border-primary: hsl(215, 15%, 15%);
+    --table-striped: hsl(216, 25%, 8%);
+    --table-hover: hsl(215, 15%, 15%);
+}
+
+html.theme-transition, html.theme-transition *, html.theme-transition *:before, html.theme-transition *:after {
+  transition: all 750ms !important;
+  transition-delay: 0 !important;
 }
 
 *{font-family:'Open Sans',sans-serif}

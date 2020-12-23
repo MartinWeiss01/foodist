@@ -1,18 +1,14 @@
-/* Dont copy - DELETE IT */
-nav {
-    color: black;
-    box-shadow: 0 0 6px #00000021;
-}
-/* --------- */
-
-/* dashboard.css © Copyright 2020 Martin Weiss (martinweiss.cz) */
-* {outline:none;}
+/*
+    * dashboard.css
+    * © Copyright 2020 Martin Weiss (martinweiss.cz)
+*/
+* {outline:none;color:var(--color-primary);}
 
 /* 
     * Layout
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
 */
-body {margin:0;padding:0;}
+body {margin:0;padding:0;background:var(--background-default);}
   
 .container {
     display:grid;
@@ -31,30 +27,22 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 0 21px;
+    color: var(--color-primary);
+    box-shadow: 0 0 6px var(--nav-shadow);
 }
 
-main {
-    grid-area: main;
-    overflow: overlay;
-}
-main::-webkit-scrollbar {
-    width: 7px;
-}
-main::-webkit-scrollbar-thumb {
-    background-color: #0000004f;
-    border-radius: 50rem;
-}
+main {grid-area:main;overflow:overlay;margin:2rem 0 0 3rem;padding-right:3rem;}
+main::-webkit-scrollbar {width:7px;}
+main::-webkit-scrollbar-thumb {background-color:var(--scrollbar-thumb);border-radius:50rem;}
 
-#sidebar {
-    grid-area: side;
-}
+#sidebar {grid-area:side;}
 
 footer {
     grid-area: footer;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #1a1a1a2e;
+    color: var(--color-secondary);
     font-weight: 700;
     font-size: 13px;
     letter-spacing: -1px;
@@ -70,9 +58,7 @@ footer {
         "footer";
     }
 
-    #sidebar {
-        display:none;
-    }
+    #sidebar {display:none;}
 }
 
 /* 
@@ -143,14 +129,64 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 /* 
+    * Companies & Restaurants List | Located in Main | Replacement for Restaurans List
+    * © Copyright 2020 Martin Weiss (martinweiss.cz) 
+*/
+.companies {
+    display: flex;
+    flex-direction: column;
+}
+
+.company {
+    margin: 1rem 0;
+}
+
+.companycontrollers icon {font-size:24px;padding: 9px 12px;cursor: pointer;color:var(--main-bg);}
+.companycontrollers icon:last-of-type {padding: 9px 8px 9px 12px;}
+.companycontrollers icon:hover {transform: translateY(-2px);transition: .15s;}
+
+.companyRestaurantsList {
+    margin-left: 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+.companycontrollers icon.active {
+    color: var(--main-col);
+}
+
+.table-record {
+    display: flex;
+    align-items: center;
+    user-select: none;
+    justify-content: space-between;
+    border: 1px solid var(--border-primary);
+    transition: .3s;
+}
+
+.company-header {
+    height: 3.6rem;
+    padding: 0 10px;
+}
+
+.companysub {
+    border-top: none;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.companysub:nth-child(2n-1) {background-color:var(--table-striped)}
+.companysub:hover {background-color:var(--table-hover)}
+
+/* 
     * Restaurants List | Located in Main
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
 */
 .records-list {
     display: flex;
     flex-direction: column;
-    margin: 2rem 3rem 0;
-    border: 1px solid #e0e0e094;
+    border: 1px solid var(--border-primary);
 }
 
 .record {
@@ -158,16 +194,16 @@ input:hover, input:focus, select:hover, select:focus {
     height: 3.6rem;
     align-items: center;
     user-select: none;
-    border-bottom: 1px solid #e0e0e094;
+    border-bottom: 1px solid var(--border-primary);
     padding: 0 7px;
     justify-content: space-between;
     transition: .3s;
 }
 
 .record:last-child {border:none;}
-.record:nth-child(2n-1) {background: #f9f9f994;}
+.record:nth-child(2n-1) {background-color:var(--table-striped);}
 
-.record:hover {background-color: #f5f5f5;}            
+.record:hover {background-color:var(--table-hover);}            
 .record-sub {
     display: flex;
     align-items: center;
@@ -200,7 +236,7 @@ input:hover, input:focus, select:hover, select:focus {
     justify-content: space-between;
     margin-bottom: 7px;
     padding-bottom: 6px;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid var(--border-primary);
 }
 
 .foodInfo {
@@ -238,7 +274,7 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 .modal-box {
-    background: white;
+    background: var(--background-default);
     padding: 3rem 0;
     min-width: 17rem;
     max-width: 33rem;
