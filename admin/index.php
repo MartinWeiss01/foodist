@@ -42,23 +42,59 @@
         <div class="container">
             <nav><img src="https://foodist.store/images/brand/logo.svg" style="width: 6em;"></nav>
             <main>
-                <div class="records-list">
-                    <?php
-                        $i = 1;
-                        $result = $conn->query("SELECT * FROM restaurants");
-                        if($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                echo '<div id="record-'.$i.'" data-restaurant-id="'.$row['ID'].'" class="record">
-                                    <span id="restaurant-'.$i.'" class="restaurant-name">'.$row['Name'].'</span>
-                                    <div class="record-sub">
-                                        <icon id="restaurant-edit-'.$i.'" onclick="modalMode_Editing('.$i.')" class="material-icons edit">edit</icon>
-                                        <icon id="restaurant-delete-'.$i.'" onclick="modalMode_Deleting('.$i.')" class="material-icons delete">delete_outline</icon>
-                                    </div>
-                                </div>';
+            <p id="THEMEINFO"></p>
+                <div class="companies">
+                <?php
+                    $i = 0;
+                    $result = $conn->query("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
+                    if($result->num_rows > 0) {
+                        $lastID = 0;
+                        $lastList = false;
+                        while($row = $result->fetch_assoc()) {
+                            if($lastID != $row['ID']) {
+                                if($lastID != 0) {
+                                    echo '</div>';
+                                    if($lastList) {
+                                        echo '</div>';
+                                        $lastList = false;
+                                    }
+                                }
+                                $lastID = $row['ID'];
                                 $i++;
+                                echo '<div class="company" id="company-'.$i.'" data-company-id="'.$row['ID'].'" data-company-name="'.$row['Name'].'" data-company-in="'.$row['IdentificationNumber'].'" data-company-mail="'.$row['Email'].'"><div class="company-header table-record"><span class="companyheader">'.$row['Name'].'</span><div class="companycontrollers"><icon class="material-icons">add_circle_outline</icon><icon class="material-icons">edit</icon><icon class="material-icons" onclick="test()">delete_outline</icon>';
+
+                                if($row['rID'] != NULL) {
+                                    echo '<icon onclick="collapse(this, '.$i.')" class="material-icons">expand_more</icon></div></div><div id="companyRestaurantsList-'.$i.'" class="companyRestaurantsList">';
+                                    $lastList = true;
+                                } else echo '</div></div>';
                             }
+                            if($row['rID'] != NULL) echo '<div class="companysub table-record" id="company-restaurant-'.$i.'" data-restaurant-id="'.$row['rID'].'" data-restaurant-name="'.$row['rName'].'" data-restaurant-address="'.$row['Address'].'" data-restaurant-city="'.$row['City'].'"><span>'.$row['rName'].'</span><div class="companycontrollers"><icon class="material-icons">edit</icon><icon class="material-icons">delete_outline</icon></div></div>';
                         }
-                    ?>
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                ?>
+                </div>
+
+                <!------------------------------------------------>
+
+                <div class="records-list">
+                <?php
+                    $i = 1;
+                    $result = $conn->query("SELECT * FROM restaurants");
+                    if($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo '<div id="record-'.$i.'" data-restaurant-id="'.$row['ID'].'" class="record">
+                                <span id="restaurant-'.$i.'" class="restaurant-name">'.$row['Name'].'</span>
+                                <div class="record-sub">
+                                    <icon id="restaurant-edit-'.$i.'" onclick="modalMode_Editing('.$i.')" class="material-icons edit">edit</icon>
+                                    <icon id="restaurant-delete-'.$i.'" onclick="modalMode_Deleting('.$i.')" class="material-icons delete">delete_outline</icon>
+                                </div>
+                            </div>';
+                            $i++;
+                        }
+                    }
+                ?>
                 </div>
             </main>
             <div id="sidebar">
@@ -94,8 +130,23 @@
             </div>
         </div>
     </body>
-    
+
     <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) changeTheme(1, false);
+        else changeTheme(0, false);
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if(event.matches) changeTheme(1);
+            else changeTheme(0);
+        });
+        function changeTheme(j = -1, animations = true) {
+            let doc = document.documentElement;
+            if(animations) doc.classList.add("theme-transition");
+            if((j === 0) || (doc.hasAttribute("dark"))) {doc.removeAttribute("dark");document.getElementById("THEMEINFO").innerText = "nowLight";}
+            else {doc.setAttribute("dark", "");document.getElementById("THEMEINFO").innerText = "nowDark";}
+            if(animations) window.setTimeout(function () {doc.classList.remove("theme-transition")}, 1000);
+        }
+
         <?php
             if($result_cities->num_rows > 0) {
                 $x = '<select name="cities" id="cities">';
@@ -112,17 +163,17 @@
                     $x .= "<input type=\"checkbox\" name=\"cuisineOption".$row['ID']."\" value=\"".$row['ID']."\"><label for=\"cuisineOption".$row['ID']."\">".$row['Name']."</label>";
                 }
                 $x .= '</div>';
-                echo "const cuisinesList = '$x';";
-            } else echo "const cuisinesList = -1;";
+                echo "\nconst cuisinesList = '$x';";
+            } else echo "\nconst cuisinesList = -1;";
 
-            echo "let newID = 1+".$i.";";
+            echo "\nlet newID = 1+".$i.";";
         ?>
 
-        const DEBUG = false;
-        const overlayModalBox = document.getElementById("overlayModal");
-        const modalContentBox = document.getElementById("modalContentBox");
-        const modalConfirmInput = document.getElementById("modalConfirm");
-        const modalCancelInput = document.getElementById("modalCancel");
+        const DEBUG = true,
+            overlayModalBox = document.getElementById("overlayModal"),
+            modalContentBox = document.getElementById("modalContentBox"),
+            modalConfirmInput = document.getElementById("modalConfirm"),
+            modalCancelInput = document.getElementById("modalCancel");
 
         modalConfirmInput.addEventListener("click", function(){
             if(overlayModalBox.dataset.mode == 1) {
@@ -288,7 +339,6 @@
         document.addEventListener("keydown", function(e){
             if(overlayModalBox.classList.contains("active")) {
                 if(e.key == "Escape") hideModal();
-                console.log("Modal byl schován");
             }
         });
 
@@ -412,6 +462,20 @@
 
         function deleteRecord(e) {
             e.parentNode.removeChild(e);
+        }
+
+        function collapse(k, e) {
+            let list = document.getElementById("companyRestaurantsList-"+e);
+            k.classList.toggle("active");
+            if(list.getAttribute("collapsed") != null) {
+                list.removeAttribute("collapsed");
+                list.style.maxHeight = null;
+                list.style.overflow = "hidden";
+            } else {
+                list.setAttribute("collapsed", "");
+                list.style.maxHeight = list.scrollHeight + "px";
+                list.style.removeProperty("overflow");
+            }
         }
     </script>
 </html>
