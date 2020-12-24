@@ -169,7 +169,7 @@
             echo "\nlet newID = 1+".$i.";";
         ?>
 
-        const DEBUG = true,
+        const DEBUG = false,
             overlayModalBox = document.getElementById("overlayModal"),
             modalContentBox = document.getElementById("modalContentBox"),
             modalConfirmInput = document.getElementById("modalConfirm"),
@@ -204,69 +204,40 @@
                 let currentRecord = document.getElementById("record-"+overlayModalBox.dataset.obj);
                 let restaurantID = currentRecord.dataset.restaurantId;
 
-                let newName = false;
-                let updateCount = 0;
-                let foodCount = 0;
-                let deleteCount = 0;
-                let updateString = '"update":[';
-                let foodString = '{"food":[';
-                let deleteString = '"delete":[';
-                let e_restaurantName;
+                let food = [],
+                    toDelete = [],
+                    rNameChanged = false,
+                    currentName = document.getElementById("restaurantName");
 
-                if(document.getElementById("restaurantName").hasAttribute("changed")) {
-                    e_restaurantName = `{"restaurantName":"${document.getElementById("restaurantName").innerText}"}`;
-                    document.getElementById("restaurant-"+overlayModalBox.dataset.obj).innerText = document.getElementById("restaurantName").innerText;
-                    updateCount++;
-                    newName = true;
-                }
-
-                if(document.getElementById("foodlist-editable") != null) {
+                if(document.getElementById("foodlist-editable") !== null) {
                     let feX = document.getElementById("foodlist-editable").childNodes;
                     for(let i = 0; i < feX.length; i++) {
-                        if(feX[i].hasAttribute("delete")) {
-                            if(deleteCount == 0) deleteString += `{"ID":"${feX[i].dataset.fid}"}`;
-                            else deleteString += `, {"ID":"${feX[i].dataset.fid}"}`;
-                            deleteCount++;
-                            console.log(`{"ID":"${feX[i].dataset.fid}"}`);
-                        } else {
-                            let feXChildFoodName = document.getElementById("foodName-"+feX[i].dataset.fid);
-                            let feXChildFoodPrice = document.getElementById("foodPrice-"+feX[i].dataset.fid);
-
-                            if(feXChildFoodName.hasAttribute("changed") || feXChildFoodPrice.hasAttribute("changed")) {
-                                if(foodCount == 0) foodString += `{"ID":"${feX[i].dataset.fid}", "Name":"${feXChildFoodName.innerText}", "Price":"${feXChildFoodPrice.innerText}"}`;
-                                else foodString += `, {"ID":"${feX[i].dataset.fid}", "Name":"${feXChildFoodName.innerText}", "Price":"${feXChildFoodPrice.innerText}"}`;
-                                foodCount++;
-                                console.log(`{"ID":"${feX[i].dataset.fid}", "Name":"${feXChildFoodName.innerText}", "Price":"${feXChildFoodPrice.innerText}"}`);
-                            }
+                        if(feX[i].hasAttribute("delete")) toDelete.push({ID: feX[i].dataset.fid});
+                        else {
+                            let feXChildFoodName = document.getElementById("foodName-"+feX[i].dataset.fid),
+                                feXChildFoodPrice = document.getElementById("foodPrice-"+feX[i].dataset.fid);
+                            if(feXChildFoodName.hasAttribute("changed") || feXChildFoodPrice.hasAttribute("changed")) food.push({ID: feX[i].dataset.fid, Name: feXChildFoodName.innerText, Price: feXChildFoodPrice.innerText});
                         }
                     }
                 }
-                
-                foodString += "]}";
-                deleteString += "]";
-                if(foodCount != 0) updateCount++;
-                if(newName) {
-                    if(foodCount == 0) updateString += `${e_restaurantName}]`;
-                    else updateString += `${e_restaurantName}, ${foodString}]`; 
-                } else if(foodCount != 0) updateString += `${foodString}]`; 
 
-                let finalJSON = `{`;
-                if(updateCount != 0) {
-                    if(deleteCount != 0) finalJSON += `${updateString}, ${deleteString}`;
-                    else finalJSON += `${updateString}`;
-                } else if(deleteCount != 0) finalJSON += `${deleteString}`;
-                finalJSON += "}";
-                finalJSON = JSON.stringify(JSON.parse(finalJSON));
+                if(currentName.hasAttribute("changed")) {
+                    document.getElementById("restaurant-"+overlayModalBox.dataset.obj).innerText = document.getElementById("restaurantName").innerText;
+                    rNameChanged = true;
+                }
+                let update = {restaurantName: currentName.innerText, nameChanged: rNameChanged, food};
+                let finalJSON = JSON.stringify({update, toDelete});
+
                 if(!DEBUG) {
-                    if(finalJSON.length != 2) {
-                        fetch("controllers/editrecords.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${restaurantID}&data=${finalJSON}`})
+                    if(food.length !== 0 || toDelete.length !== 0 || rNameChanged) {
+                        fetch("controllers/editrecords.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${restaurantID}&data=${encodeURIComponent(finalJSON)}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
                         .then(data => {console.log(`[!] Dunno? 0xFD${data}.`);})
                         .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě. | ${err} | ${finalJSON}`);});
-                    } else console.log(`[?] Vypadá to, že nedošlo k žádné změně. Délka JSONu: ${finalJSON.length} | ${finalJSON}`);
+                    } 
                 } else console.log(finalJSON);
             } else if(overlayModalBox.dataset.mode == 3) {
                 let currentRecord = document.getElementById("record-"+overlayModalBox.dataset.obj);
