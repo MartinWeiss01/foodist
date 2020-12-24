@@ -9,35 +9,35 @@
     $data = json_decode($_POST["data"], true);
     writeDebug($data);
 
-    $index = 0;
-    if($data["update"][$index]["restaurantName"]) {
-        $query = "UPDATE restaurants SET Name = '".$data['update'][0]['restaurantName']."' WHERE ID = ".$rID;
-        $conn->query($query);
-        $index = 1;
+    if($data["update"]["nameChanged"]) {
+        $query = "UPDATE restaurants SET Name = '".$data['update']['restaurantName']."' WHERE ID = $rID";
+        $conn->query($query) or die("-2");
         writeDebug($query);
     }
 
-    if($data["update"][$index]["food"]) {
-        for($i = 0; $i < sizeof($data["update"][$index]["food"]); $i++) {
-            $fID = $data["update"][$index]["food"][$i]["ID"];
-            $fName = $data["update"][$index]["food"][$i]["Name"];
-            $fPrice = $data["update"][$index]["food"][$i]["Price"];
-            $query = "UPDATE food SET Name = '$fName', Price = '$fPrice' WHERE ID = $fID";
-            $conn->query($query);
-            writeDebug($query);
+    if($data["update"]["food"]) {
+        $query = "";
+        for($i = 0; $i < sizeof($data["update"]["food"]); $i++) {
+            $fID = $data["update"]["food"][$i]["ID"];
+            $fName = $data["update"]["food"][$i]["Name"];
+            $fPrice = $data["update"]["food"][$i]["Price"];
+            $query .= "UPDATE food SET Name = '$fName', Price = '$fPrice' WHERE ID = $fID; ";
         }
+        $conn->multi_query($query) or die("-3");
+        writeDebug($query);
     }
 
-    if($data["delete"]) {
+    if($data["toDelete"]) {
         $query = "DELETE FROM food WHERE ID IN (";
-        for($i = 0; $i < sizeof($data["delete"]); $i++) {
+        for($i = 0; $i < sizeof($data["toDelete"]); $i++) {
             if($i != 0) $query .= ", ";
-            $query .= $data["delete"][$i]["ID"];
+            $query .= $data["toDelete"][$i]["ID"];
         }
         $query .= ")";
-        $conn->query($query);
+        $conn->query($query) or die("-4");
         writeDebug($query);
     }
+
     $conn->close();  
 
     writeDebug(json_encode($data));
