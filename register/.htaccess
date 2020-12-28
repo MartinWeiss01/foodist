@@ -1,3 +1,0 @@
-ErrorDocument 403 https://foodist.store/
-ErrorDocument 404 https://foodist.store/
-ErrorDocument 500 https://foodist.store/
