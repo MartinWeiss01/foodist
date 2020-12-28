@@ -1,6 +1,13 @@
 <?php
+/* addNewCompany.php
+ * Method: POST
+ * Parameters: {name, accountin, email, pwd}
+ * (c) 2020 Martin Weiss, martinweiss.cz
+ * -----------------
+ * Located in   \admin\index.php
+ */
     session_start();
-    require_once('../../config/.config.inc.php');
+    require_once('../config/.config.inc.php');
     if(!isset($_SESSION["FoodistID"])) return die("-666");
 
     $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
@@ -12,6 +19,8 @@
     $password = htmlspecialchars($_POST["pwd"]);
 
     $query = "INSERT INTO restaurant_accounts (Name, IdentificationNumber, Email, Password) VALUES ('$name', '$accountin', '$email', SHA2('$password', 256))";
-    $conn->query($query);
+    $conn->query($query) or die("-2");
+    echo $conn->insert_id;
+
     $conn->close();
 ?>

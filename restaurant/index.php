@@ -127,7 +127,7 @@
         }
 
         function getRestaurantFoodList(j) {
-            fetch("../admin/controllers/getfoodlist.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${j}`})
+            fetch("../controllers/getFoodList.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${j}`})
             .then(response => {
                 if(response.ok) return response.json();
                 return Promise.reject(response);
@@ -163,7 +163,7 @@
 
                 if(foodName != "" && foodPrice != "") {
                     if(!DEBUG) {
-                        fetch("../admin/controllers/addfood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}&foodname=${foodName}&foodprice=${foodPrice}`})
+                        fetch("../controllers/addFood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}&foodname=${foodName}&foodprice=${foodPrice}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
@@ -180,7 +180,7 @@
 
                 if(DEBUG) deleteRecord(currentFood);
                 else {
-                    fetch("../admin/controllers/removefood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `fid=${overlayModalBox.dataset.obj}`})
+                    fetch("../controllers/removeFood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `fid=${overlayModalBox.dataset.obj}`})
                     .then(response => {
                         if(response.ok) return response.json();
                         return Promise.reject(response);

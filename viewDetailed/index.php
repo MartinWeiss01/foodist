@@ -109,7 +109,7 @@
         function updateCart(e, c) {actionCart(3, `&fid=${e}&count=${c}`);}
 
         function actionCart(actionid, params = "") {
-            fetch("../admin/controllers/cart.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `action=${actionid}${params}`})
+            fetch("../controllers/cart.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `action=${actionid}${params}`})
             .then(response => {
                 if(DEBUG) console.log(`Response: ${response}`);
                 if(response.ok) return response.json();

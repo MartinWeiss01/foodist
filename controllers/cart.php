@@ -1,6 +1,13 @@
 <?php
+/* cart.php
+ * Method: POST
+ * Parameters: {action, fid?, count?}
+ * (c) 2020 Martin Weiss, martinweiss.cz
+ * -----------------
+ * Located in   \viewDetailed\index.php
+ */
     session_start();
-    require_once('../../config/.config.inc.php');
+    require_once('../config/.config.inc.php');
 
     if(!isset($_SESSION["cart"])) $cart = array();
     else $cart = $_SESSION["cart"];

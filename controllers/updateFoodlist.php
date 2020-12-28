@@ -1,13 +1,22 @@
 <?php
+/* updateFoodlist.php
+ * Method: POST
+ * Parameters: {rid, data}
+ * (c) 2020 Martin Weiss, martinweiss.cz
+ * -----------------
+ * Located in   \admin\index.php
+ */
     session_start();
-    require_once('../../config/.config.inc.php');
+    require_once('../config/.config.inc.php');
     if(!isset($_SESSION["FoodistID"])) return die("-666");
     $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
     $conn -> set_charset("utf8");
 
+    $globalTime = date("Y-m-d H:i:s");
+
     $rID = $_POST["rid"];
     $data = json_decode($_POST["data"], true);
-    writeDebug($data);
+    writeDebug(json_encode($data, JSON_UNESCAPED_UNICODE), "Data");
 
     if($data["update"]["nameChanged"]) {
         $query = "UPDATE restaurants SET Name = '".$data['update']['restaurantName']."' WHERE ID = $rID";
@@ -40,10 +49,9 @@
 
     $conn->close();  
 
-    writeDebug(json_encode($data));
-    function writeDebug($s) {
-        $fow = fopen("/var/www/html/martinweiss/app/foodist/admin/controllers/cachedData.json", "a");
-        fwrite($fow, "QUERY: ".$s."\n");
+    function writeDebug($s, $title = "Query") {
+        $fow = fopen("cachedData.json", "a");
+        fwrite($fow, "[".$globalTime."][".$title."] ".$s."\n");
         fclose($fow);
     }
 ?>
