@@ -44,41 +44,42 @@
         <div id="root" class="container">
             <nav>
                 <img src="https://foodist.store/images/brand/logo.svg" style="width: 6em;">
-                <div class="account" data-role="button">
-                    <img class="accountImage" src="/images/users/f23w51x696q1x5196.jpg">
-                    <span class="accountDetails">Martin Weiss <icon>arrow_drop_down</icon></span>
+
+                <div class="flex row">
+                    <div class="contentAddButton" data-role="button" onclick="addNewCompany()">
+                        <icon>add</icon>
+                        <span>Firma</span>
+                    </div>
+
+                    <div class="flex row hcenter account" data-role="button">
+                        <img class="accountImage" src="/images/users/default.jpg">
+                        <span class="flex row hcenter accountDetails">Username <icon>arrow_drop_down</icon></span>
+                    </div>
                 </div>
             </nav>
             <main>
-                <div class="lineContentButton">
-                    <div class="contentAddButton" data-role="button" onclick="addNewCompany()">
-                        <icon>add</icon>
-                        <span>Nová firma</span>
-                    </div>
-                </div>
-
-                <div id="citiesBox" class="cardList">
-                    <div class="cardItem" onclick="addNewCity()" data-role="button"><icon>add</icon><span class="cardTitle">Město</span></div>
+                <div id="citiesBox" class="flex row cardList">
+                    <div class="flex cardItem" onclick="addNewCity()" data-role="button"><icon>add</icon><span class="cardTitle">Město</span></div>
                     <?php
                         if($citiesList->num_rows > 0) {
                             $citiesString = 'let citiesList = `<select name="cities" id="cities">';
-                            while($row = $citiesList->fetch_assoc()) {echo '<div class="cardItem" data-city-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cities/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>;';}
+                            while($row = $citiesList->fetch_assoc()) {echo '<div class="flex cardItem" data-city-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cities/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>;';}
                             $citiesString .= '</select>`;';
                         }
                     ?>
                 </div>
-                <div id="cuisinesBox" class="cardList">
-                    <div class="cardItem" onclick="addNewCuisine()" data-role="button"><icon>add</icon><span class="cardTitle">Kuchyně</span></div>
+                <div id="cuisinesBox" class="flex row cardList">
+                    <div class="flex cardItem" onclick="addNewCuisine()" data-role="button"><icon>add</icon><span class="cardTitle">Kuchyně</span></div>
                     <?php
                         if($cuisinesList->num_rows > 0) {
-                            $cuisinesString = 'let cuisinesList = `<div id="checkboxesCuisines" class="cuisines-checkboxes">';
-                            while($row = $cuisinesList->fetch_assoc()) {echo '<div class="cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cuisines/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$cuisinesString .= '<input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'"><label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>';}
+                            $cuisinesString = 'let cuisinesList = `<div id="checkboxesCuisines" class="flex cuisines-checkboxes">';
+                            while($row = $cuisinesList->fetch_assoc()) {echo '<div class="flex cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cuisines/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$cuisinesString .= '<input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'"><label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>';}
                             $cuisinesString .= '</div>`;';
                         }
                     ?>
                 </div>
 
-                <div id="companiesList" class="companies">
+                <div id="companiesList" class="flex">
                 <?php
                     $result = $conn->query("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
                     if($result->num_rows > 0) {
@@ -94,14 +95,14 @@
                                     }
                                 }
                                 $lastID = $row['ID'];
-                                echo '<div class="company" id="company-'.$row['ID'].'" data-company-id="'.$row['ID'].'" data-company-name="'.$row['Name'].'" data-company-in="'.$row['IdentificationNumber'].'" data-company-mail="'.$row['Email'].'"><div class="company-header table-record"><span class="companyheader">'.$row['Name'].'</span><div class="companycontrollers"><icon data-tooltip="Přidat novou restauraci pro tuto společnost" class="material-icons add" onclick="addNewRestaurant('.$row['ID'].')">add_circle_outline</icon><icon class="material-icons edit" onclick="modalMode_Editing('.$row['ID'].', true)">edit</icon><icon class="material-icons delete" onclick="removeRecord('.$row['ID'].', true)">delete_outline</icon>';
+                                echo '<div class="company" id="company-'.$row['ID'].'" data-company-id="'.$row['ID'].'" data-company-name="'.$row['Name'].'" data-company-in="'.$row['IdentificationNumber'].'" data-company-mail="'.$row['Email'].'"><div class="flex row justify-content-between hcenter company-header table-record"><span class="companyheader">'.$row['Name'].'</span><div class="companycontrollers"><icon data-tooltip="Přidat novou restauraci pro tuto společnost" class="material-icons add" onclick="addNewRestaurant('.$row['ID'].')">add_circle_outline</icon><icon class="material-icons edit" onclick="modalMode_Editing('.$row['ID'].', true)">edit</icon><icon class="material-icons delete" onclick="removeRecord('.$row['ID'].', true)">delete_outline</icon>';
 
                                 if($row['rID'] != NULL) {
                                     echo '<icon class="material-icons collapse" data-action="collapse" onclick="collapseElement(this, '.$row['ID'].')">expand_more</icon></div></div><div id="companyRestaurantsList-'.$row['ID'].'" class="companyRestaurantsList">';
                                     $lastList = true;
                                 } else echo '</div></div>';
                             }
-                            if($row['rID'] != NULL) echo '<div class="companysub table-record" id="company-restaurant-'.$row['rID'].'" data-restaurant-id="'.$row['rID'].'" data-restaurant-name="'.$row['rName'].'" data-restaurant-address="'.$row['Address'].'" data-restaurant-city="'.$row['City'].'"><span id="restaurant-nameblock-'.$row['rID'].'">'.$row['rName'].'</span><div class="companycontrollers"><icon class="material-icons edit" onclick="modalMode_Editing('.$row['rID'].')">edit</icon><icon class="material-icons delete" onclick="removeRecord('.$row['rID'].')">delete_outline</icon></div></div>';
+                            if($row['rID'] != NULL) echo '<div class="flex row justify-content-between hcenter companysub table-record" id="company-restaurant-'.$row['rID'].'" data-restaurant-id="'.$row['rID'].'" data-restaurant-name="'.$row['rName'].'" data-restaurant-address="'.$row['Address'].'" data-restaurant-city="'.$row['City'].'"><span id="restaurant-nameblock-'.$row['rID'].'">'.$row['rName'].'</span><div class="companycontrollers"><icon class="material-icons edit" onclick="modalMode_Editing('.$row['rID'].')">edit</icon><icon class="material-icons delete" onclick="removeRecord('.$row['rID'].')">delete_outline</icon></div></div>';
                         }
                         echo '</div>';
                     }
@@ -114,8 +115,8 @@
 
         <div id="overlayModal" class="overlay-modal">
             <div class="container-modal">
-                <div class="modal-box">
-                    <div id="modalContentBox" class="modal-content"></div>
+                <div class="flex hcenter vcenter modal-box">
+                    <div id="modalContentBox" class="flex hcenter modal-content"></div>
                     <div class="modal-buttons-group">
                         <button id="modalConfirm" class="modal-confirm"></button>
                         <button id="modalCancel" class="modal-cancel">Zrušit</button>
@@ -285,7 +286,7 @@
                     }
 
                     let newRecord = document.createElement("div");
-                    newRecord.classList.add("cardItem");
+                    newRecord.classList.add("flex cardItem");
                     newRecord.setAttribute("data-cuisine-id", (3860+(Math.floor(Math.random()*Math.floor(1111)))));
                     newRecord.innerText = cuisineName;
                     document.getElementById("cuisinesBox").appendChild(newRecord);
@@ -305,7 +306,7 @@
                     }
 
                     let newRecord = document.createElement("div");
-                    newRecord.classList.add("cardItem");
+                    newRecord.classList.add("flex cardItem");
                     newRecord.setAttribute("data-city-id", (3860+(Math.floor(Math.random()*Math.floor(1111)))));
                     newRecord.innerText = cityName;
                     document.getElementById("citiesBox").appendChild(newRecord);
@@ -354,7 +355,7 @@
             newRecord.setAttribute("data-company-name", companyName);
             newRecord.setAttribute("data-company-in", companyIN);
             newRecord.setAttribute("data-company-mail", companyEmailAddress);
-            newRecord.innerHTML = `<div class="company-header table-record"><span class="companyheader">${companyName}</span><div class="companycontrollers"><icon data-tooltip="Přidat novou restauraci pro tuto společnost" class="material-icons add" onclick="addNewRestaurant(${companyID})">add_circle_outline</icon><icon class="material-icons edit" onclick="modalMode_Editing(${companyID}, true)">edit</icon><icon class="material-icons delete" onclick="removeRecord(${companyID}, true)">delete_outline</icon></div></div>`;
+            newRecord.innerHTML = `<div class="flex row justify-content-between hcenter company-header table-record"><span class="companyheader">${companyName}</span><div class="companycontrollers"><icon data-tooltip="Přidat novou restauraci pro tuto společnost" class="material-icons add" onclick="addNewRestaurant(${companyID})">add_circle_outline</icon><icon class="material-icons edit" onclick="modalMode_Editing(${companyID}, true)">edit</icon><icon class="material-icons delete" onclick="removeRecord(${companyID}, true)">delete_outline</icon></div></div>`;
             document.getElementById("companiesList").appendChild(newRecord);
         }
 
@@ -367,7 +368,7 @@
 
         function appendNewRestaurant(companyID, rID, rName, rAddress, rCity) {
             let newRecord = document.createElement("div");
-            newRecord.classList.add("companysub", "table-record");
+            newRecord.classList.add("flex", "row", "justify-content-between", "hcenter", "companysub", "table-record");
             newRecord.setAttribute("id", `company-restaurant-${rID}`);
             newRecord.setAttribute("data-restaurant-id", rID);
             newRecord.setAttribute("data-restaurant-name", rName);
@@ -464,7 +465,7 @@
                     else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
                     else {
                         let foodList = '<div id="foodlist-editable" class="foodlist">';
-                        for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
+                        for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="flex row hcenter food-record"><div class="flex"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="flex row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
                         foodList += '</div>';
                         content += foodList;
                     }

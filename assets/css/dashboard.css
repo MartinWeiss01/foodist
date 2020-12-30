@@ -48,43 +48,57 @@ footer {
     * dashboard.css
     * © Copyright 2020 Martin Weiss (martinweiss.cz)
 */
-* {outline:none;color:var(--color-primary);}
-[data-role="button"] {cursor:pointer;}
-
-.account, .accountDetails {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+* {
+    outline:none;
+    color:var(--color-primary);
 }
 
+[data-role="button"] {cursor:pointer;}
+
+.flex {display:flex;flex-direction: column;}
+.flex.row {flex-direction: row!important;}
+.flex.hcenter {align-items: center;}
+.flex.vcenter {justify-content: center;}
+.flex.justify-content-between {justify-content: space-between;}
+.flex.justify-content-around {justify-content: space-around;}
+
 .account {
-    padding: 10px 21px;
+    padding: 7px 10px;
     border-radius: 3px;
     transition: .3s;
 }
-.accountImage {padding-right: 10px;}
+.account:hover {background: var(--account-background);transition: .3s;}
 
-.account:hover {
-    background: var(--account-background);
-    transition: .3s;
+.account > span {font-size:14px;}
+.accountImage {
+    --size: 26px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 25px;
+    margin-right: 8px;
 }
 
-.lineContentButton {display:flex;justify-content:flex-end;margin-bottom:2rem;}
-.contentAddButton {display:flex;align-items:center;padding:10px 20px;border-radius:3px;border:1px solid var(--add);transition:.3s;}
+.contentAddButton {
+    display:flex;
+    align-items:center;
+    margin-right: 1rem;
+    padding:0 15px;
+    border-radius:3px;
+    border:1px solid var(--add);
+    font-size:15px;
+    transition:.3s;
+}
 .contentAddButton > * {margin-right: 4px;color: var(--add);transition: .3s;}
 .contentAddButton:hover {background: var(--add);transition: .3s;}
 .contentAddButton:hover > * {color:var(--color-primary);transition: .3s;}
 
 .cardList {
-    display: flex;
     margin-bottom: 2rem;
     padding-bottom: 12px;
     overflow-x: auto;
 }
 
 .cardItem {
-    display:flex;
-    flex-direction: column;
     justify-content: flex-end;
     margin-right: 1rem;
     height: 130px;
@@ -151,8 +165,6 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 .cuisines-checkboxes {
-    display: flex;
-    flex-direction: column;
     align-self: flex-start;
     position: relative;
     top: 2rem;
@@ -181,13 +193,9 @@ input:hover, input:focus, select:hover, select:focus {
     * Companies & Restaurants List | Located in Main | Replacement for Restaurans List
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
 */
-.companies {
-    display: flex;
-    flex-direction: column;
-}
 
 .company {
-    margin: 1rem 0;
+    margin-top: 1rem;
 }
 
 .companycontrollers icon {font-size:24px;padding: 9px 12px;cursor: pointer;color:var(--main-bg);}
@@ -201,10 +209,7 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 .table-record {
-    display: flex;
-    align-items: center;
     user-select: none;
-    justify-content: space-between;
     border: 1px solid var(--border-primary);
     transition: .3s;
     animation: smoothAppend linear .3s;
@@ -230,8 +235,6 @@ input:hover, input:focus, select:hover, select:focus {
     * FoodList | Located in Modal (editing process) > Admin
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
 */
-.row {display:flex;flex-direction: row;}
-
 .foodlist {width: 100%;}
 .foodName {font-size:16px;}
 .foodPriceRow {font-size:13px;}
@@ -240,18 +243,10 @@ input:hover, input:focus, select:hover, select:focus {
 .food-record icon.restore:hover {color: var(--sex-male);}
 
 .food-record {
-    display:flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: space-between;
     margin-bottom: 7px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border-primary);
-}
-
-.foodInfo {
-    display: flex;
-    flex-direction: column;
 }
 
 /* 
@@ -329,10 +324,6 @@ input:hover, input:focus, select:hover, select:focus {
     min-width: 17rem;
     max-width: 33rem;
     width: 33rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     border-radius: 7px;
     box-shadow: 0 0 20px 0px rgb(0 0 0 / 0.09);
 }
@@ -342,9 +333,6 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 .modal-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 65%;
     margin-bottom: 2rem;
 }
