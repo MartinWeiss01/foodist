@@ -1,9 +1,3 @@
-/*
-    * dashboard.css
-    * © Copyright 2020 Martin Weiss (martinweiss.cz)
-*/
-* {outline:none;color:var(--color-primary);}
-
 /* 
     * Layout
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
@@ -13,12 +7,12 @@ body {margin:0;padding:0;background:var(--background-default);}
 .container {
     display:grid;
     height:100vh;
-    grid-template-columns: 18rem auto;
+    grid-template-columns: auto;
     grid-template-rows: 4rem auto 4rem;
     grid-template-areas:
-        "nav nav"
-        "side main"
-        "side footer";
+        "nav"
+        "main"
+        "footer";
 }
 
 nav {
@@ -26,16 +20,12 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 21px;
+    padding: 0 5rem;
     color: var(--color-primary);
     box-shadow: 0 0 6px var(--nav-shadow);
 }
 
-main {grid-area:main;overflow:overlay;margin:2rem 0 0 3rem;padding-right:3rem;}
-main::-webkit-scrollbar {width:7px;}
-main::-webkit-scrollbar-thumb {background-color:var(--scrollbar-thumb);border-radius:50rem;}
-
-#sidebar {grid-area:side;}
+main {grid-area:main;overflow:overlay;padding: 2rem 5rem 0;}
 
 footer {
     grid-area: footer;
@@ -49,17 +39,96 @@ footer {
     text-align:center;
 }
 
-@media only screen and (max-width: 860px) {
-    .container {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-        "nav"
-        "main"
-        "footer";
-    }
-
-    #sidebar {display:none;}
+@media (max-width: 890px) {
+    nav {padding: 0 1rem;}
+    main {padding:2rem 1rem 0;}
 }
+
+/*
+    * dashboard.css
+    * © Copyright 2020 Martin Weiss (martinweiss.cz)
+*/
+* {outline:none;color:var(--color-primary);}
+[data-role="button"] {cursor:pointer;}
+
+.account, .accountDetails {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.account {
+    padding: 10px 21px;
+    border-radius: 3px;
+    transition: .3s;
+}
+.accountImage {padding-right: 10px;}
+
+.account:hover {
+    background: var(--account-background);
+    transition: .3s;
+}
+
+.lineContentButton {display:flex;justify-content:flex-end;margin-bottom:2rem;}
+.contentAddButton {display:flex;align-items:center;padding:10px 20px;border-radius:3px;border:1px solid var(--add);transition:.3s;}
+.contentAddButton > * {margin-right: 4px;color: var(--add);transition: .3s;}
+.contentAddButton:hover {background: var(--add);transition: .3s;}
+.contentAddButton:hover > * {color:var(--color-primary);transition: .3s;}
+
+.cardList {
+    display: flex;
+    margin-bottom: 2rem;
+    padding-bottom: 12px;
+    overflow-x: auto;
+}
+
+.cardItem {
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-right: 1rem;
+    height: 130px;
+    width: 271px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    animation: smoothAppend linear .3s;
+}
+
+.cardItem > icon {font-size:40px;padding-left:19px}
+.cardTitle {
+    padding: 0 23px 23px 23px;
+    word-break:break-word;
+    font-size: 23px;
+    font-weight: 700;
+    text-shadow: 0 0 15px black;
+    color:white;
+}
+
+.cardItem[data-role="button"] > icon,
+.cardItem[data-role="button"] > .cardTitle {color: var(--color-primary);text-shadow: none;transition: .15s;}
+.cardItem[data-role="button"] {border: 1px dashed var(--border-primary);transition: .15s;}
+.cardItem[data-role="button"]:hover {border-color: var(--sex-male);transition: .15s;}
+.cardItem[data-role="button"]:hover > icon,
+.cardItem[data-role="button"]:hover > .cardTitle {color: var(--sex-male);transition: .15s;}
+
+/* 
+    * Iconixer | Manager for all icons in AdminDOM
+    * © Copyright 2020 Martin Weiss (martinweiss.cz) 
+*/
+icon, icon:hover {transition:.25s;}
+
+icon.add:hover,
+icon.add[changed] {color:var(--add);}
+
+icon.edit:hover,
+icon.edit[changed] {color:var(--edit);}
+
+icon.delete:hover,
+icon.delete[changed] {color:var(--delete);}
+
+icon.collapse.active,
+icon.collapse:hover,
+icon.collapse[changed] {color:var(--collapse);}
 
 /* 
     * Input Styling
@@ -100,32 +169,12 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 /* 
-    * Add Button Group | Located in Sidebar
+    * Smooth Appending | Built for smoother animations when new element is added
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
 */
-.add-record {
-    display: flex;
-    font-size: 14px;
-    font-weight: 600;
-    flex-direction: row;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 50rem;
-    margin: 11px 21px;
-    color: lightgray;
-}
-
-.add-record:hover {
-    color: #1d7efa;
-}
-
-.add-record span {
-    line-height:48px;
-}
-
-.add-record icon {
-    border-radius: 5rem;
-    margin-right: 5px;
+@keyframes smoothAppend {
+    from {opacity:0;transform:translateY(10px);}
+    end {opacity:1;transform:translateY(0);}
 }
 
 /* 
@@ -143,17 +192,12 @@ input:hover, input:focus, select:hover, select:focus {
 
 .companycontrollers icon {font-size:24px;padding: 9px 12px;cursor: pointer;color:var(--main-bg);}
 .companycontrollers icon:last-of-type {padding: 9px 8px 9px 12px;}
-.companycontrollers icon:hover {transform: translateY(-2px);transition: .15s;}
 
 .companyRestaurantsList {
     margin-left: 20px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-}
-
-.companycontrollers icon.active {
-    color: var(--main-col);
 }
 
 .table-record {
@@ -163,57 +207,24 @@ input:hover, input:focus, select:hover, select:focus {
     justify-content: space-between;
     border: 1px solid var(--border-primary);
     transition: .3s;
+    animation: smoothAppend linear .3s;
 }
 
 .company-header {
     height: 3.6rem;
     padding: 0 10px;
+    border-radius: 6px 6px 0;
 }
 
 .companysub {
     border-top: none;
-    padding: 10px;
+    padding: 0 10px;
     font-size: 15px;
 }
 
 .companysub:nth-child(2n-1) {background-color:var(--table-striped)}
 .companysub:hover {background-color:var(--table-hover)}
-
-/* 
-    * Restaurants List | Located in Main
-    * © Copyright 2020 Martin Weiss (martinweiss.cz) 
-*/
-.records-list {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border-primary);
-}
-
-.record {
-    display: flex;
-    height: 3.6rem;
-    align-items: center;
-    user-select: none;
-    border-bottom: 1px solid var(--border-primary);
-    padding: 0 7px;
-    justify-content: space-between;
-    transition: .3s;
-}
-
-.record:last-child {border:none;}
-.record:nth-child(2n-1) {background-color:var(--table-striped);}
-
-.record:hover {background-color:var(--table-hover);}            
-.record-sub {
-    display: flex;
-    align-items: center;
-    user-select: none;
-}
-
-.restaurant-name {font-size:15px;padding:12px 8px;}
-.record-sub icon {font-size:24px;padding: 9px 12px;}
-.record-sub icon:last-of-type {padding: 9px 8px 9px 12px;}
-.record-sub icon:hover {transform: translateY(-2px);transition: .15s;}
+.companysub:last-child {border-radius: 0 0 6px 6px}
 
 /* 
     * FoodList | Located in Modal (editing process) > Admin
@@ -225,9 +236,8 @@ input:hover, input:focus, select:hover, select:focus {
 .foodName {font-size:16px;}
 .foodPriceRow {font-size:13px;}
 .food-record icon:not(last-child) {margin-right:10px;}
-.food-record icon {color:var(--muted-col);font-size: 25px;cursor: pointer;transition:.4s;}
-.food-record icon.delete:hover, .food-record icon.delete[changed] {color: var(--fail);transition:.4s;}
-.food-record icon.restore:hover {color: var(--sex-male);transition:.4s;}
+.food-record icon {color:var(--muted-col);font-size: 25px;cursor: pointer;}
+.food-record icon.restore:hover {color: var(--sex-male);}
 
 .food-record {
     display:flex;
@@ -245,10 +255,50 @@ input:hover, input:focus, select:hover, select:focus {
 }
 
 /* 
+    * Toast | Compact Info/Alert Messages
+    * © Copyright 2020 Martin Weiss (martinweiss.cz) 
+*/
+.toastBox[active] {
+    visibility: visible;
+    animation: toastIn 0.5s, toastOut 0.5s 2.5s;
+}
+
+.toastBox {
+    visibility: hidden;
+    position: fixed;
+    z-index: 860;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    bottom: 3rem;
+}
+
+.toast {
+    background: var(--background-default);
+    color: var(--color-primary);
+    border: 1px solid var(--border-primary);
+    padding: 0.5rem;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+}
+
+@keyframes toastIn {
+    from {opacity:0;bottom:0;}
+    to {opacity:1;bottom:3rem;}
+}
+
+@keyframes toastOut {
+    from {opacity:1;bottom:3rem;}
+    to {opacity:0;bottom:0;}
+}
+
+/* 
     * Modal
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 
 */
-.container[modon] {
+[modon] {
     filter: blur(3px);
     transition:.15s;
 }

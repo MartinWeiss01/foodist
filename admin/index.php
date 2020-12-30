@@ -5,8 +5,10 @@
     $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
     if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
     $conn -> set_charset("utf8");
-    $result_cities = $conn->query("SELECT * FROM cities ORDER BY Name ASC");
-    $result_cuisines = $conn->query("SELECT * FROM cuisines ORDER BY Name ASC");
+    $citiesList = $conn->query("SELECT * FROM cities");
+    $cuisinesList = $conn->query("SELECT * FROM cuisines");
+    $citiesString = "let citiesList = -1;";
+    $cuisinesString = "let cuisinesList = -1;";
 ?>
 
 <!DOCTYPE html>
@@ -39,13 +41,45 @@
     </head>
 
     <body>
-        <div class="container">
-            <nav><img src="https://foodist.store/images/brand/logo.svg" style="width: 6em;"></nav>
+        <div id="root" class="container">
+            <nav>
+                <img src="https://foodist.store/images/brand/logo.svg" style="width: 6em;">
+                <div class="account" data-role="button">
+                    <img class="accountImage" src="/images/users/f23w51x696q1x5196.jpg">
+                    <span class="accountDetails">Martin Weiss <icon>arrow_drop_down</icon></span>
+                </div>
+            </nav>
             <main>
-            <p id="THEMEINFO"></p>
-                <div class="companies">
+                <div class="lineContentButton">
+                    <div class="contentAddButton" data-role="button" onclick="addNewCompany()">
+                        <icon>add</icon>
+                        <span>Nová firma</span>
+                    </div>
+                </div>
+
+                <div id="citiesBox" class="cardList">
+                    <div class="cardItem" onclick="addNewCity()" data-role="button"><icon>add</icon><span class="cardTitle">Město</span></div>
+                    <?php
+                        if($citiesList->num_rows > 0) {
+                            $citiesString = 'let citiesList = `<select name="cities" id="cities">';
+                            while($row = $citiesList->fetch_assoc()) {echo '<div class="cardItem" data-city-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cities/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>;';}
+                            $citiesString .= '</select>`;';
+                        }
+                    ?>
+                </div>
+                <div id="cuisinesBox" class="cardList">
+                    <div class="cardItem" onclick="addNewCuisine()" data-role="button"><icon>add</icon><span class="cardTitle">Kuchyně</span></div>
+                    <?php
+                        if($cuisinesList->num_rows > 0) {
+                            $cuisinesString = 'let cuisinesList = `<div id="checkboxesCuisines" class="cuisines-checkboxes">';
+                            while($row = $cuisinesList->fetch_assoc()) {echo '<div class="cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cuisines/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$cuisinesString .= '<input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'"><label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>';}
+                            $cuisinesString .= '</div>`;';
+                        }
+                    ?>
+                </div>
+
+                <div id="companiesList" class="companies">
                 <?php
-                    $i = 0;
                     $result = $conn->query("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
                     if($result->num_rows > 0) {
                         $lastID = 0;
@@ -60,61 +94,21 @@
                                     }
                                 }
                                 $lastID = $row['ID'];
-                                $i++;
-                                echo '<div class="company" id="company-'.$i.'" data-company-id="'.$row['ID'].'" data-company-name="'.$row['Name'].'" data-company-in="'.$row['IdentificationNumber'].'" data-company-mail="'.$row['Email'].'"><div class="company-header table-record"><span class="companyheader">'.$row['Name'].'</span><div class="companycontrollers"><icon class="material-icons">add_circle_outline</icon><icon class="material-icons">edit</icon><icon class="material-icons" onclick="test()">delete_outline</icon>';
+                                echo '<div class="company" id="company-'.$row['ID'].'" data-company-id="'.$row['ID'].'" data-company-name="'.$row['Name'].'" data-company-in="'.$row['IdentificationNumber'].'" data-company-mail="'.$row['Email'].'"><div class="company-header table-record"><span class="companyheader">'.$row['Name'].'</span><div class="companycontrollers"><icon data-tooltip="Přidat novou restauraci pro tuto společnost" class="material-icons add" onclick="addNewRestaurant('.$row['ID'].')">add_circle_outline</icon><icon class="material-icons edit" onclick="modalMode_Editing('.$row['ID'].', true)">edit</icon><icon class="material-icons delete" onclick="removeRecord('.$row['ID'].', true)">delete_outline</icon>';
 
                                 if($row['rID'] != NULL) {
-                                    echo '<icon onclick="collapse(this, '.$i.')" class="material-icons">expand_more</icon></div></div><div id="companyRestaurantsList-'.$i.'" class="companyRestaurantsList">';
+                                    echo '<icon class="material-icons collapse" data-action="collapse" onclick="collapseElement(this, '.$row['ID'].')">expand_more</icon></div></div><div id="companyRestaurantsList-'.$row['ID'].'" class="companyRestaurantsList">';
                                     $lastList = true;
                                 } else echo '</div></div>';
                             }
-                            if($row['rID'] != NULL) echo '<div class="companysub table-record" id="company-restaurant-'.$i.'" data-restaurant-id="'.$row['rID'].'" data-restaurant-name="'.$row['rName'].'" data-restaurant-address="'.$row['Address'].'" data-restaurant-city="'.$row['City'].'"><span>'.$row['rName'].'</span><div class="companycontrollers"><icon class="material-icons">edit</icon><icon class="material-icons">delete_outline</icon></div></div>';
+                            if($row['rID'] != NULL) echo '<div class="companysub table-record" id="company-restaurant-'.$row['rID'].'" data-restaurant-id="'.$row['rID'].'" data-restaurant-name="'.$row['rName'].'" data-restaurant-address="'.$row['Address'].'" data-restaurant-city="'.$row['City'].'"><span id="restaurant-nameblock-'.$row['rID'].'">'.$row['rName'].'</span><div class="companycontrollers"><icon class="material-icons edit" onclick="modalMode_Editing('.$row['rID'].')">edit</icon><icon class="material-icons delete" onclick="removeRecord('.$row['rID'].')">delete_outline</icon></div></div>';
                         }
                         echo '</div>';
                     }
                     echo '</div>';
                 ?>
                 </div>
-
-                <!------------------------------------------------>
-
-                <div class="records-list">
-                <?php
-                    $i = 1;
-                    $result = $conn->query("SELECT * FROM restaurants");
-                    if($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            echo '<div id="record-'.$i.'" data-restaurant-id="'.$row['ID'].'" class="record">
-                                <span id="restaurant-'.$i.'" class="restaurant-name">'.$row['Name'].'</span>
-                                <div class="record-sub">
-                                    <icon id="restaurant-edit-'.$i.'" onclick="modalMode_Editing('.$i.')" class="material-icons edit">edit</icon>
-                                    <icon id="restaurant-delete-'.$i.'" onclick="modalMode_Deleting('.$i.')" class="material-icons delete">delete_outline</icon>
-                                </div>
-                            </div>';
-                            $i++;
-                        }
-                    }
-                ?>
-                </div>
             </main>
-            <div id="sidebar">
-                <div id="add-new-account" class="add-record">
-                    <icon>add</icon>
-                    <span>Nová firma</span>
-                </div>
-                <div id="add-new-record" class="add-record">
-                    <icon>add</icon>
-                    <span>Nová restaurace</span>
-                </div>
-                <div id="add-new-cuisine" class="add-record">
-                    <icon>add</icon>
-                    <span>Nová kuchyně</span>
-                </div>
-                <div id="add-new-city" class="add-record">
-                    <icon>add</icon>
-                    <span>Nové město</span>
-                </div>
-            </div>
             <footer>Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright 2020</footer>
         </div>
 
@@ -129,9 +123,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="toastBox">
+            <div id="toast" class="toast"></div>
+        </div>
     </body>
 
     <script>
+        <?php
+            echo $citiesString."\n".$cuisinesString;
+        ?>
+
+        const DEBUG = true,
+            citiesBox = document.getElementById("citiesBox"),
+            cuisinesBox = document.getElementById("cuisinesBox"),
+            overlayModalBox = document.getElementById("overlayModal"),
+            modalContentBox = document.getElementById("modalContentBox"),
+            modalConfirmInput = document.getElementById("modalConfirm"),
+            modalCancelInput = document.getElementById("modalCancel"),
+            toastElement = document.getElementById("toast");
+
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) changeTheme(1, false);
         else changeTheme(0, false);
 
@@ -142,71 +153,53 @@
         function changeTheme(j = -1, animations = true) {
             let doc = document.documentElement;
             if(animations) doc.classList.add("theme-transition");
-            if((j === 0) || (doc.hasAttribute("dark"))) {doc.removeAttribute("dark");document.getElementById("THEMEINFO").innerText = "nowLight";}
-            else {doc.setAttribute("dark", "");document.getElementById("THEMEINFO").innerText = "nowDark";}
-            if(animations) window.setTimeout(function () {doc.classList.remove("theme-transition")}, 1000);
+            if((j === 0) || (doc.hasAttribute("dark"))) {doc.removeAttribute("dark");showToast("[!] Switched to Light Theme.");}
+            else {doc.setAttribute("dark", "");showToast("[!] Switched to Dark Theme.");}
+            if(animations) window.setTimeout(() => {doc.classList.remove("theme-transition")}, 1000);
         }
 
-        <?php
-            if($result_cities->num_rows > 0) {
-                $x = '<select name="cities" id="cities">';
-                while($row = $result_cities->fetch_assoc()) {
-                    $x .= "<option value=\"".$row['ID']."\">".$row['Name']."</option>";
-                }
-                $x .= '</select>';
-                echo "const citiesList = '$x';";
-            } else echo "const citiesList = -1;";
+        document.addEventListener("DOMContentLoaded", () => {
+            window.setTimeout(() => {DEBUG ? showToast("[!] Webová aplikace se nachází v testovacím režimu!") : ""}, 860);
+        });
 
-            if($result_cuisines->num_rows > 0) {
-                $x = '<div id="checkboxesCuisines" class="cuisines-checkboxes">';
-                while($row = $result_cuisines->fetch_assoc()) {
-                    $x .= "<input type=\"checkbox\" name=\"cuisineOption".$row['ID']."\" value=\"".$row['ID']."\"><label for=\"cuisineOption".$row['ID']."\">".$row['Name']."</label>";
-                }
-                $x .= '</div>';
-                echo "\nconst cuisinesList = '$x';";
-            } else echo "\nconst cuisinesList = -1;";
+        document.addEventListener("keydown", function(e){
+            if(overlayModalBox.classList.contains("active")) {
+                if(e.key == "Escape") hideModal();
+                else if(e.key == "Enter") modalConfirmInput.click();
+            }
+        });
 
-            echo "\nlet newID = 1+".$i.";";
-        ?>
-
-        const DEBUG = false,
-            overlayModalBox = document.getElementById("overlayModal"),
-            modalContentBox = document.getElementById("modalContentBox"),
-            modalConfirmInput = document.getElementById("modalConfirm"),
-            modalCancelInput = document.getElementById("modalCancel");
-
+        modalCancelInput.addEventListener("click", hideModal);
         modalConfirmInput.addEventListener("click", function(){
             if(overlayModalBox.dataset.mode == 1) {
-                let recordName = document.getElementById("insertRecordName").value;
-                let cuisines = document.getElementById("checkboxesCuisines");
-                if(recordName != "") {
-                    let chosencity = document.getElementById("cities").value;
-                    let chosenaccount = document.getElementById("accounts").value;
-                    let address = document.getElementById("insertRecordAddress").value;
-                    let cuis = "";
+                let companyID = overlayModalBox.dataset.obj,
+                    recordName = document.getElementById("insertRecordName").value,
+                    chosencity = document.getElementById("cities").value,
+                    address = document.getElementById("insertRecordAddress").value,
+                    cuisines = document.getElementById("checkboxesCuisines"),
+                    cuis = "";
                     for(let i = 0; i < cuisines.getElementsByTagName("input").length; i++) if(cuisines.getElementsByTagName("input")[i].checked) cuis += `${i},`;
                     cuis = cuis.slice(0, -1);
 
-                    if(DEBUG) addNewRecord(newID*200, recordName);
-                    else {
-                        fetch("controllers/addrecord.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `city=${chosencity}&account=${chosenaccount}&name=${recordName}&address=${address}&cuisines=${cuis}`})
+                if(recordName != "") { //CHECK THIS -> THIS DOES NOT DO ANYTHING, maybe add something like warning outline all around the input
+                    if(!DEBUG) {
+                        fetch("../controllers/addNewRestaurant.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: `city=${chosencity}&account=${companyID}&name=${recordName}&address=${address}&cuisines=${cuis}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
                         .then(data => {
-                            if(parseInt(data) > 0) addNewRecord(parseInt(data), recordName);
+                            if(parseInt(data) > 0) appendNewRestaurant(companyID, parseInt(data), recordName, address, chosencity);
                         })
                         .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                    }
+                    } else appendNewRestaurant(companyID, (3860+(Math.floor(Math.random()*Math.floor(1111)))), recordName, address, chosencity);
                 }
             } else if(overlayModalBox.dataset.mode == 2) {
-                let currentRecord = document.getElementById("record-"+overlayModalBox.dataset.obj);
-                let restaurantID = currentRecord.dataset.restaurantId;
-
                 let food = [],
                     toDelete = [],
                     rNameChanged = false,
+                    restaurantID = overlayModalBox.dataset.obj,
                     currentName = document.getElementById("restaurantName");
 
                 if(document.getElementById("foodlist-editable") !== null) {
@@ -222,56 +215,59 @@
                 }
 
                 if(currentName.hasAttribute("changed")) {
-                    document.getElementById("restaurant-"+overlayModalBox.dataset.obj).innerText = document.getElementById("restaurantName").innerText;
+                    document.getElementById("company-restaurant-"+restaurantID).dataset.restaurantName = document.getElementById("restaurantName").innerText;
+                    document.getElementById("restaurant-nameblock-"+restaurantID).innerText = document.getElementById("restaurantName").innerText;
                     rNameChanged = true;
                 }
-                let update = {restaurantName: currentName.innerText, nameChanged: rNameChanged, food};
-                let finalJSON = JSON.stringify({update, toDelete});
+                let update = {restaurantName: currentName.innerText, nameChanged: rNameChanged, food},
+                    finalJSON = JSON.stringify({update, toDelete});
 
                 if(!DEBUG) {
                     if(food.length !== 0 || toDelete.length !== 0 || rNameChanged) {
-                        fetch("controllers/editrecords.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${restaurantID}&data=${encodeURIComponent(finalJSON)}`})
+                        fetch("../controllers/updateFoodlist.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${restaurantID}&data=${encodeURIComponent(finalJSON)}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
                         .then(data => {console.log(`[!] Dunno? 0xFD${data}.`);})
-                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě. | ${err} | ${finalJSON}`);});
+                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě. | ${err} | ${finalJSON}`);}); //CHECK THIS
                     } 
                 } else console.log(finalJSON);
             } else if(overlayModalBox.dataset.mode == 3) {
-                let currentRecord = document.getElementById("record-"+overlayModalBox.dataset.obj);
-                let rID = currentRecord.dataset.restaurantId;
+                let rID = overlayModalBox.dataset.obj,
+                    recordElement = document.getElementById("company-restaurant-"+rID);
 
-                if(DEBUG) deleteRecord(currentRecord);
-                else {
-                    fetch("controllers/removerecord.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}`})
+                if(!DEBUG) {
+                    fetch("../controllers/removeRestaurant.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}`})
                     .then(response => {
                         if(response.ok) return response.json();
                         return Promise.reject(response);
                     })
                     .then(data => {
-                        if(parseInt(data) == 1) deleteRecord(currentRecord);
-                        else console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
+                        if(parseInt(data) == 1) removeRecordFromList(recordElement);
+                        else console.log(`[!] Při odebírání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
                     })
                     .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                }
+                } else removeRecordFromList(recordElement);
             } else if(overlayModalBox.dataset.mode == 4) {
-                let accountName = document.getElementById("insertAccountName").value;
-                let accountIN = document.getElementById("insertAccountIN").value;
-                let accountEmail = document.getElementById("insertAccountEmail").value;
-                let accountPwd = document.getElementById("insertAccountPassword").value;
+                let accountName = document.getElementById("insertAccountName").value,
+                    accountIN = document.getElementById("insertAccountIN").value,
+                    accountEmail = document.getElementById("insertAccountEmail").value,
+                    accountPwd = document.getElementById("insertAccountPassword").value;
                 
-                if(accountName != "" && accountIN != "" && accountEmail != "" && accountPwd != "") {
+                if(accountName != "" && accountIN != "" && accountEmail != "" && accountPwd != "") { //CHECK THIS -> THIS DOES NOT DO ANYTHING, maybe add something like warning outline all around the input
                     if(!DEBUG) {
-                        fetch("controllers/addaccount.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${accountName}&accountin=${accountIN}&email=${accountEmail}&pwd=${accountPwd}`})
+                        fetch("../controllers/addNewCompany.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${accountName}&accountin=${accountIN}&email=${accountEmail}&pwd=${accountPwd}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
+                        .then(data => {
+                            if(parseInt(data) <= 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`); //CHECK THIS -> if returned value is ok
+                            else appendNewCompany(parseInt(data), accountName, accountIN, accountEmail);
+                        })
                         .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                    } else console.log("[!] Webová aplikace se nachází v debuging módu, účet nebyl přidán.");
+                    } else appendNewCompany((3860+(Math.floor(Math.random()*Math.floor(1111)))), accountName, accountIN, accountEmail);
                 }
             } else if(overlayModalBox.dataset.mode == 5) {
                 let cuisineName = document.getElementById("inserCuisineName").value;
@@ -279,7 +275,7 @@
                 
                 if(cuisineName != "" && cuisineIcon != "") {
                     if(!DEBUG) {
-                        fetch("controllers/addcuisine.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cuisineName}&icon=${cuisineIcon}`})
+                        fetch("../controllers/addCuisine.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cuisineName}&icon=${cuisineIcon}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
@@ -287,13 +283,19 @@
                         .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
                         .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                     }
+
+                    let newRecord = document.createElement("div");
+                    newRecord.classList.add("cardItem");
+                    newRecord.setAttribute("data-cuisine-id", (3860+(Math.floor(Math.random()*Math.floor(1111)))));
+                    newRecord.innerText = cuisineName;
+                    document.getElementById("cuisinesBox").appendChild(newRecord);
                 }
             } else if(overlayModalBox.dataset.mode == 6) {
                 let cityName = document.getElementById("inserCityName").value;
                 
                 if(cityName != "") {
                     if(!DEBUG) {
-                        fetch("controllers/addcity.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cityName}`})
+                        fetch("../controllers/addCity.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cityName}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
@@ -301,78 +303,179 @@
                         .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
                         .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
                     }
+
+                    let newRecord = document.createElement("div");
+                    newRecord.classList.add("cardItem");
+                    newRecord.setAttribute("data-city-id", (3860+(Math.floor(Math.random()*Math.floor(1111)))));
+                    newRecord.innerText = cityName;
+                    document.getElementById("citiesBox").appendChild(newRecord);
                 }
+            } else if(overlayModalBox.dataset.mode == 7) {
+                let cID = overlayModalBox.dataset.obj,
+                    recordElement = document.getElementById("company-"+cID);
+
+                if(!DEBUG) {
+                    fetch("../controllers/removeRestaurant.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `cid=${cID}`})
+                    .then(response => {
+                        if(response.ok) return response.json();
+                        return Promise.reject(response);
+                    })
+                    .then(data => {
+                        if(parseInt(data) == 1) removeRecordFromList(recordElement, true);
+                        else console.log(`[!] Při odebírání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
+                    })
+                    .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
+                } else removeRecordFromList(recordElement, true);
             }
             hideModal();
         });
 
-        modalCancelInput.addEventListener("click", hideModal);
-        document.addEventListener("keydown", function(e){
-            if(overlayModalBox.classList.contains("active")) {
-                if(e.key == "Escape") hideModal();
-            }
-        });
-
-        document.getElementById("add-new-record").addEventListener("click", function() {
-            fetch("controllers/getavailableaccounts.php", {method: 'POST', credentials: 'same-origin'})
-            .then(response => {
-                if(response.ok) return response.json();
-                return Promise.reject(response);
-            })
-            .then(data => {
-                if(parseInt(data) == -2) alert("[!] Neexistují žádné společnosti.");
-                else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data}.`);
-                else {  
-                    let content = '<h1>Přidat restauraci</h1><input id="insertRecordName" placeholder="Název restaurace"><input id="insertRecordAddress" placeholder="Ulice">';
-                    let accountsList = '<select name="accounts" id="accounts">';
-                    for(let i = 0; i < data.length; i++) accountsList += `<option value="${data[i][0]}">${data[i][1]}</option>`;
-                    accountsList += '</select>';
-
-                    content += accountsList;
-                    if(citiesList != -1) content += citiesList;
-                    if(cuisinesList != -1) content += cuisinesList;
-                    showModal(content, -1, "Přidat", 1);
-                }
-            })
-            .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-        });
-
-        document.getElementById("add-new-account").addEventListener("click", function() {
-            let content = '<h1>Přidat novou firmu</h1><input id="insertAccountName" placeholder="Název účtu"><input id="insertAccountIN" placeholder="IČO společnosti"><input id="insertAccountEmail" placeholder="E-mailová adresa"><input type="password" id="insertAccountPassword" placeholder="Heslo">';
-            showModal(content, -1, "Přidat", 4);
-        });
-        document.getElementById("add-new-cuisine").addEventListener("click", function() {
-            let content = '<h1>Přidat novou kuchyni</h1><input id="inserCuisineName" placeholder="Název kuchyně"><input id="insertCuisineIcon" placeholder="Jméno ikonky">';
-            showModal(content, -1, "Přidat", 5);
-        });
-        document.getElementById("add-new-city").addEventListener("click", function() {
+        
+        function addNewCity() {
             let content = '<h1>Přidat nové město</h1><input id="inserCityName" placeholder="Název města">';
             showModal(content, -1, "Přidat", 6);
-        });
+        }
 
-        function modalMode_Editing(j) {
-            let rID = document.getElementById("record-"+j).dataset.restaurantId;
+        function addNewCuisine() {
+            let content = '<h1>Přidat novou kuchyni</h1><input id="inserCuisineName" placeholder="Název kuchyně"><input id="insertCuisineIcon" placeholder="Jméno ikonky">';
+            showModal(content, -1, "Přidat", 5);
+        }
 
-            fetch("controllers/getfoodlist.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}`})
-            .then(response => {
-                if(response.ok) return response.json();
-                return Promise.reject(response);
-            })
-            .then(data => {
-                let rName = document.getElementById("restaurant-"+j).innerText;
-                let content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
-                
-                if(parseInt(data) == -2) console.log(`[!] Restaurade ${rID} nemá žádné jídlo.`);
-                else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
-                else {
-                    let foodList = '<div id="foodlist-editable" class="foodlist">';
-                    for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
-                    foodList += '</div>';
-                    content += foodList;
+        function addNewCompany() {
+            let content = '<h1>Přidat novou firmu</h1><input id="insertAccountName" placeholder="Název účtu"><input id="insertAccountIN" placeholder="IČO společnosti"><input id="insertAccountEmail" placeholder="E-mailová adresa"><input type="password" id="insertAccountPassword" placeholder="Heslo">';
+            showModal(content, -1, "Přidat", 4);
+        }
+
+        function appendNewCompany(companyID, companyName, companyIN, companyEmailAddress) {
+            let newRecord = document.createElement("div");
+            newRecord.classList.add("company");
+            newRecord.setAttribute("id", `company-${companyID}`);
+            newRecord.setAttribute("data-company-id", companyID);
+            newRecord.setAttribute("data-company-name", companyName);
+            newRecord.setAttribute("data-company-in", companyIN);
+            newRecord.setAttribute("data-company-mail", companyEmailAddress);
+            newRecord.innerHTML = `<div class="company-header table-record"><span class="companyheader">${companyName}</span><div class="companycontrollers"><icon data-tooltip="Přidat novou restauraci pro tuto společnost" class="material-icons add" onclick="addNewRestaurant(${companyID})">add_circle_outline</icon><icon class="material-icons edit" onclick="modalMode_Editing(${companyID}, true)">edit</icon><icon class="material-icons delete" onclick="removeRecord(${companyID}, true)">delete_outline</icon></div></div>`;
+            document.getElementById("companiesList").appendChild(newRecord);
+        }
+
+        function addNewRestaurant(companyID) {
+            let content = '<h1>Přidat restauraci</h1><input id="insertRecordName" placeholder="Název restaurace"><input id="insertRecordAddress" placeholder="Ulice">';
+            if(citiesList != -1) content += citiesList;
+            if(cuisinesList != -1) content += cuisinesList;
+            showModal(content, companyID, "Přidat", 1);
+        }
+
+        function appendNewRestaurant(companyID, rID, rName, rAddress, rCity) {
+            let newRecord = document.createElement("div");
+            newRecord.classList.add("companysub", "table-record");
+            newRecord.setAttribute("id", `company-restaurant-${rID}`);
+            newRecord.setAttribute("data-restaurant-id", rID);
+            newRecord.setAttribute("data-restaurant-name", rName);
+            newRecord.setAttribute("data-restaurant-address", rAddress);
+            newRecord.setAttribute("data-restaurant-city", rCity);
+            newRecord.innerHTML = `<span id="restaurant-nameblock-${rID}">${rName}</span><div class="companycontrollers"><icon class="material-icons edit" onclick="modalMode_Editing(${rID})">edit</icon><icon class="material-icons delete" onclick="removeRecord(${rID})">delete_outline</icon></div>`;
+            
+            if(!document.getElementById("companyRestaurantsList-"+companyID)) {
+                let newList = document.createElement("div");
+                newList.classList.add("companyRestaurantsList");
+                newList.setAttribute("id", `companyRestaurantsList-${companyID}`);
+                document.getElementById("company-"+companyID).appendChild(newList);
+                document.querySelector(`#company-${companyID} .companycontrollers`).innerHTML += `<icon class="material-icons collapse" data-action="collapse" onclick="collapseElement(this, ${companyID})">expand_more</icon>`;
+            }
+            document.getElementById("companyRestaurantsList-"+companyID).appendChild(newRecord);
+            document.getElementById("companyRestaurantsList-"+companyID).style.maxHeight = document.getElementById("companyRestaurantsList-"+companyID).scrollHeight + "px";
+        }
+
+        function removeRecord(recordID, isRecordCompany = false) {
+            if(!isRecordCompany) {
+                let content = `<h1>Smazat restauraci</h1>${document.getElementById("company-restaurant-"+recordID).dataset.restaurantName}`;
+                showModal(content, recordID, "Potvrdit", 3);
+            } else {
+                let content = `<h1>Smazat společnost</h1>${document.getElementById("company-"+recordID).dataset.companyName}`;
+                showModal(content, recordID, "Potvrdit", 7);
+            }
+        }
+
+        function removeRecordFromList(element, isRecordCompany = false) {
+            if(!isRecordCompany) {
+                if(element.parentElement.childElementCount === 1) {
+                    let companyID = element.parentElement.parentElement.dataset.companyId;
+                    document.querySelector(`#company-${companyID} .companycontrollers icon[data-action="collapse"]`).remove();
+                    element.parentElement.remove();
+                    return;
                 }
-                showModal(content, j, "Uložit", 2);
-            })
-            .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
+            }
+            element.remove();
+        }
+
+        function showModal(modalContent, objectID, confirmButtonText, modalMode) {
+            modalContentBox.innerHTML = modalContent;
+            modalConfirmInput.innerText = confirmButtonText;
+            overlayModalBox.setAttribute('data-obj', objectID);
+            overlayModalBox.setAttribute('data-mode', modalMode);
+            overlayModalBox.classList.add("active");
+            document.getElementById("root").setAttribute("modon", "");
+        }
+
+        function hideModal() {
+            modalContentBox.innerHTML = "";
+            modalConfirmInput.innerHTML = "";
+            overlayModalBox.removeAttribute('data-obj');
+            overlayModalBox.removeAttribute('data-mode');
+            overlayModalBox.classList.remove("active");
+            document.getElementById("root").removeAttribute("modon");
+        }
+
+        function collapseElement(collapsibleElement, companyID) {
+            let list = document.getElementById("companyRestaurantsList-"+companyID);
+            collapsibleElement.classList.toggle("active");
+            if(list.getAttribute("collapsed") !== null) {
+                list.removeAttribute("collapsed");
+                list.style.maxHeight = null;
+                list.style.overflow = "hidden";
+            } else {
+                list.setAttribute("collapsed", "");
+                list.style.maxHeight = list.scrollHeight + "px";
+                list.style.removeProperty("overflow");
+            }
+        }
+
+        function showToast(message) {
+            toastElement.innerText = message;
+            toastElement.parentElement.setAttribute("active", "");
+            window.setTimeout(() => {
+                toastElement.innerText = "";
+                toastElement.parentElement.removeAttribute("active");
+            }, 2800);
+        }
+        /* ----------------------- renewed ------------------------- */
+        function modalMode_Editing(j, company = false) {
+            if(!company) {
+                fetch("../controllers/getFoodList.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${j}`})
+                .then(response => {
+                    if(response.ok) return response.json();
+                    return Promise.reject(response);
+                })
+                .then(data => {
+                    let rName = document.getElementById("company-restaurant-"+j).dataset.restaurantName,
+                        content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
+                    
+                    if(parseInt(data) == -2) console.log(`[!] Restaurade ${rID} nemá žádné jídlo.`);
+                    else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
+                    else {
+                        let foodList = '<div id="foodlist-editable" class="foodlist">';
+                        for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
+                        foodList += '</div>';
+                        content += foodList;
+                    }
+                    showModal(content, j, "Uložit", 2);
+                })
+                .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
+            } else {
+                //CHECK THIS
+                //modal for editing whole company
+                showToast("Not implemented yet");
+            }
         }
 
         function foodrecordChanging(e) {
@@ -395,57 +498,6 @@
             } else {
                 e.parentElement.parentElement.setAttribute("delete", "");
                 e.setAttribute("changed", "");
-            }
-        }
-
-        function modalMode_Deleting(j) {
-            let content = "<h1>Smazat restauraci</h1>"+document.getElementById("restaurant-"+j).innerText;
-            showModal(content, j, "Potvrdit", 3);
-        }
-
-        function showModal(i, j, k, l) {
-            modalContentBox.innerHTML = i;
-            modalConfirmInput.innerText = k;
-            overlayModalBox.setAttribute('data-obj', j);
-            overlayModalBox.setAttribute('data-mode', l);
-            overlayModalBox.classList.add("active");
-            document.getElementsByClassName("container")[0].setAttribute("modon", "");
-        }
-
-        function hideModal() {
-            modalContentBox.innerHTML = "";
-            modalConfirmInput.innerHTML = "";
-            overlayModalBox.removeAttribute('data-obj');
-            overlayModalBox.removeAttribute('data-mode');
-            overlayModalBox.classList.remove("active");
-            document.getElementsByClassName("container")[0].removeAttribute("modon");
-        }
-
-        function addNewRecord(rID, rName) {
-            let newRecord = document.createElement("div");
-            newRecord.setAttribute("id", "record-"+newID);
-            newRecord.setAttribute("data-restaurant-id", rID);
-            newRecord.classList.add("record");
-            newRecord.innerHTML = `<span id="restaurant-${newID}" class="restaurant-name">${rName}</span><div class="record-sub"><icon id="restaurant-edit-${newID}" onclick="modalMode_Editing(${newID})" class="material-icons edit">edit</icon><icon id="restaurant-delete-${newID}" onclick="modalMode_Deleting(${newID})" class="material-icons delete">delete_outline</icon></div>`;
-            document.getElementsByClassName("records-list")[0].appendChild(newRecord);
-            newID++;
-        }
-
-        function deleteRecord(e) {
-            e.parentNode.removeChild(e);
-        }
-
-        function collapse(k, e) {
-            let list = document.getElementById("companyRestaurantsList-"+e);
-            k.classList.toggle("active");
-            if(list.getAttribute("collapsed") != null) {
-                list.removeAttribute("collapsed");
-                list.style.maxHeight = null;
-                list.style.overflow = "hidden";
-            } else {
-                list.setAttribute("collapsed", "");
-                list.style.maxHeight = list.scrollHeight + "px";
-                list.style.removeProperty("overflow");
             }
         }
     </script>
