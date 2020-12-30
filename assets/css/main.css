@@ -1,5 +1,4 @@
 /* main.css © Copyright 2020 Martin Weiss (martinweiss.cz) */
-
 html {
     --main-col: #FFC400;
     --alt-col: #d91c1c;
@@ -16,20 +15,25 @@ html {
 
     --success: #4CAF50;
     --fail: #D91C1C;
+    --delete-alt: #d10000; /* not used */
 
     /* Gen2.0 */
     /* Dashboard */
-    --main-col: #03A9F4;
-
     --background-default: hsl(0, 0%, 100%);
     --color-primary: hsl(0, 0%, 10%);
     --border-primary: hsla(0, 0%, 88%, 0.58);
     --table-striped: hsla(0, 0%, 98%, 0.58);
     --table-hover: hsl(0, 0%, 96%);
-    
     --color-secondary: hsla(0, 0%, 10%, 0.18);
+    --scrollbar-thumb: hsla(0, 0%, 54%, 0.31);
+    --account-background: hsl(0, 0%, 97%);
+    
+    --add: hsl(200, 100%, 49%);
+    --edit: hsl(39, 96%, 50%);
+    --delete: hsl(0, 77%, 48%);
+    --collapse: hsl(163, 100%, 33%);
+    
     --nav-shadow: hsla(0, 0%, 0%, 0.129);
-    --scrollbar-thumb: hsla(0, 0%, 0%, 0.31);
 }
 
 html[dark] {
@@ -37,13 +41,19 @@ html[dark] {
     --color-primary: hsl(0, 0%, 100%);
     --border-primary: hsl(215, 15%, 15%);
     --table-striped: hsl(216, 25%, 8%);
-    --table-hover: hsl(215, 15%, 15%);
+    --table-hover: hsl(200, 10%, 6%);
+    --color-secondary: hsla(0, 0%, 50%, 0.15);
+    --scrollbar-thumb: hsla(0, 0%, 0%, 0.31);
+    --account-background: hsla(0, 0%, 44%, 0.161);
 }
 
 html.theme-transition, html.theme-transition *, html.theme-transition *:before, html.theme-transition *:after {
   transition: all 750ms !important;
   transition-delay: 0 !important;
 }
+
+::-webkit-scrollbar {width:7px;height:7px;}
+::-webkit-scrollbar-thumb {background-color:var(--scrollbar-thumb);border-radius:50rem;}
 
 *{font-family:'Open Sans',sans-serif}
 @font-face{font-family:'Open Sans';src:url(../fonts/OpenSansBold.woff2) format("woff2");font-weight:700;font-style:normal}@font-face{font-family:'Open Sans';src:url(../fonts/OpenSansSemiBold.woff2) format("woff2");font-weight:600;font-style:normal}@font-face{font-family:'Open Sans';src:url(../fonts/OpenSansRegular.woff2) format("woff2");font-weight:400;font-style:normal}
