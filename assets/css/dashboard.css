@@ -67,7 +67,7 @@ footer {
     border-radius: 3px;
     transition: .3s;
 }
-.account:hover {background: var(--account-background);transition: .3s;}
+.account:hover, .menuParent[active] > .account {background: var(--account-background);transition: .3s;}
 
 .account > span {font-size:14px;}
 .accountImage {
@@ -124,6 +124,63 @@ footer {
 .cardItem[data-role="button"]:hover {border-color: var(--sex-male);transition: .15s;}
 .cardItem[data-role="button"]:hover > icon,
 .cardItem[data-role="button"]:hover > .cardTitle {color: var(--sex-male);transition: .15s;}
+
+/* 
+    * Menu | Dropdown Menu
+    * © Copyright 2020 Martin Weiss (martinweiss.cz) 
+*/
+
+.menuParent {position: relative;}
+.menu {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    border-radius: 3px;
+    padding: 15px;
+    width: 225px;
+    background: hsl(0deg 0% 5%);
+}
+
+.menuParent[active] .menuItem span,
+.menuParent[active] .menuItem icon,
+.menuParent[active] .menu {
+    animation: menuIn 0.5s;
+    visibility: visible;
+}
+
+.menu,
+.menuItem span,
+.menuItem icon {
+    visibility: hidden;
+    animation: menuOut 0.5s;
+}
+
+.menuItem span {font-size: 14px;color:white;}
+.menuItem icon {font-size: 16px;color:white;}
+
+.menuItem {
+    background: #1a1a1a;
+    padding: 7px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+.menuDivider:not(first-child){margin-top:0;}
+.menuDivider {
+    width: 100%;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ffffff26;
+}
+
+@keyframes menuIn {
+    from {opacity:0;top:0;}
+    to {opacity:1;top: 52px;}
+}
+
+@keyframes menuOut {
+    from {opacity:1;top: 52px;}
+    to {opacity:0;top: 0;}
+}
 
 /* 
     * Iconixer | Manager for all icons in AdminDOM
@@ -243,7 +300,6 @@ input:hover, input:focus, select:hover, select:focus {
 .food-record icon.restore:hover {color: var(--sex-male);}
 
 .food-record {
-    justify-content: space-between;
     margin-bottom: 7px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border-primary);
