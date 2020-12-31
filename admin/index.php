@@ -51,9 +51,19 @@
                         <span>Firma</span>
                     </div>
 
-                    <div class="flex row hcenter account" data-role="button">
-                        <img class="accountImage" src="/images/users/default.jpg">
-                        <span class="flex row hcenter accountDetails">Username <icon>arrow_drop_down</icon></span>
+                    <div class="menuParent">
+                        <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
+                            <img class="accountImage" src="/images/users/default.jpg">
+                            <span class="flex row hcenter accountDetails">Username <icon>arrow_drop_down</icon></span>
+                        </div>
+                        <div id="menubody" class="flex menu">
+                            <div class="flex row hcenter menuItem disabled"><icon>admin_panel_settings</icon><span>Administrace</span></div>
+                            <div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div>
+                            <hr class="menuDivider">
+                            <div class="flex row hcenter justify-content-between menuItem" onclick="changeTheme()"><div class="flex row hcenter"><icon theme-listener>light_mode</icon><span theme-listener>Světlý režim</span></div><div><icon>toggle_on</icon></div></div>
+                            <hr class="menuDivider">
+                            <div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -142,31 +152,36 @@
             modalContentBox = document.getElementById("modalContentBox"),
             modalConfirmInput = document.getElementById("modalConfirm"),
             modalCancelInput = document.getElementById("modalCancel"),
+            themeListenerIcon = document.querySelector("icon[theme-listener]"),
+            themeListenerSpan = document.querySelector("span[theme-listener]"),
             toastElement = document.getElementById("toast");
 
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) changeTheme(1, false);
-        else changeTheme(0, false);
+        window.matchMedia('(prefers-color-scheme: dark)').matches ? changeTheme(1, false) : changeTheme(0, false);
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => event.matches ? changeTheme(1) : changeTheme(0));
 
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if(event.matches) changeTheme(1);
-            else changeTheme(0);
-        });
         function changeTheme(j = -1, animations = true) {
             let doc = document.documentElement;
             if(animations) doc.classList.add("theme-transition");
-            if((j === 0) || (doc.hasAttribute("dark"))) {doc.removeAttribute("dark");showToast("[!] Switched to Light Theme.");}
-            else {doc.setAttribute("dark", "");showToast("[!] Switched to Dark Theme.");}
-            if(animations) window.setTimeout(() => {doc.classList.remove("theme-transition")}, 1000);
+            if((j === 0) || (doc.hasAttribute("dark"))) {
+                doc.removeAttribute("dark");
+                showToast("[!] Switched to Light Theme.");
+                themeListenerIcon.innerText = "dark_mode";
+                themeListenerSpan.innerText = "Tmavý režim";
+            } else {
+                doc.setAttribute("dark", "");
+                themeListenerIcon.innerText = "light_mode";
+                themeListenerSpan.innerText = "Světlý režim";
+                showToast("[!] Switched to Dark Theme.");
+            }
+            if(animations) window.setTimeout(() => doc.classList.remove("theme-transition"), 1000);
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            window.setTimeout(() => {DEBUG ? showToast("[!] Webová aplikace se nachází v testovacím režimu!") : ""}, 860);
-        });
+        document.addEventListener("DOMContentLoaded", () => {window.setTimeout(() => DEBUG ? showToast("[!] Webová aplikace se nachází v testovacím režimu!") : "", 860);});
 
-        document.addEventListener("keydown", function(e){
+        document.addEventListener("keydown", event => {
             if(overlayModalBox.classList.contains("active")) {
-                if(e.key == "Escape") hideModal();
-                else if(e.key == "Enter") modalConfirmInput.click();
+                if(event.key == "Escape") hideModal();
+                else if(event.key == "Enter") modalConfirmInput.click();
             }
         });
 
@@ -449,6 +464,18 @@
                 toastElement.parentElement.removeAttribute("active");
             }, 2800);
         }
+
+        function menuHandler(caller) {
+            caller.parentElement.hasAttribute("active") ? caller.parentElement.removeAttribute("active") : caller.parentElement.setAttribute("active", "");
+        }
+
+        function hideMenu(caller) {
+            document.getElementById("menubody").style.visibility = "visible";
+            caller.parentElement.removeAttribute("active");
+            window.setTimeout(() => {
+                document.getElementById("menubody").style.visibility = "hidden";
+            }, 300);
+        }
         /* ----------------------- renewed ------------------------- */
         function modalMode_Editing(j, company = false) {
             if(!company) {
@@ -465,7 +492,7 @@
                     else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
                     else {
                         let foodList = '<div id="foodlist-editable" class="foodlist">';
-                        for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="flex row hcenter food-record"><div class="flex"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="flex row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
+                        for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="flex row hcenter justify-content-between food-record"><div class="flex"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="flex row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
                         foodList += '</div>';
                         content += foodList;
                     }
