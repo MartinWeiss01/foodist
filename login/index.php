@@ -17,6 +17,8 @@
             $_SESSION["FoodistFirstName"] = $x["First_Name"];
             $_SESSION["FoodistLastName"] = $x["Last_Name"];
             $_SESSION["FoodistImage"] = $x["Image"];
+            if($x["Admin"] > 0) $_SESSION["FoodistAdmin"] = $x["Admin"];
+            
             $sql = "UPDATE users SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = ".$_SESSION["FoodistID"];
             $result = $conn->query($sql);
             $conn->close();
