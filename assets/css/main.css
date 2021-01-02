@@ -1,4 +1,14 @@
-/* main.css © Copyright 2020 Martin Weiss (martinweiss.cz) */
+/* main.css | © Copyright 2020 Martin Weiss (martinweiss.cz) */
+a{text-decoration:none}
+[data-role="button"]{cursor:pointer}
+.flex{display:flex;flex-direction:column}
+.flex.row{flex-direction:row!important}
+.flex.hcenter{align-items:center}
+.flex.vcenter{justify-content:center}
+.flex.justify-content-between{justify-content:space-between}
+.flex.justify-content-around{justify-content:space-around}
+.flex.wrap{flex-wrap:wrap}
+
 html {
     --main-col: #FFC400;
     --alt-col: #d91c1c;
@@ -27,12 +37,29 @@ html {
     --color-secondary: hsla(0, 0%, 10%, 0.18);
     --scrollbar-thumb: hsla(0, 0%, 54%, 0.31);
     --account-background: hsl(0, 0%, 97%);
+    --menu-background: hsl(0, 0%, 97%);
+    --menu-icon-background: hsl(0, 0%, 80%);
+    --menu-item-focus: hsla(0, 0%, 0%, 0.059);
+    --menu-divider: hsl(0, 0%, 89%);
     
+    --accept-color: #3AB54A;
+    --accept-color-focus: #FFFFFF;
+    --accept-bgcol: hsla(0, 0%, 100%, 0);
+    --accept-bgcol-focus: #3AB54A;
+    --accept-border: #3AB54A;
+    --accept-border-focus:  #3AB54A;
+    --decline-color: #1A1A1A;
+    --decline-color-focus: #FFFFFF;
+    --decline-bgcol: #FFFFFF;
+    --decline-bgcol-focus: #1A1A1A;
+    --decline-border: #1A1A1A;
+    --decline-border-focus: #1A1A1A;
+
     --add: hsl(200, 100%, 49%);
     --edit: hsl(39, 96%, 50%);
     --delete: hsl(0, 77%, 48%);
     --collapse: hsl(163, 100%, 33%);
-    
+
     --nav-shadow: hsla(0, 0%, 0%, 0.129);
 }
 
@@ -45,6 +72,23 @@ html[dark] {
     --color-secondary: hsla(0, 0%, 50%, 0.15);
     --scrollbar-thumb: hsla(0, 0%, 0%, 0.31);
     --account-background: hsla(0, 0%, 44%, 0.161);
+    --menu-background: hsl(0deg 0% 5%);
+    --menu-icon-background: hsl(0, 0%, 18%);
+    --menu-item-focus: hsl(0, 0%, 10%);
+    --menu-divider: hsla(0, 0%, 100%, 0.149);
+
+    --accept-color: hsl(127, 70%, 44%);
+    --accept-color-focus: hsl(0, 0%, 100%);
+    --accept-bgcol:  hsla(0, 0%, 100%, 0);
+    --accept-bgcol-focus: hsl(120, 100%, 12%);
+    --accept-border: hsl(127, 70%, 44%);
+    --accept-border-focus:  hsl(127, 70%, 44%);
+    --decline-color: hsl(0, 0%, 100%);
+    --decline-color-focus: hsl(0, 77%, 48%);
+    --decline-bgcol:  hsla(0, 0%, 100%, 0);
+    --decline-bgcol-focus: hsla(0, 0%, 0%, 0.388);
+    --decline-border: hsl(0, 0%, 15%);
+    --decline-border-focus: hsl(0, 77%, 48%);
 }
 
 html.theme-transition, html.theme-transition *, html.theme-transition *:before, html.theme-transition *:after {
