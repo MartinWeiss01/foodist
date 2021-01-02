@@ -52,12 +52,32 @@
                 <a href="https://foodist.store/"><img src="https://foodist.store/images/brand/logo.svg" style="width: 8em;"></a>
                 
                 <div class="nav-right">
-                    <div class="user">
-                        <?php
-                            if($_SESSION["FoodistEmail"]) echo "<a href='/logout'><span id='userprofile'>".$_SESSION["FoodistEmail"]." <icon>expand_more</icon></span>";
-                            else echo "<a href='/login'><span id='userprofile'>Přihlášení</span>";
-                            echo '<img src="https://foodist.store/images/avatars/'.$_SESSION["FoodistID"].'.jpg" onerror="this.src=\'https://foodist.store/images/avatars/default.svg\';"></a>';
-                        ?>
+                    <div class="menuParent">
+                        <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
+                            <img class="accountImage" src="/images/users/<?php echo $_SESSION["FoodistID"] ? $_SESSION["FoodistImage"] : "default.svg";?>">
+                            <span class="flex row hcenter accountDetails"><?php echo $_SESSION["FoodistID"] ? ($_SESSION["FoodistFirstName"]." ".$_SESSION["FoodistLastName"]) : "Přihlásit se";?> <icon>arrow_drop_down</icon></span>
+                        </div>
+                        <div id="menubody" class="flex menu">
+                            <?php if($_SESSION["FoodistAdmin"]) {?><a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a><?php } ?>
+                            <?php if($_SESSION["FoodistID"]) {?>
+                                <a href="#" onclick="showToast('Not Implemented Yet')"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a>
+                                <hr class="menuDivider">
+                            <?php } ?>
+                            <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()">
+                                <div class="flex row hcenter">
+                                    <icon>nights_stay</icon>
+                                    <span>Tmavý režim</span>
+                                </div>
+                                <div><icon theme-listener>toggle_on</icon></div>
+                            </div>
+                            <hr class="menuDivider">
+                            <?php if($_SESSION["FoodistID"]) {?>
+                                <a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>
+                            <?php } else { ?>
+                            <a href="/login"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Přihlásit se</span></div></a>
+                            <a href="/register"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Registrovat se</span></div></a>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <div class="cart" onclick="toggleShoppingCart()">
@@ -95,10 +115,56 @@
             <footer>Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
             <div id="shoppingCart" class="shopping-cart"><div id="containerCart" class="container-cart empty-cart">Váš nákupní košík je prázdný</div></div>
         </div>
+
+        <div class="toastBox">
+            <div id="toast" class="toast"></div>
+        </div>
     </body>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function(){checkCart();});
+        const themeListenerIcon = document.querySelector("icon[theme-listener]"),
+            toastElement = document.getElementById("toast");
+
+        window.matchMedia('(prefers-color-scheme: dark)').matches ? changeTheme(1, false) : changeTheme(0, false);
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => event.matches ? changeTheme(1) : changeTheme(0));
+
+        function changeTheme(j = -1, animations = true) {
+            let doc = document.documentElement;
+            if(animations) doc.classList.add("theme-transition");
+            if((j === 0) || (doc.hasAttribute("dark"))) {
+                doc.removeAttribute("dark");
+                showToast("[!] Switched to Light Theme.");
+                themeListenerIcon.innerText = "toggle_off";
+            } else {
+                doc.setAttribute("dark", "");
+                themeListenerIcon.innerText = "toggle_on";
+                showToast("[!] Switched to Dark Theme.");
+            }
+            if(animations) window.setTimeout(() => doc.classList.remove("theme-transition"), 1000);
+        }
+
+        function showToast(message) {
+            toastElement.innerText = message;
+            toastElement.parentElement.setAttribute("active", "");
+            window.setTimeout(() => {
+                toastElement.innerText = "";
+                toastElement.parentElement.removeAttribute("active");
+            }, 2800);
+        }
+
+        function menuHandler(caller) {
+            caller.parentElement.hasAttribute("active") ? caller.parentElement.removeAttribute("active") : caller.parentElement.setAttribute("active", "");
+        }
+
+        function hideMenu(caller) {
+            document.getElementById("menubody").style.visibility = "visible";
+            caller.parentElement.removeAttribute("active");
+            window.setTimeout(() => {
+                document.getElementById("menubody").style.visibility = "hidden";
+            }, 300);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {checkCart();});
         const shoppingCartBox = document.getElementById("shoppingCart");
         const cartContainer = document.getElementById("containerCart");
         const mainContainer = document.getElementById("root");
