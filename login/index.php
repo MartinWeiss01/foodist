@@ -8,12 +8,15 @@
         $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
         if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
     
-        $sql = "SELECT ID, Email FROM users WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)";
+        $sql = "SELECT * FROM users WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)";
         $result = $conn->query($sql);
         $x = $result->fetch_assoc();
         if(is_array($x)) {
             $_SESSION["FoodistID"] = $x["ID"];
             $_SESSION["FoodistEmail"] = $x["Email"];
+            $_SESSION["FoodistFirstName"] = $x["First_Name"];
+            $_SESSION["FoodistLastName"] = $x["Last_Name"];
+            $_SESSION["FoodistImage"] = $x["Image"];
             $sql = "UPDATE users SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = ".$_SESSION["FoodistID"];
             $result = $conn->query($sql);
             $conn->close();
