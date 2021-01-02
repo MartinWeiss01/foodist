@@ -1,12 +1,11 @@
 <?php
     session_start();
-    if(!isset($_SESSION["FoodistID"])) header("Location: ../");
-    require_once('../config/.config.inc.php');
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-    if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
-    $conn -> set_charset("utf8");
-    $citiesList = $conn->query("SELECT * FROM cities");
-    $cuisinesList = $conn->query("SELECT * FROM cuisines");
+    if(!isset($_SESSION["FoodistID"])) return die(header("Location: ../"));
+    require_once('../controllers/ConnectionController.php');
+    $conn = new ConnectionHandler();
+    $citiesList = $conn->callQuery("SELECT * FROM cities");
+    $cuisinesList = $conn->callQuery("SELECT * FROM cuisines");
+
     $citiesString = "let citiesList = -1;";
     $cuisinesString = "let cuisinesList = -1;";
 ?>
@@ -53,16 +52,22 @@
 
                     <div class="menuParent">
                         <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                            <img class="accountImage" src="/images/users/default.jpg">
-                            <span class="flex row hcenter accountDetails">Username <icon>arrow_drop_down</icon></span>
+                            <img class="accountImage" src="/images/users/<?php echo $_SESSION["FoodistImage"]; ?>">
+                            <span class="flex row hcenter accountDetails"><?php echo $_SESSION["FoodistFirstName"]." ".$_SESSION["FoodistLastName"]." ";?><icon>arrow_drop_down</icon></span>
                         </div>
                         <div id="menubody" class="flex menu">
-                            <div class="flex row hcenter menuItem disabled"><icon>admin_panel_settings</icon><span>Administrace</span></div>
-                            <div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div>
+                            <a href="#" onclick="showToast('Not Implemented Yet')"><div class="flex row hcenter menuItem disabled"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>
+                            <a href="#" onclick="showToast('Not Implemented Yet')"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a>
                             <hr class="menuDivider">
-                            <div class="flex row hcenter justify-content-between menuItem" onclick="changeTheme()"><div class="flex row hcenter"><icon theme-listener>light_mode</icon><span theme-listener>Světlý režim</span></div><div><icon>toggle_on</icon></div></div>
+                            <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()">
+                                <div class="flex row hcenter">
+                                    <icon>nights_stay</icon>
+                                    <span>Tmavý režim</span>
+                                </div>
+                                <div><icon theme-listener>toggle_on</icon></div>
+                            </div>
                             <hr class="menuDivider">
-                            <div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div>
+                            <a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>
                         </div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                     <?php
                         if($citiesList->num_rows > 0) {
                             $citiesString = 'let citiesList = `<select name="cities" id="cities">';
-                            while($row = $citiesList->fetch_assoc()) {echo '<div class="flex cardItem" data-city-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cities/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>;';}
+                            while($row = $citiesList->fetch_assoc()) {echo '<div class="flex cardItem" data-city-id="'.$row['ID'].'" style="background: url('.($row['Image'] ? $row['Image'] : "/images/cities/default.jpg").') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>';}
                             $citiesString .= '</select>`;';
                         }
                     ?>
@@ -91,7 +96,7 @@
 
                 <div id="companiesList" class="flex">
                 <?php
-                    $result = $conn->query("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
+                    $result = $conn->callQuery("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
                     if($result->num_rows > 0) {
                         $lastID = 0;
                         $lastList = false;
@@ -127,9 +132,9 @@
             <div class="container-modal">
                 <div class="flex hcenter vcenter modal-box">
                     <div id="modalContentBox" class="flex hcenter modal-content"></div>
-                    <div class="modal-buttons-group">
-                        <button id="modalConfirm" class="modal-confirm"></button>
-                        <button id="modalCancel" class="modal-cancel">Zrušit</button>
+                    <div class="flex row wrap">
+                        <button id="modalConfirm" class="modalController confirm" data-role="button"></button>
+                        <button id="modalCancel" class="modalController cancel" data-role="button">Zrušit</button>
                     </div>
                 </div>
             </div>
@@ -141,11 +146,11 @@
     </body>
 
     <script>
-        <?php
-            echo $citiesString."\n".$cuisinesString;
-        ?>
+        <?php echo $citiesString."\n".$cuisinesString; ?>
 
-        const DEBUG = true,
+        let DEBUG_RANDOM_NUMBER = () => (3860+(Math.floor(Math.random()*Math.floor(1111))));
+
+        const DEBUG = false,
             citiesBox = document.getElementById("citiesBox"),
             cuisinesBox = document.getElementById("cuisinesBox"),
             overlayModalBox = document.getElementById("overlayModal"),
@@ -153,7 +158,6 @@
             modalConfirmInput = document.getElementById("modalConfirm"),
             modalCancelInput = document.getElementById("modalCancel"),
             themeListenerIcon = document.querySelector("icon[theme-listener]"),
-            themeListenerSpan = document.querySelector("span[theme-listener]"),
             toastElement = document.getElementById("toast");
 
         window.matchMedia('(prefers-color-scheme: dark)').matches ? changeTheme(1, false) : changeTheme(0, false);
@@ -165,12 +169,10 @@
             if((j === 0) || (doc.hasAttribute("dark"))) {
                 doc.removeAttribute("dark");
                 showToast("[!] Switched to Light Theme.");
-                themeListenerIcon.innerText = "dark_mode";
-                themeListenerSpan.innerText = "Tmavý režim";
+                themeListenerIcon.innerText = "toggle_off";
             } else {
                 doc.setAttribute("dark", "");
-                themeListenerIcon.innerText = "light_mode";
-                themeListenerSpan.innerText = "Světlý režim";
+                themeListenerIcon.innerText = "toggle_on";
                 showToast("[!] Switched to Dark Theme.");
             }
             if(animations) window.setTimeout(() => doc.classList.remove("theme-transition"), 1000);
@@ -184,7 +186,7 @@
                 else if(event.key == "Enter") modalConfirmInput.click();
             }
         });
-
+        
         modalCancelInput.addEventListener("click", hideModal);
         modalConfirmInput.addEventListener("click", function(){
             if(overlayModalBox.dataset.mode == 1) {
@@ -192,24 +194,23 @@
                     recordName = document.getElementById("insertRecordName").value,
                     chosencity = document.getElementById("cities").value,
                     address = document.getElementById("insertRecordAddress").value,
-                    cuisines = document.getElementById("checkboxesCuisines"),
-                    cuis = "";
-                    for(let i = 0; i < cuisines.getElementsByTagName("input").length; i++) if(cuisines.getElementsByTagName("input")[i].checked) cuis += `${i},`;
-                    cuis = cuis.slice(0, -1);
+                    cuisines = document.querySelectorAll("#checkboxesCuisines input"),
+                    cuisList = [];
 
-                if(recordName != "") { //CHECK THIS -> THIS DOES NOT DO ANYTHING, maybe add something like warning outline all around the input
+                    for(let i = 0; i < cuisines.length; i++) if(cuisines[i].checked) cuisList.push(parseInt(cuisines[i].value));
+
+
+                if(recordName != "") {
                     if(!DEBUG) {
                         fetch("../controllers/addNewRestaurant.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                            body: `city=${chosencity}&account=${companyID}&name=${recordName}&address=${address}&cuisines=${cuis}`})
+                            body: `city=${chosencity}&account=${companyID}&name=${recordName}&address=${address}&cuisines=${cuisList}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {
-                            if(parseInt(data) > 0) appendNewRestaurant(companyID, parseInt(data), recordName, address, chosencity);
-                        })
-                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                    } else appendNewRestaurant(companyID, (3860+(Math.floor(Math.random()*Math.floor(1111)))), recordName, address, chosencity);
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewRestaurant(companyID, data["insert_id"], recordName, address, chosencity);})
+                        .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
+                    } else appendNewRestaurant(companyID, DEBUG_RANDOM_NUMBER, recordName, address, chosencity);
                 }
             } else if(overlayModalBox.dataset.mode == 2) {
                 let food = [],
@@ -245,8 +246,8 @@
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {console.log(`[!] Dunno? 0xFD${data}.`);})
-                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě. | ${err} | ${finalJSON}`);}); //CHECK THIS
+                        .then(data => {if(data["error_code"]) console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`);})
+                        .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
                     } 
                 } else console.log(finalJSON);
             } else if(overlayModalBox.dataset.mode == 3) {
@@ -259,11 +260,8 @@
                         if(response.ok) return response.json();
                         return Promise.reject(response);
                     })
-                    .then(data => {
-                        if(parseInt(data) == 1) removeRecordFromList(recordElement);
-                        else console.log(`[!] Při odebírání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
-                    })
-                    .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
+                    .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : removeRecordFromList(recordElement);})
+                    .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
                 } else removeRecordFromList(recordElement);
             } else if(overlayModalBox.dataset.mode == 4) {
                 let accountName = document.getElementById("insertAccountName").value,
@@ -271,23 +269,20 @@
                     accountEmail = document.getElementById("insertAccountEmail").value,
                     accountPwd = document.getElementById("insertAccountPassword").value;
                 
-                if(accountName != "" && accountIN != "" && accountEmail != "" && accountPwd != "") { //CHECK THIS -> THIS DOES NOT DO ANYTHING, maybe add something like warning outline all around the input
+                if(accountName != "" && accountIN != "" && accountEmail != "" && accountPwd != "") {
                     if(!DEBUG) {
                         fetch("../controllers/addNewCompany.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${accountName}&accountin=${accountIN}&email=${accountEmail}&pwd=${accountPwd}`})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {
-                            if(parseInt(data) <= 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`); //CHECK THIS -> if returned value is ok
-                            else appendNewCompany(parseInt(data), accountName, accountIN, accountEmail);
-                        })
-                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                    } else appendNewCompany((3860+(Math.floor(Math.random()*Math.floor(1111)))), accountName, accountIN, accountEmail);
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCompany(data["insert_id"], accountName, accountIN, accountEmail);})
+                        .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
+                    } else appendNewCompany(DEBUG_RANDOM_NUMBER, accountName, accountIN, accountEmail);
                 }
             } else if(overlayModalBox.dataset.mode == 5) {
-                let cuisineName = document.getElementById("inserCuisineName").value;
-                let cuisineIcon = document.getElementById("insertCuisineIcon").value;
+                let cuisineName = document.getElementById("inserCuisineName").value,
+                    cuisineIcon = document.getElementById("insertCuisineIcon").value;
                 
                 if(cuisineName != "" && cuisineIcon != "") {
                     if(!DEBUG) {
@@ -296,15 +291,9 @@
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
-                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                    }
-
-                    let newRecord = document.createElement("div");
-                    newRecord.classList.add("flex cardItem");
-                    newRecord.setAttribute("data-cuisine-id", (3860+(Math.floor(Math.random()*Math.floor(1111)))));
-                    newRecord.innerText = cuisineName;
-                    document.getElementById("cuisinesBox").appendChild(newRecord);
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCuisine(data["insert_id"], cuisineName);})
+                        .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
+                    } else appendNewCuisine(DEBUG_RANDOM_NUMBER, cuisineName);
                 }
             } else if(overlayModalBox.dataset.mode == 6) {
                 let cityName = document.getElementById("inserCityName").value;
@@ -316,15 +305,9 @@
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);})
-                        .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
-                    }
-
-                    let newRecord = document.createElement("div");
-                    newRecord.classList.add("flex cardItem");
-                    newRecord.setAttribute("data-city-id", (3860+(Math.floor(Math.random()*Math.floor(1111)))));
-                    newRecord.innerText = cityName;
-                    document.getElementById("citiesBox").appendChild(newRecord);
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCity(data["insert_id"], cityName);})
+                        .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
+                    } else appendNewCity(DEBUG_RANDOM_NUMBER, cityName);
                 }
             } else if(overlayModalBox.dataset.mode == 7) {
                 let cID = overlayModalBox.dataset.obj,
@@ -336,25 +319,49 @@
                         if(response.ok) return response.json();
                         return Promise.reject(response);
                     })
-                    .then(data => {
-                        if(parseInt(data) == 1) removeRecordFromList(recordElement, true);
-                        else console.log(`[!] Při odebírání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
-                    })
-                    .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
+                    .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : removeRecordFromList(recordElement, true);})
+                    .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
                 } else removeRecordFromList(recordElement, true);
             }
             hideModal();
         });
 
-        
         function addNewCity() {
             let content = '<h1>Přidat nové město</h1><input id="inserCityName" placeholder="Název města">';
             showModal(content, -1, "Přidat", 6);
         }
 
+        function appendNewCity(cityID, cityName) {
+            let newRecord = document.createElement("div");
+            newRecord.classList.add("flex", "cardItem");
+            newRecord.setAttribute("data-city-id", cityID);
+            newRecord.setAttribute('style', 'background: url(/images/cities/default.jpg) no-repeat center center;background-size:cover;');
+            newRecord.innerHTML = `<span class="cardTitle">${cityName}</span>`;
+            document.getElementById("citiesBox").appendChild(newRecord);
+
+            //Temporary Solution
+            let tempCities = citiesList.slice(0, -9);
+            tempCities += `<option value=${cityID}>${cityName}</option></select>`;
+            citiesList = tempCities;
+        }
+
         function addNewCuisine() {
             let content = '<h1>Přidat novou kuchyni</h1><input id="inserCuisineName" placeholder="Název kuchyně"><input id="insertCuisineIcon" placeholder="Jméno ikonky">';
             showModal(content, -1, "Přidat", 5);
+        }
+
+        function appendNewCuisine(cuisineID, cuisineName) {
+            let newRecord = document.createElement("div");
+            newRecord.classList.add("flex", "cardItem");
+            newRecord.setAttribute("data-cuisine-id", cuisineID);
+            newRecord.setAttribute('style', 'background: url(/images/cuisines/default.jpg) no-repeat center center;background-size:cover;');
+            newRecord.innerHTML = `<span class="cardTitle">${cuisineName}</span>`;
+            document.getElementById("cuisinesBox").appendChild(newRecord);
+
+            //Temporary Solution
+            let tempCuisines = cuisinesList.slice(0, -6);
+            tempCuisines += `<input type="checkbox" name="cuisineOption${cuisineID}" value="${cuisineID}"><label for="cuisineOption${cuisineID}">${cuisineName}</label></div>`;
+            cuisinesList = tempCuisines;
         }
 
         function addNewCompany() {
@@ -477,6 +484,13 @@
             }, 300);
         }
         /* ----------------------- renewed ------------------------- */
+        /*
+            To-Do:
+                Editing empty restaurants
+                Editing whole company
+                CSS
+                Optimalizace následujících funkcí
+        */
         function modalMode_Editing(j, company = false) {
             if(!company) {
                 fetch("../controllers/getFoodList.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${j}`})

@@ -6,17 +6,13 @@
  * -----------------
  * Located in   \admin\index.php
  */
+    header("Content-Type: application/json");
     session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
+    if(!isset($_SESSION["FoodistID"])) return die('{"error_code":-666,"error_message":"Access Denied"}');
+    require_once('ConnectionController.php');
 
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
-
-    $name = htmlspecialchars($_POST["name"]);
-
-    $query = "INSERT INTO cities (Name) VALUES ('$name')";
-    $conn->query($query);
-    echo $conn->insert_id;
-    $conn->close();
+    $conn = new ConnectionHandler();
+    $newCityName = htmlspecialchars($_POST["name"]);
+    $conn->callQuery("INSERT INTO cities (Name) VALUES ('".$newCityName."')");
+    $conn->finishConnection('{"insert_id":'.$conn->connection->insert_id.'}');
 ?>

@@ -6,26 +6,13 @@
  * -----------------
  * Located in   \admin\index.php
  */
+    header("Content-Type: application/json");
     session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
+    if(!isset($_SESSION["FoodistID"])) return die('{"error_code":-666,"error_message":"Access Denied"}');
+    require_once('ConnectionController.php');
 
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
-
-    if(isset($_POST["rid"])) {
-        $rID = $_POST["rid"];
-        $query = "DELETE FROM restaurants WHERE ID = $rID";
-        $conn->query($query) or die("-2");
-        echo "1";
-    } else if(isset($_POST["cid"])) {
-        //CHECK THIS
-        //remove whole company - maybe bad idea
-        echo "1";
-    } else {
-        $conn->close();
-        die("-2");
-    }
-
-    $conn->close();
+    $conn = new ConnectionHandler();
+    if(isset($_POST["rid"])) $conn->callQuery("DELETE FROM restaurants WHERE ID = ".$_POST["rid"]);
+    else if(isset($_POST["cid"])) $conn->callQuery("DELETE FROM restaurant_accounts WHERE ID = ".$_POST["cid"]);
+    $conn->finishConnection('{"success":"true"}');
 ?>

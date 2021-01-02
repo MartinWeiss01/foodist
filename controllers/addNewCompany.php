@@ -6,21 +6,16 @@
  * -----------------
  * Located in   \admin\index.php
  */
+    header("Content-Type: application/json");
     session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
+    if(!isset($_SESSION["FoodistID"])) return die('{"error_code":-666,"error_message":"Access Denied"}');
+    require_once('ConnectionController.php');
 
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
-
-    $name = htmlspecialchars($_POST["name"]);
-    $accountin = htmlspecialchars($_POST["accountin"]);
-    $email = htmlspecialchars($_POST["email"]);
-    $password = htmlspecialchars($_POST["pwd"]);
-
-    $query = "INSERT INTO restaurant_accounts (Name, IdentificationNumber, Email, Password) VALUES ('$name', '$accountin', '$email', SHA2('$password', 256))";
-    $conn->query($query) or die("-2");
-    echo $conn->insert_id;
-
-    $conn->close();
+    $conn = new ConnectionHandler();
+    $newCompanyName = htmlspecialchars($_POST["name"]);
+    $newCompanyAccountIN = htmlspecialchars($_POST["accountin"]);
+    $newCompanyEmail = htmlspecialchars($_POST["email"]);
+    $newCompanyPassword = htmlspecialchars($_POST["pwd"]);
+    $conn->callQuery("INSERT INTO restaurant_accounts (Name, IdentificationNumber, Email, Password) VALUES ('".$newCompanyName."', '".$newCompanyAccountIN."', '".$newCompanyEmail."', SHA2('".$newCompanyPassword."', 256))");
+    $conn->finishConnection('{"insert_id":'.$conn->connection->insert_id.'}');
 ?>

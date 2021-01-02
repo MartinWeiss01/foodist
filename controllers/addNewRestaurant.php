@@ -1,40 +1,34 @@
 <?php
 /* addNewRestaurant.php
  * Method: POST
- * Parameters: {city, account, name, address, cuisines}
+ * Parameters: {city, account, name, address, cuisines?}
  * (c) 2020 Martin Weiss, martinweiss.cz
  * -----------------
  * Located in   \admin\index.php
  */
-
+    header("Content-Type: application/json");
     session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
+    if(!isset($_SESSION["FoodistID"])) return die('{"error_code":-666,"error_message":"Access Denied"}');
+    require_once('ConnectionController.php');
 
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
+    $conn = new ConnectionHandler();
+    $newRestaurantName = htmlspecialchars($_POST["name"]);
+    $newRestaurantAddress = htmlspecialchars($_POST["address"]);
+    $newRestaurantCity = $_POST["city"];
+    $newRestaurantAccount = $_POST["account"];
+    $newRestaurantCuisines = $_POST["cuisines"];
+    $conn->callQuery("INSERT INTO restaurants (Name, Address, City, accountID) VALUES ('".$newRestaurantName."', '".$newRestaurantAddress."', '".$newRestaurantCity."', '".$newRestaurantAccount."')");
+    $insertedID = $conn->connection->insert_id;
 
-    $city = $_POST["city"];
-    $cuisines = $_POST["cuisines"];
-    $account = $_POST["account"];
-    $name = htmlspecialchars($_POST["name"]);
-    $address = htmlspecialchars($_POST["address"]);
-
-    $query = "INSERT INTO restaurants (Name, Address, City, accountID) VALUES ('$name', '$address', $city, $account)";
-    $conn->query($query) or die("-2");
-    $newID = $conn->insert_id;
-
-    $query = "INSERT INTO `foodist`.`restaurants_cuisines` (`restaurantID`, `cuisineID`) VALUES ";
-    if(!empty($cuisines)) {
-        $slicedCuisines = explode(",", $cuisines);
+    if(!empty($newRestaurantCuisines)) {
+        $queryString = "INSERT INTO restaurants_cuisines (restaurantID, cuisineID) VALUES ";
+        $slicedCuisines = explode(",", $newRestaurantCuisines);
         for($i = 0; $i < sizeof($slicedCuisines); $i++) {
-            $query .= "('".$newID."', '".$slicedCuisines[$i]."')";
-            if($i != (sizeof($slicedCuisines)-1)) $query .= ", ";
-            else $query .= ";";
+            $queryString .= "('".$insertedID."', '".$slicedCuisines[$i]."')";
+            if($i != (sizeof($slicedCuisines)-1)) $queryString .= ", ";
+            else $queryString .= ";";
         }
+        $conn->callQuery($queryString);
     }
-    $conn->query($query) or die("-3");
-
-    echo $newID;
-    $conn->close();
+    $conn->finishConnection('{"insert_id":'.$insertedID.'}');
 ?>
