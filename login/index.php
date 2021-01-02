@@ -1,9 +1,6 @@
 <?php
     session_start();
-    if(isset($_SESSION["FoodistID"])) {
-        header("Location: ../");
-        die();
-    }
+    if(isset($_SESSION["FoodistID"])) return die(header("Location: ../"));
 
     $rep = false;
     if(count($_POST) > 0) {
@@ -23,7 +20,7 @@
             $sql = "UPDATE users SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = ".$_SESSION["FoodistID"];
             $result = $conn->query($sql);
             $conn->close();
-            header("Location: ..");            
+            die(header("Location: .."));
         } else $rep = true;
         $conn->close();
     }
