@@ -1,6 +1,9 @@
 <?php
     session_start();
-    if(isset($_SESSION["FoodistID"])) header("Location: ../");
+    if(isset($_SESSION["FoodistID"])) {
+        header("Location: ../");
+        die();
+    }
 
     $rep = false;
     if(count($_POST) > 0) {
