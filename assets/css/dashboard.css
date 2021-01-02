@@ -119,9 +119,9 @@ footer {
 .cardItem[data-role="button"] > icon,
 .cardItem[data-role="button"] > .cardTitle {color: var(--color-primary);text-shadow: none;transition: .15s;}
 .cardItem[data-role="button"] {border: 1px dashed var(--border-primary);transition: .15s;}
-.cardItem[data-role="button"]:hover {border-color: var(--sex-male);transition: .15s;}
+.cardItem[data-role="button"]:hover {border-color: var(--add);transition: .15s;}
 .cardItem[data-role="button"]:hover > icon,
-.cardItem[data-role="button"]:hover > .cardTitle {color: var(--sex-male);transition: .15s;}
+.cardItem[data-role="button"]:hover > .cardTitle {color: var(--add);transition: .15s;}
 
 /* 
     * Iconixer | Manager for all icons in AdminDOM
