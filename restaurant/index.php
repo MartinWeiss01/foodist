@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if(!isset($_SESSION["RestaurantAccountID"])) header("Location: login/");
+    if(!isset($_SESSION["RestaurantAccountID"])) return die(header("Location: login/"));
     require_once('../config/.config.inc.php');
     $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
     if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
