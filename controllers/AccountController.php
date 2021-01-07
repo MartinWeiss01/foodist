@@ -3,23 +3,27 @@
     session_start();
 
     class UserAccountHandler {
-        private $authorized = false;
+        public $authorized = false;
+        public $DisplayName = "Přihlásit se";
+
         public $UID;
         public $UEmail;
         public $UFirstName;
         public $ULastName;
-        public $UProfilePicture;
+        public $UProfilePicture = "default.svg";
         public $UAdmin;
 
         public function __construct($arr) {
             if(isset($arr["FoodistID"])) {
-                $this->authorized = true;
                 $this->UID = $arr["FoodistID"];
                 $this->UEmail = $arr["FoodistEmail"];
                 $this->UFirstName = $arr["FoodistFirstName"];
                 $this->ULastName = $arr["FoodistLastName"];
                 $this->UProfilePicture = $arr["FoodistImage"];
                 $this->UAdmin = $arr["FoodistAdmin"];
+                
+                $this->authorized = true;
+                $this->DisplayName = "$this->UFirstName $this->ULastName";
             }
             return 1;
         }
