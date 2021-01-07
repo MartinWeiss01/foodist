@@ -1,30 +1,23 @@
 <?php
-    session_start();
-    if(isset($_SESSION["FoodistID"])) return die(header("Location: ../"));
-
+    require_once('../config/defines.inc.php');
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    $account->redirectAuthorized();
+    
     $rep = false;
     if(count($_POST) > 0) {
-        require_once('../config/.config.inc.php');
-        $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-        if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
+        require_once('../controllers/ConnectionController.php');
+        $conn = new ConnectionHandler();
     
-        $sql = "SELECT * FROM users WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)";
-        $result = $conn->query($sql);
-        $x = $result->fetch_assoc();
-        if(is_array($x)) {
-            $_SESSION["FoodistID"] = $x["ID"];
-            $_SESSION["FoodistEmail"] = $x["Email"];
-            $_SESSION["FoodistFirstName"] = $x["First_Name"];
-            $_SESSION["FoodistLastName"] = $x["Last_Name"];
-            $_SESSION["FoodistImage"] = $x["Image"];
-            if($x["Admin"] > 0) $_SESSION["FoodistAdmin"] = $x["Admin"];
-            
-            $sql = "UPDATE users SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = ".$_SESSION["FoodistID"];
-            $result = $conn->query($sql);
-            $conn->close();
-            die(header("Location: .."));
-        } else $rep = true;
-        $conn->close();
+        $result = $conn->callQuery("SELECT * FROM users WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)");
+        $fetched = $account->fetchLogin($result->fetch_assoc());
+
+        if(!$fetched) $rep = true;
+        else {
+            $conn->callQuery("UPDATE users SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = $account->UID");
+            $conn->finishConnection(header("Location: ".SSL_APP_PATH));
+        }
+        $conn->closeConnection();
     }
 ?>
 
