@@ -1,38 +1,29 @@
 <?php
-    session_start();
-    if(isset($_SESSION["FoodistID"])) header("Location: ../");
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    $account->redirectAuthorized();
     
+    $fail = NULL;
     if(count($_POST) > 0) {
-        $fail = 0;
-        if(isset($_POST["firstName"]) && !empty($_POST["firstName"])) $local_firstName = htmlspecialchars($_POST["firstName"]); else $fail = 1;
-        if(isset($_POST["lastName"]) && !empty($_POST["lastName"])) $local_lastName = htmlspecialchars($_POST["lastName"]); else $fail = 1;
-        if(isset($_POST["email"]) && !empty($_POST["email"])) $local_email = htmlspecialchars($_POST["email"]); else $fail = 1;
-        if(isset($_POST["telephone"]) && !empty($_POST["telephone"])) $local_telephone = htmlspecialchars($_POST["telephone"]); else $fail = 1;
-        if(isset($_POST["date"]) && !empty($_POST["date"])) $local_date = htmlspecialchars($_POST["date"]); else $fail = 1;
-        if(isset($_POST["password"]) && !empty($_POST["password"])) $local_password = htmlspecialchars($_POST["password"]); else $fail = 1;
-        if(isset($_POST["password_confirm"]) && !empty($_POST["password_confirm"])) $local_password_confirm = htmlspecialchars($_POST["password_confirm"]); else $fail = 1;
-        if(isset($_POST["sexValue"]) && !empty($_POST["sexValue"])) $local_sexValue = htmlspecialchars($_POST["sexValue"]); else $fail = 1;
+        if(isset($_POST["firstName"]) && !empty($_POST["firstName"])) $local_firstName = htmlspecialchars($_POST["firstName"]); else $fail = "Chyba s křestním jménem";
+        if(isset($_POST["lastName"]) && !empty($_POST["lastName"])) $local_lastName = htmlspecialchars($_POST["lastName"]); else $fail = "Chyba s příjmením";
+        if(isset($_POST["email"]) && !empty($_POST["email"])) $local_email = htmlspecialchars($_POST["email"]); else $fail = "Chyba s emailem";
+        if(isset($_POST["telephone"]) && !empty($_POST["telephone"])) $local_telephone = htmlspecialchars($_POST["telephone"]); else $fail = "Chyba s telefonem";
+        if(isset($_POST["date"]) && !empty($_POST["date"])) $local_date = htmlspecialchars($_POST["date"]); else $fail = "Chyba s datem";
+        if(isset($_POST["password"]) && !empty($_POST["password"])) $local_password = htmlspecialchars($_POST["password"]); else $fail = "Chyba s heslem";
+        if(isset($_POST["password_confirm"]) && !empty($_POST["password_confirm"])) $local_password_confirm = htmlspecialchars($_POST["password_confirm"]); else $fail = "Chyba s potvrzovacím heslem";
+        if(isset($_POST["sexValue"]) && !empty($_POST["sexValue"])) $local_sexValue = htmlspecialchars($_POST["sexValue"]); else $fail = "Chyba s pohlavím";
+        if(!preg_match('/^(.+)@(.+)\.(.+)$/', $local_email)) $fail = "Chyba s emailem";
+        if(!preg_match('/^\+\d{3}\s(\d{3}){3}$/', $local_telephone)) $fail = "Chyba s telefonem";
+        if($local_password != $local_password_confirm) $fail = "Hesla se neshodují";
+
+        $local_sexValue -= 1;
         
-        if(!preg_match('/^(.+)@(.+)\.(.+)$/', $local_email)) $fail = 1;
-        if(!preg_match('/^\+\d{3}\s(\d{3}){3}$/', $local_telephone)) $fail = 1;
-
-        if($local_password != $local_password_confirm) $fail = 1;
-
-        if($local_sexValue == 1) $local_sexValue = 0;
-        else if($local_sexValue == 2) $local_sexValue = 1;
-        $userIP = $_SERVER['REMOTE_ADDR'];
-        
-        if($fail == 0) {
-            require_once('../config/.config.inc.php');
-            $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-            if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
-
-            $sql = "INSERT INTO users(Email, Password, First_Name, Last_Name, Sex, Telephone, Birth, Register_IP) VALUES ('$local_email', SHA2('$local_password', 256), '$local_firstName', '$local_lastName', $local_sexValue, '$local_telephone', '$local_date', '$userIP')";
-            if($conn->query($sql) === TRUE) {
-                $conn->close();
-                header("Location: ../login/?successRegistration");
-            } else $fail = 1;
-            $conn->close();
+        if($fail == NULL) {
+            require_once('../controllers/ConnectionController.php');
+            $conn = new ConnectionHandler();
+            $conn->callQuery("INSERT INTO users(Email, Password, First_name, Last_Name, Sex, Telephone, Birth, Register_IP) VALUE ('$local_email', SHA2('$local_password', 256), '$local_firstName', '$local_lastName', $local_sexValue, '$local_telephone', '$local_date', '".$_SERVER["REMOTE_ADDR"]."')");
+            $conn->finishConnection(header("Location: ../login/"));
         }
     } 
 ?>
@@ -75,7 +66,7 @@
             <img style="padding-bottom: 50px;width:55%;" src="../images/brand/logo.svg">
                 <form method="post">
                     <?php
-                        if($fail == 1) echo "NASTALA CHYBA";
+                        if($fail != NULL) echo $fail;
                     ?>
                     <input type="text" id="firstName" name="firstName" placeholder="Křestní jméno" autocomplete="off" required require/>
                     <input type="text" id="lastName" name="lastName" placeholder="Příjmení" autocomplete="off" required require/>
