@@ -7,11 +7,12 @@
  * Located in   \admin\index.php
  */
     header("Content-Type: application/json");
-    session_start();
-    if(!isset($_SESSION["FoodistID"])) return die('{"error_code":-666,"error_message":"Access Denied"}');
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    $account->disableUnauthorized();
     require_once('ConnectionController.php');
-
     $conn = new ConnectionHandler();
+    
     $newCuisineName = htmlspecialchars($_POST["name"]);
     $newCuisineIcon = htmlspecialchars($_POST["icon"]);
     $conn->callQuery("INSERT INTO cuisines (Name, Icon) VALUES ('".$newCuisineName."', '".$newCuisineIcon."')");
