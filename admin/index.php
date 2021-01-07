@@ -1,12 +1,12 @@
 <?php
     require_once('../controllers/AccountController.php');
-    require_once('../controllers/ConnectionController.php');
     $account = new UserAccountHandler($_SESSION);
     $account->redirectUnauthorized();
+    
+    require_once('../controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
     $citiesList = $conn->callQuery("SELECT * FROM cities");
     $cuisinesList = $conn->callQuery("SELECT * FROM cuisines");
-
     $citiesString = "let citiesList = -1;";
     $cuisinesString = "let cuisinesList = -1;";
 ?>
