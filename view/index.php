@@ -1,22 +1,18 @@
 <?php
-    session_start();
-    require_once('../config/.config.inc.php');
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-    if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
-    mysqli_set_charset($conn, "utf8");
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    require_once('../controllers/ConnectionController.php');
+    $conn = new ConnectionHandler();
 
     if(isset($_POST["cities"]) && !empty($_POST["cities"])) {
-        $sql = "SELECT Name FROM cities WHERE ID = ".$_POST['cities'];
-        $result_city = $conn->query($sql);
+        $result_city = $conn->callQuery("SELECT Name FROM cities WHERE ID = ".$_POST['cities']);
         $result_city = $result_city->fetch_assoc();
         $result_city = $result_city["Name"];
 
-        if(isset($_POST["cuisines"]) && !empty($_POST["cuisines"])) $sql = "SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']." AND rc.cuisineID = ".$_POST['cuisines'];
-        else $sql = "SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities'];
-        
-        $result = $conn->query($sql);
-        $conn->close();
+        if(isset($_POST["cuisines"]) && !empty($_POST["cuisines"])) $result = $conn->callQuery("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']." AND rc.cuisineID = ".$_POST['cuisines']);
+        else $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']);
     } else $nocity = true;
+    $conn->closeConnection();
 ?>
 
 
@@ -56,29 +52,19 @@
                 
                 <div class="menuParent">
                     <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                        <img class="accountImage" src="/images/users/<?php echo $_SESSION["FoodistID"] ? $_SESSION["FoodistImage"] : "default.svg";?>">
-                        <span class="flex row hcenter accountDetails"><?php echo $_SESSION["FoodistID"] ? ($_SESSION["FoodistFirstName"]." ".$_SESSION["FoodistLastName"]) : "Přihlásit se";?> <icon>arrow_drop_down</icon></span>
+                        <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
+                        <span class="flex row hcenter accountDetails"><?php echo $account->DisplayName; ?> <icon>arrow_drop_down</icon></span>
                     </div>
                     <div id="menubody" class="flex menu">
-                        <?php if($_SESSION["FoodistAdmin"]) {?><a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a><?php } ?>
-                        <?php if($_SESSION["FoodistID"]) {?>
-                            <a href="#" onclick="showToast('Not Implemented Yet')"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a>
-                            <hr class="menuDivider">
-                        <?php } ?>
-                        <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()">
-                            <div class="flex row hcenter">
-                                <icon>nights_stay</icon>
-                                <span>Tmavý režim</span>
-                            </div>
-                            <div><icon theme-listener>toggle_on</icon></div>
-                        </div>
-                        <hr class="menuDivider">
-                        <?php if($_SESSION["FoodistID"]) {?>
-                            <a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>
-                        <?php } else { ?>
-                        <a href="/login"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Přihlásit se</span></div></a>
-                        <a href="/register"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Registrovat se</span></div></a>
-                        <?php } ?>
+                        <?php
+                            if($account->UAdmin > 0) echo '<a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>';
+                            if($account->authorized) echo '<a href="#" onclick="showToast(`Not Implemented Yet`)"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a><hr class="menuDivider">';
+                        ?>
+                        <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()"><div class="flex row hcenter"><icon>nights_stay</icon><span>Tmavý režim</span></div><div><icon theme-listener>toggle_on</icon></div></div><hr class="menuDivider">
+                        <?php
+                            if($account->authorized) echo '<a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>';
+                            else echo '<a href="/login"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Přihlásit se</span></div></a><hr class="menuDivider"><a href="/register"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Registrovat se</span></div></a>';
+                        ?>
                     </div>
                 </div>
             </nav>
