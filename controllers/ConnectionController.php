@@ -20,8 +20,12 @@
             return $result;
         }
 
-        public function finishConnection($response_message) {
+        public function closeConnection() {
             $this->connection->close();
+        }
+
+        public function finishConnection($response_message) {
+            $this->closeConnection();
             $this->exitScript($response_message);
         }
 
