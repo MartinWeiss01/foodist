@@ -7,11 +7,12 @@
  * Located in   \admin\index.php
  */
     header("Content-Type: application/json");
-    session_start();
-    if(!isset($_SESSION["FoodistID"])) return die('{"error_code":-666,"error_message":"Access Denied"}');
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    $account->disableUnauthorized();
     require_once('ConnectionController.php');
-
     $conn = new ConnectionHandler();
+    
     $rID = $_POST["rid"];
     $data = json_decode($_POST["data"], true);
     if($data["update"]["nameChanged"]) $conn->callQuery("UPDATE restaurants SET Name = '".$data['update']['restaurantName']."' WHERE ID = ".$rID);
