@@ -1,7 +1,8 @@
 <?php
-    session_start();
-    if(!isset($_SESSION["FoodistID"])) return die(header("Location: ../"));
+    require_once('../controllers/AccountController.php');
     require_once('../controllers/ConnectionController.php');
+    $account = new UserAccountHandler($_SESSION);
+    $account->redirectUnauthorized();
     $conn = new ConnectionHandler();
     $citiesList = $conn->callQuery("SELECT * FROM cities");
     $cuisinesList = $conn->callQuery("SELECT * FROM cuisines");
@@ -52,8 +53,8 @@
 
                     <div class="menuParent">
                         <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                            <img class="accountImage" src="/images/users/<?php echo $_SESSION["FoodistImage"]; ?>">
-                            <span class="flex row hcenter accountDetails"><?php echo $_SESSION["FoodistFirstName"]." ".$_SESSION["FoodistLastName"]." ";?><icon>arrow_drop_down</icon></span>
+                            <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
+                            <span class="flex row hcenter accountDetails"><?php echo "$account->UFirstName $account->ULastName";?> <icon>arrow_drop_down</icon></span>
                         </div>
                         <div id="menubody" class="flex menu">
                             <a href="#" onclick="showToast('Not Implemented Yet')"><div class="flex row hcenter menuItem disabled"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>
