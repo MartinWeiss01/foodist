@@ -1,19 +1,20 @@
 <?php
-    session_start();
-    require_once('../config/.config.inc.php');
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-    if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
-    mysqli_set_charset($conn, "utf8");
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    require_once('../controllers/ConnectionController.php');
+    $conn = new ConnectionHandler();
 
     if(isset($_GET["rID"]) && !empty($_GET["rID"])) {
-        $sql = "SELECT * FROM restaurants WHERE ID = ".$_GET['rID'];
-        $result = $conn->query($sql);
+        $result = $conn->callQuery("SELECT * FROM restaurants WHERE ID = ".$_GET["rID"]);
         $result = $result->fetch_assoc();
         $name = $result["Name"];
         $address = $result["Address"];
         $rID = $result["ID"];
         $city = $result["City"];
-    } else echo "Žádné město";
+
+        $foodlist = $conn->callQuery("SELECT * FROM food WHERE restaurantID = ".$_GET["rID"]);
+    } else echo "Žádná restaurace!";
+    $conn->closeConnection();
 ?>
 
 
@@ -54,29 +55,19 @@
                 <div class="nav-right">
                     <div class="menuParent">
                         <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                            <img class="accountImage" src="/images/users/<?php echo $_SESSION["FoodistID"] ? $_SESSION["FoodistImage"] : "default.svg";?>">
-                            <span class="flex row hcenter accountDetails"><?php echo $_SESSION["FoodistID"] ? ($_SESSION["FoodistFirstName"]." ".$_SESSION["FoodistLastName"]) : "Přihlásit se";?> <icon>arrow_drop_down</icon></span>
+                            <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
+                            <span class="flex row hcenter accountDetails"><?php echo $account->DisplayName; ?> <icon>arrow_drop_down</icon></span>
                         </div>
                         <div id="menubody" class="flex menu">
-                            <?php if($_SESSION["FoodistAdmin"]) {?><a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a><?php } ?>
-                            <?php if($_SESSION["FoodistID"]) {?>
-                                <a href="#" onclick="showToast('Not Implemented Yet')"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a>
-                                <hr class="menuDivider">
-                            <?php } ?>
-                            <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()">
-                                <div class="flex row hcenter">
-                                    <icon>nights_stay</icon>
-                                    <span>Tmavý režim</span>
-                                </div>
-                                <div><icon theme-listener>toggle_on</icon></div>
-                            </div>
-                            <hr class="menuDivider">
-                            <?php if($_SESSION["FoodistID"]) {?>
-                                <a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>
-                            <?php } else { ?>
-                            <a href="/login"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Přihlásit se</span></div></a>
-                            <a href="/register"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Registrovat se</span></div></a>
-                            <?php } ?>
+                            <?php
+                                if($account->UAdmin > 0) echo '<a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>';
+                                if($account->authorized) echo '<a href="#" onclick="showToast(`Not Implemented Yet`)"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a><hr class="menuDivider">';
+                            ?>
+                            <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()"><div class="flex row hcenter"><icon>nights_stay</icon><span>Tmavý režim</span></div><div><icon theme-listener>toggle_on</icon></div></div><hr class="menuDivider">
+                            <?php
+                                if($account->authorized) echo '<a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>';
+                                else echo '<a href="/login"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Přihlásit se</span></div></a><hr class="menuDivider"><a href="/register"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Registrovat se</span></div></a>';
+                            ?>
                         </div>
                     </div>
 
@@ -95,17 +86,14 @@
                         <?php
                             echo $name." - ".$address." - ".$rID." - ".$city."<br>";
                             echo "<div class='foodList'>";
-                            $query = "SELECT * FROM food WHERE restaurantID = ".$_GET['rID'];
-                            $result = $conn->query($query);
 
-                            if($result->num_rows > 0) {
-                                while($row = $result->fetch_assoc()) {
+                            if($foodlist->num_rows > 0) {
+                                while($row = $foodlist->fetch_assoc()) {
                                     echo "<div class='foodRecord' data-foodid='".$row["ID"]."'><img class='foodRecordImage' src='../images/food/template".rand(1,7).".png'>
                                     <span class='foodRecordName'>".$row["Name"]."</span><span class='foodRecordPrice'><img src='../images/icons/price.png' style='height:24px;'>".$row["Price"]." Kč</span>
                                     <div class='addToCart' onclick='addToCart(".$row["ID"].")'><img src='../images/icons/cartadd.png'></div></div>";
                                 }
                             }
-                            $conn->close();
                             echo "</div>";
                         ?>
                     </div>
