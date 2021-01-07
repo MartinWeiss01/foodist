@@ -26,6 +26,7 @@
 
         public function fetchLogin($arr) {
             if(!is_array($arr)) return 0;
+            $this->authorized = true;
             $this->UID = $arr["ID"];
             $_SESSION["FoodistID"] = $this->UID;
             $_SESSION["FoodistEmail"] = $arr["Email"];
