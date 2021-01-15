@@ -1,5 +1,5 @@
 <?php
-    require_once('../config/defines.inc.php');
+    require_once(dirname(__DIR__).'/config/defines.inc.php');
     session_start();
 
     class UserAccountHandler {
