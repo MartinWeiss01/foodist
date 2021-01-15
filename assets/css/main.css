@@ -4,9 +4,11 @@ a{text-decoration:none}
 .flex{display:flex;flex-direction:column}
 .flex.row{flex-direction:row!important}
 .flex.hcenter{align-items:center}
+.flex.hstart{align-items:flex-start}
 .flex.vcenter{justify-content:center}
 .flex.justify-content-between{justify-content:space-between}
 .flex.justify-content-around{justify-content:space-around}
+.flex.justify-content-end{justify-content:flex-end}
 .flex.wrap{flex-wrap:wrap}
 
 html {
@@ -29,6 +31,9 @@ html {
 
     /* Gen2.0 */
     /* Dashboard */
+    --accent-pcolor: #FDC500;
+    --accent-pcolor-neg: #003F88;
+
     --background-default: hsl(0, 0%, 100%);
     --color-primary: hsl(0, 0%, 10%);
     --border-primary: hsla(0, 0%, 88%, 0.58);
@@ -56,10 +61,12 @@ html {
     --decline-border-focus: #1A1A1A;
 
     --add: hsl(200, 100%, 49%);
+    --add-bg: hsla(200, 100%, 49%, 0.239);
     --edit: hsl(39, 96%, 50%);
     --delete: hsl(0, 77%, 48%);
     --collapse: hsl(163, 100%, 33%);
 
+    --logo-color: hsl(163, 100%, 33%);
     --nav-shadow: hsla(0, 0%, 0%, 0.129);
 }
 

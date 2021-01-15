@@ -55,7 +55,7 @@
                         <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
                         <span class="flex row hcenter accountDetails"><?php echo $account->DisplayName; ?> <icon>arrow_drop_down</icon></span>
                     </div>
-                    <div id="menubody" class="flex menu">
+                    <div id="menubody" class="flex menu align-right">
                         <?php
                             if($account->UAdmin > 0) echo '<a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>';
                             if($account->authorized) echo '<a href="#" onclick="showToast(`Not Implemented Yet`)"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a><hr class="menuDivider">';

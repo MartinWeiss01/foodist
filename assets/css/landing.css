@@ -1,0 +1,154 @@
+/* Menu | Dropdown Menu | Minified (32.23% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
+.menuParent{position:relative}.menu{position:absolute;top:52px;border-radius:3px;padding:15px;min-width:260px;background:var(--menu-background);box-shadow:0 0 6px var(--nav-shadow)}.menu.align-right{right:0}.menuParent[active] .menuItem span,.menuParent[active] .menuItem icon,.menuParent[active] .menu{animation:menuIn .5s;visibility:visible}.menu,.menuItem span,.menuItem icon{visibility:hidden;animation:menuOut .5s}.menuItem span{font-size:14px;color:var(--color-primary)}.menuItem icon:not([theme-listener]){font-size:22px;color:var(--color-primary);background:var(--menu-icon-background);padding:10px;border-radius:20px;margin-right:8px}.menuItem icon[theme-listener]{font-size:22px;color:var(--color-primary);padding:10px;margin-right:8px}.menuItem{padding:7px;border-radius:3px}.menuItem:hover{background:var(--menu-item-focus)}.menuDivider{width:100%;height:1px;border:0;border-top:1px solid var(--menu-divider);margin:0}.menu > :not(:last-child){margin-bottom:10px!important}@keyframes menuIn{from{opacity:0;top:0}to{opacity:1;top:52px}}@keyframes menuOut{from{opacity:1;top:52px}to{opacity:0;top:0}}
+/* Toast | Minified (59.24% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
+.toastBox[active]{visibility:visible;animation:toastIn 0.5s,toastOut .5s 2.5s}.toastBox{visibility:hidden;position:fixed;z-index:860;display:flex;justify-content:center;align-items:flex-end;width:100%;bottom:3rem}.toast{background:var(--background-default);color:var(--color-primary);border:1px solid var(--border-primary);padding:.5rem;font-size:13px;font-weight:700;border-radius:6px}@keyframes toastIn{from{opacity:0;bottom:0}to{opacity:1;bottom:3rem}}@keyframes toastOut{from{opacity:1;bottom:3rem}to{opacity:0;bottom:0}}
+
+/*
+ * Layout | Landing
+ * © Copyright 2020 Martin Weiss (martinWeiss.cz)
+
+ * #header-holderhack should be hidden on small viewp. #header-holderhack {display:none;}
+
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+header {
+    background: rgb(23,24,35);
+    background: linear-gradient(120deg, rgba(23,24,35,1) 0%, rgba(16,15,35,1) 57%, rgba(89,10,10,1) 100%);
+}
+
+.nav {
+    height: 5rem;
+    padding: 0 5rem;
+}
+
+.header-logo {
+    height:40px;
+    fill: white;
+}
+
+#header-holderhack {
+    height: 1px;
+    width: 96px;
+}
+
+#header-control {
+    gap: 1rem;
+}
+
+.header-control-item {
+    height: 40px;
+    fill: white;
+    transition: .15s;
+    border-radius: 30px;
+    padding: 7px;
+}
+
+.header-control-item:hover {
+    fill: var(--add);
+    background-color: #00a7fa3d; 
+    transition: .15s;
+}
+
+.jumbotron {
+    height: 35rem;
+    background: url(/images/bg/jumbotron.png) no-repeat 10% 110%;
+}
+
+/*
+ * Content After Jumbatron
+ * (c) Copyright 2020 Martin Weiss (martinWeiss.cz)
+*/
+main {
+    margin-top: -25rem;
+}
+
+/*
+ * City & Cuisine Select Manager
+ * (c) Copyright 2020 Martin Weiss (martinWeiss.cz)
+*/
+.detailmanager {
+    color: white;
+    height: 40rem;
+    width: 30rem;
+    padding: 40px 0 40px 40px;
+    margin-right: 16rem;
+    backdrop-filter: blur(22px);
+    box-shadow: 0px 0px 13px 0px #0000001f;
+}
+
+/*
+ * Viewports Manager
+ * (c) Copyright 2020 Martin Weiss (martinWeiss.cz)
+*/
+@media only screen and (max-width: 62rem) {
+    .detailmanager {
+        margin-right: 0;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .header-control-item.cart {
+        display:none;   
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .nav {
+        padding: 0 2rem;
+    }
+}
+
+@media only screen and (max-width: 769px) {
+    #header-holderhack {
+        display: none;
+    }
+}
+
+/*
+#backdrop-hack {
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    filter: blur(10px);
+}
+#root {
+    height: 100%;
+    width: 100%;
+    padding: 3rem 5rem;
+}
+
+.controlpanel {
+    gap: 2rem;
+}
+
+.controlPanelSVG {
+    fill: white;
+    height: 38px;
+    padding: 3px;
+    transition: .15s;
+}
+.controlPanelSVG:hover {
+    fill: var(--add);
+    transition: .15s;
+}
+
+.logo {
+    height: fit-content;
+    fill: #FFFFFF;
+}
+*/
