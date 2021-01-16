@@ -12,6 +12,7 @@
         public $ULastName;
         public $UProfilePicture = "default.svg";
         public $UAdmin;
+        public $UCart = array();
 
         public function __construct($arr) {
             if(isset($arr["FoodistID"])) {
@@ -21,10 +22,12 @@
                 $this->ULastName = $arr["FoodistLastName"];
                 $this->UProfilePicture = $arr["FoodistImage"];
                 $this->UAdmin = $arr["FoodistAdmin"];
-                
+
                 $this->authorized = true;
                 $this->DisplayName = "$this->UFirstName $this->ULastName";
             }
+
+            if(isset($arr["FoodistCart"])) $this->UCart = $arr["FoodistCart"];
             return 1;
         }
 
@@ -49,6 +52,9 @@
         }
         public function disableUnauthorized() {
             if(!($this->authorized)) return die('{"error_code":-666,"error_message":"Access Denied"}');
+        }
+        public function updateUserCart() {
+            $_SESSION["FoodistCart"] = $this->UCart;
         }
     }
 ?>
