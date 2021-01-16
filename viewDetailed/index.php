@@ -77,17 +77,17 @@
 
             <main>
                 <div class="restaurant-details">
-                    <div class="restaurant-detailed-header">
+                    <div class="flex hcenter vcenter restaurant-detailed-header">
                         <?php echo $name; ?>
                     </div>
                     <div class="restaurant-detailed-body">
                         <?php
                             echo $name." - ".$address." - ".$rID." - ".$city."<br>";
-                            echo "<div class='foodList'>";
+                            echo "<div class='flex row justify-content-evenly wrap'>";
 
                             if($foodlist->num_rows > 0) {
                                 while($row = $foodlist->fetch_assoc()) {
-                                    echo "<div class='foodRecord' data-foodid='".$row["ID"]."'><img class='foodRecordImage' src='../images/food/template".rand(1,7).".png'>
+                                    echo "<div class='flex hcenter vcenter foodRecord' data-foodid='".$row["ID"]."'><img class='foodRecordImage' src='../images/food/template".rand(1,7).".png'>
                                     <span class='foodRecordName'>".$row["Name"]."</span><span class='foodRecordPrice'><img src='../images/icons/price.png' style='height:24px;'>".$row["Price"]." Kč</span>
                                     <div class='addToCart' onclick='addToCart(".$row["ID"].")'><img src='../images/icons/cartadd.png'></div></div>";
                                 }
@@ -140,7 +140,7 @@
             cartContainer.innerHTML = null;
             if(Object.keys(cart).length != 0) {
                 let newContent = `<h1 id="cartTitle">Váš košík</h1><div id="containerCart" class="flex">`;
-                for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="itemLeft"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="itemRight"><icon class="remove" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
+                for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="flex row hcenter justify-content-between cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="flex"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="flex row hcenter"><icon class="remove" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
                 newContent += `</div>`;
                 shoppingCartBox.innerHTML = newContent;
             } else shoppingCartBox.innerHTML = `<div id="containerCart" class="flex empty-cart">Váš nákupní košík je prázdný</div>`;

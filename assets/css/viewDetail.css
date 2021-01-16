@@ -43,7 +43,7 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 
 #containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
 .empty-cart {display:flex;justify-content:center;align-items:center;height:100%}
-
+.cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--cartShadowTop), inset -5px -5px 10px var(--cartShadowBottom)}
 
 
 
@@ -75,28 +75,6 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     © Copyright 2020 Martin Weiss (martinweiss.cz)
 */
 
-
-
-
-.cartItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-    border-radius: 6px;
-    box-shadow: inset 5px 5px 10px var(--cartShadowTop), inset -5px -5px 10px var(--cartShadowBottom);
-}
-.itemLeft {
-    display: flex;
-    flex-direction: column;
-}
-
-.itemRight {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
 .restaurant-details {
     height: 100%;
     display: grid;
@@ -114,9 +92,6 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: white;
     font-size: 5rem;
     text-transform: uppercase;
@@ -128,20 +103,9 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     padding: 2rem;
 }
 
-
-.foodList {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-}
-
 .foodRecord {
     background: #ffffff;
     width: 14rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     margin: 4rem 0;
     border-radius: 10px;
     box-shadow: 0 0 20px 0px #00000005;
@@ -184,12 +148,8 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 
 .addToCart:hover {
     background: #1a1a1a;
-    width: 100%;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    padding: 7px;
     transition: .3s;
+    border-radius: 9px;
 }
 
 .addToCart:hover > img {
