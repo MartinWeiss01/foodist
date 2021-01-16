@@ -46,6 +46,8 @@ html {
     --menu-icon-background: hsl(0, 0%, 80%);
     --menu-item-focus: hsla(0, 0%, 0%, 0.059);
     --menu-divider: hsl(0, 0%, 89%);
+    --cartShadowTop: hsl(0, 0%, 93%);
+    --cartShadowBottom: hsl(0, 0%, 100%);
     
     --accept-color: #3AB54A;
     --accept-color-focus: #FFFFFF;
@@ -83,6 +85,8 @@ html[dark] {
     --menu-icon-background: hsl(0, 0%, 18%);
     --menu-item-focus: hsl(0, 0%, 10%);
     --menu-divider: hsla(0, 0%, 100%, 0.149);
+    --cartShadowTop: hsl(213, 27%, 6%);
+    --cartShadowBottom: hsl(218, 28%, 8%);
 
     --accept-color: hsl(127, 70%, 44%);
     --accept-color-focus: hsl(0, 0%, 100%);
