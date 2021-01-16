@@ -41,7 +41,7 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 .header-control-item:hover {fill:var(--add);background-color:var(--add-bg);transition:.15s}
 .nav-agent {gap:20px}
 
-#containerCart {width:100%;color:var(--color-primary)}
+#containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
 .empty-cart {display:flex;justify-content:center;align-items:center;height:100%}
 
 
@@ -82,7 +82,9 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 2rem;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: inset 5px 5px 10px var(--cartShadowTop), inset -5px -5px 10px var(--cartShadowBottom);
 }
 .itemLeft {
     display: flex;
