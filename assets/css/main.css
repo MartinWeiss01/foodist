@@ -14,9 +14,9 @@ a{text-decoration:none}
 
 html {
     --main-col: #FFC400;
-    --alt-col: #d91c1c;
-    --alt-col-light: #d91c1c9a;
-    --base-col: #FFFFFF;
+    --alt-col: #d91c1c; /* unused */
+    --alt-col-light: #d91c1c9a; /* unused */
+    --base-col: #FFFFFF; /* unused */
     --sex-female: #E91E63;
     --sex-male: #03A9F4;
     --muted-col: #757575;
@@ -47,8 +47,8 @@ html {
     --menu-icon-background: hsl(0, 0%, 80%);
     --menu-item-focus: hsla(0, 0%, 0%, 0.059);
     --menu-divider: hsl(0, 0%, 89%);
-    --cartShadowTop: hsl(0, 0%, 93%);
-    --cartShadowBottom: hsl(0, 0%, 100%);
+    --shadowTop: hsl(0, 0%, 93%);
+    --shadowBottom: hsl(0, 0%, 100%);
     
     --accept-color: #3AB54A;
     --accept-color-focus: #FFFFFF;
@@ -86,8 +86,8 @@ html[dark] {
     --menu-icon-background: hsl(0, 0%, 18%);
     --menu-item-focus: hsl(0, 0%, 10%);
     --menu-divider: hsla(0, 0%, 100%, 0.149);
-    --cartShadowTop: hsl(213, 27%, 6%);
-    --cartShadowBottom: hsl(218, 28%, 8%);
+    --shadowTop: hsl(213, 27%, 6%);
+    --shadowBottom: hsl(218, 28%, 8%);
 
     --accept-color: hsl(127, 70%, 44%);
     --accept-color-focus: hsl(0, 0%, 100%);

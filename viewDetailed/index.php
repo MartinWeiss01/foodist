@@ -84,13 +84,8 @@
                         <?php
                             echo $name." - ".$address." - ".$rID." - ".$city."<br>";
                             echo "<div class='flex row justify-content-evenly wrap'>";
-
                             if($foodlist->num_rows > 0) {
-                                while($row = $foodlist->fetch_assoc()) {
-                                    echo "<div class='flex hcenter vcenter foodRecord' data-foodid='".$row["ID"]."'><img class='foodRecordImage' src='../images/food/template".rand(1,7).".png'>
-                                    <span class='foodRecordName'>".$row["Name"]."</span><span class='foodRecordPrice'><img src='../images/icons/price.png' style='height:24px;'>".$row["Price"]." Kč</span>
-                                    <div class='addToCart' onclick='addToCart(".$row["ID"].")'><img src='../images/icons/cartadd.png'></div></div>";
-                                }
+                                while($row = $foodlist->fetch_assoc()) echo '<div class="item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/food/template'.rand(1,7).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].'Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg fill="white" width="25px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
                             }
                             echo "</div>";
                         ?>

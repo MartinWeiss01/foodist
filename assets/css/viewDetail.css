@@ -36,15 +36,21 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     .container[carton] > #shoppingCart {position:absolute}
 }
 
-.header-logo {height:40px;fill:var(--logo-color)}
+.header-logo {height:35px;fill:var(--logo-color)}
 .header-control-item {height:40px;fill:var(--color-primary);transition:.15s;border-radius:30px;padding:7px}
 .header-control-item:hover {fill:var(--add);background-color:var(--add-bg);transition:.15s}
 .nav-agent {gap:20px}
 
 #containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
 .empty-cart {display:flex;justify-content:center;align-items:center;height:100%}
-.cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--cartShadowTop), inset -5px -5px 10px var(--cartShadowBottom)}
+.cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--shadowTop), inset -5px -5px 10px var(--shadowBottom)}
 
+.item {width:325px;margin:1rem 0;padding:1rem;border-radius:6px;box-shadow:22px 22px 44px var(--shadowTop), -22px -22px 44px var(--shadowBottom)}
+.itemHeader {position:relative;height:120px;border-radius:6px 6px 0 0;background:#dbbd48}
+.itemPreview {height:120px;position:absolute;bottom:-35px}
+.itemBody {color:var(--color-primary);margin-top:55px;padding:0 10px}
+.itemName {color:var(--color-primary);font-size:20px;font-weight:600;white-space:pre-wrap}
+.itemAdd {height:50px;width:50px;font-size:35px;border-radius:60px;background:var(--add)}
 
 
 
