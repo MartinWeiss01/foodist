@@ -1,6 +1,8 @@
-/* Menu | Dropdown Menu | Minified (32.23% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
+/* Menu | Dropdown Menu | Minified (32.34% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
 .menuParent{position:relative}.menu{position:absolute;top:52px;border-radius:3px;padding:15px;min-width:260px;background:var(--menu-background);box-shadow:0 0 6px var(--nav-shadow)}.menu.align-right{right:0}.menuParent[active] .menuItem span,.menuParent[active] .menuItem icon,.menuParent[active] .menu{animation:menuIn .5s;visibility:visible}.menu,.menuItem span,.menuItem icon{visibility:hidden;animation:menuOut .5s}.menuItem span{font-size:14px;color:var(--color-primary)}.menuItem icon:not([theme-listener]){font-size:22px;color:var(--color-primary);background:var(--menu-icon-background);padding:10px;border-radius:20px;margin-right:8px}.menuItem icon[theme-listener]{font-size:22px;color:var(--color-primary);padding:10px;margin-right:8px}.menuItem{padding:7px;border-radius:3px}.menuItem:hover{background:var(--menu-item-focus)}.menuDivider{width:100%;height:1px;border:0;border-top:1px solid var(--menu-divider);margin:0}.menu > :not(:last-child){margin-bottom:10px!important}@keyframes menuIn{from{opacity:0;top:0}to{opacity:1;top:52px}}@keyframes menuOut{from{opacity:1;top:52px}to{opacity:0;top:0}}
-/* Toast | Minified (59.24% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
+/* accountMenu | Account Styling | Minified (28.92% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
+.account{padding:7px 10px;border-radius:3px;transition:.3s}.account:hover,.menuParent[active] > .account{background:var(--account-background);transition:.3s}.account > span{font-size:14px}.accountImage{--size:26px;width:var(--size);height:var(--size);border-radius:25px;margin-right:8px}
+/* Toast | Minified (40.38% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
 .toastBox[active]{visibility:visible;animation:toastIn 0.5s,toastOut .5s 2.5s}.toastBox{visibility:hidden;position:fixed;z-index:860;display:flex;justify-content:center;align-items:flex-end;width:100%;bottom:3rem}.toast{background:var(--background-default);color:var(--color-primary);border:1px solid var(--border-primary);padding:.5rem;font-size:13px;font-weight:700;border-radius:6px}@keyframes toastIn{from{opacity:0;bottom:0}to{opacity:1;bottom:3rem}}@keyframes toastOut{from{opacity:1;bottom:3rem}to{opacity:0;bottom:0}}
 
 /*
@@ -45,36 +47,23 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 .empty-cart {display:flex;justify-content:center;align-items:center;height:100%}
 .cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--shadowTop), inset -5px -5px 10px var(--shadowBottom)}
 
-.item {width:325px;margin:1rem 0;padding:1rem;border-radius:6px;box-shadow:22px 22px 44px var(--shadowTop), -22px -22px 44px var(--shadowBottom)}
-.itemHeader {position:relative;height:120px;border-radius:6px 6px 0 0;background:#dbbd48}
-.itemPreview {height:120px;position:absolute;bottom:-35px}
-.itemBody {color:var(--color-primary);margin-top:55px;padding:0 10px}
-.itemName {color:var(--color-primary);font-size:20px;font-weight:600;white-space:pre-wrap}
-.itemAdd {height:50px;width:50px;font-size:35px;border-radius:60px;background:var(--add)}
+.item {margin:1rem 0;border-radius:6px;box-shadow:22px 22px 44px var(--shadowTop), -22px -22px 44px var(--shadowBottom)}
+.itemHeader {position:relative;height:150px}
+.itemHeader::before {content:' ';height:100%;width:100%;background:#dbbd48;border-radius:6px 6px 0 0;clip-path:circle(63.5% at 35% 10%)}
+.itemPreview {height:160px;position:absolute;bottom:-55px}
+.itemBody {gap:15px;color:var(--color-primary);padding:4rem 2rem 2rem 2rem}
+.itemInfo {width:150px}
+.itemName {color:var(--color-primary);font-size:18px;font-weight:600;white-space:pre-wrap}
+.itemAdd {--size:40px;height:var(--size);width:var(--size);font-size:35px;fill:var(--add);border-radius:60px;border:2px solid var(--add);transition:.3s}
+.itemAdd:hover {background:var(--add);fill:white;transition:.3s}
 
+icon.add, icon.remove {padding:4px;border:1px solid whitesmoke;border-radius:5px;transition:.3s}
+icon.add:hover, icon.remove:hover {color:white;transition:.3s}
+icon.add {border-color:var(--success);color:var(--success)}
+icon.remove {border-color:var(--delete);color:var(--delete)}
+icon.add:hover {background-color:var(--success)}
+icon.remove:hover {background-color:var(--delete)}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    accountMenu.css
-    © Copyright 2020 Martin Weiss (martinweiss.cz)
-*/
-.account{padding:7px 10px;border-radius:3px;transition:.3s}
-.account:hover,
-.menuParent[active] > .account{background:var(--account-background);transition:.3s}
-.account > span{font-size:14px}
-.accountImage{--size:26px;width:var(--size);height:var(--size);border-radius:25px;margin-right:8px}
 
 /*
     viewDetail.css
@@ -93,11 +82,6 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 
 .restaurant-detailed-header {
     grid-area: rdHeader;
-    background: url("https://images.unsplash.com/photo-1605654940299-cd48a4bda742?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=mariah-hewines-88aMFDKdv6E-unsplash.jpg&w=1920") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
     color: white;
     font-size: 5rem;
     text-transform: uppercase;
@@ -108,77 +92,3 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     grid-area: rdBody;
     padding: 2rem;
 }
-
-.foodRecord {
-    background: #ffffff;
-    width: 14rem;
-    margin: 4rem 0;
-    border-radius: 10px;
-    box-shadow: 0 0 20px 0px #00000005;
-}
-
-.foodRecordImage {
-    margin: -60px 0 20px;
-    height: 120px;
-}
-
-.foodRecordName {
-    font-weight: 700;
-    font-size: 18px;
-}
-
-.foodRecordPrice {
-    margin: 5px 0 20px;
-    font-weight: 600;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-}
-
-.addToCart {
-    background: white;
-    border: 1px solid #1a1a1a;
-    width: 100%;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    padding: 7px;
-    transition: .3s;
-    cursor: pointer;
-}
-.addToCart > img {
-    height: 28px;
-    filter: invert(100%);
-    transition: .3s;
-}
-
-.addToCart:hover {
-    background: #1a1a1a;
-    transition: .3s;
-    border-radius: 9px;
-}
-
-.addToCart:hover > img {
-    filter: invert(0%);
-    transition: .3s;
-}
-
-
-
-
-icon.add, icon.remove {
-    cursor: pointer;
-    padding: 4px;
-    border: 1px solid whitesmoke;
-    border-radius: 5px;
-    transition: .3s;
-}
-
-icon.add:hover, icon.remove:hover {
-    color:white;
-    transition: .3s;
-}
-icon.add {border-color: green;color:green;}
-icon.add:hover {background-color: green;}
-icon.remove {border-color: red;color:red;}
-icon.remove:hover {background-color:red;}

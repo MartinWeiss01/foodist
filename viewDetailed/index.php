@@ -11,6 +11,7 @@
         $address = $result["Address"];
         $rID = $result["ID"];
         $city = $result["City"];
+        $imagebg = $result["ImageBG"];
 
         $foodlist = $conn->callQuery("SELECT * FROM food WHERE restaurantID = ".$_GET["rID"]);
     } else echo "Žádná restaurace!";
@@ -77,15 +78,14 @@
 
             <main>
                 <div class="restaurant-details">
-                    <div class="flex hcenter vcenter restaurant-detailed-header">
-                        <?php echo $name; ?>
-                    </div>
+                    <?php echo "<div class='flex hcenter vcenter restaurant-detailed-header' style='background:url(/images/restaurants/bg/$imagebg) no-repeat center center fixed;background-size:cover;'>$name</div>"; ?>
                     <div class="restaurant-detailed-body">
                         <?php
                             echo $name." - ".$address." - ".$rID." - ".$city."<br>";
                             echo "<div class='flex row justify-content-evenly wrap'>";
+                            $row = $foodlist->fetch_assoc();
                             if($foodlist->num_rows > 0) {
-                                while($row = $foodlist->fetch_assoc()) echo '<div class="item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/food/template'.rand(1,7).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].'Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg fill="white" width="25px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
+                                while($row = $foodlist->fetch_assoc()) echo '<div class="flex justify-content-between item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/restaurants/food/'.($row["ImageID"] == "default" ? rand(1,19) : $row["ImageID"]).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex itemInfo"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].' Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg width="18px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
                             }
                             echo "</div>";
                         ?>
@@ -135,7 +135,7 @@
             cartContainer.innerHTML = null;
             if(Object.keys(cart).length != 0) {
                 let newContent = `<h1 id="cartTitle">Váš košík</h1><div id="containerCart" class="flex">`;
-                for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="flex row hcenter justify-content-between cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="flex"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="flex row hcenter"><icon class="remove" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
+                for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="flex row hcenter justify-content-between cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="flex"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="flex row hcenter"><icon class="remove" data-role="button" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" data-role="button" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
                 newContent += `</div>`;
                 shoppingCartBox.innerHTML = newContent;
             } else shoppingCartBox.innerHTML = `<div id="containerCart" class="flex empty-cart">Váš nákupní košík je prázdný</div>`;
