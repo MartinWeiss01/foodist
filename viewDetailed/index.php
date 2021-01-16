@@ -99,7 +99,7 @@
             </main>
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
-            <div id="shoppingCart"><div id="containerCart" class="empty-cart">Váš nákupní košík je prázdný</div></div>
+            <div id="shoppingCart"><div id="containerCart" class="flex empty-cart">Váš nákupní košík je prázdný</div></div>
         </div>
 
         <div class="toastBox">
@@ -129,25 +129,21 @@
         function actionCart(actionid, params = "") {
             fetch("../controllers/cart.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `action=${actionid}${params}`})
             .then(response => {
-                if(DEBUG) console.log(`Response: ${response}`);
                 if(response.ok) return response.json();
                 return Promise.reject(response);
             })
-            .then(data => {
-                if(DEBUG) console.log(`Data: ${data}`);
-                parseCart(data);
-            })
-            .catch((error) => {console.log(`Při zpracovávání košíku došlo k chybě: ${error}`);});
+            .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : parseCart(data);})
+            .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
         }
 
         function parseCart(cart){
             cartContainer.innerHTML = null;
             if(Object.keys(cart).length != 0) {
-                let newContent = `<h1 id="cartTitle">Váš košík</h1><div id="containerCart">`;
+                let newContent = `<h1 id="cartTitle">Váš košík</h1><div id="containerCart" class="flex">`;
                 for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="itemLeft"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="itemRight"><icon class="remove" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
                 newContent += `</div>`;
                 shoppingCartBox.innerHTML = newContent;
-            } else shoppingCartBox.innerHTML = `<div id="containerCart" class="empty-cart">Váš nákupní košík je prázdný</div>`;
+            } else shoppingCartBox.innerHTML = `<div id="containerCart" class="flex empty-cart">Váš nákupní košík je prázdný</div>`;
         }
 
         function itemCountChange(e, i = 0) {

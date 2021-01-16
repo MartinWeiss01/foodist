@@ -6,54 +6,47 @@
  * -----------------
  * Located in   \viewDetailed\index.php
  */
-    session_start();
-    require_once('../config/.config.inc.php');
+    header("Content-Type: application/json");
+    require_once('../controllers/AccountController.php');
+    $account = new UserAccountHandler($_SESSION);
+    $account->disableUnauthorized();
+    require_once('ConnectionController.php');
+    $conn = new ConnectionHandler();
 
-    if(!isset($_SESSION["cart"])) $cart = array();
-    else $cart = $_SESSION["cart"];
+    switch ($_POST["action"]) {
+        case 1:
+            $fid = $_POST["fid"];
+            $fnid = "f$fid";
 
-
-    if($_POST["action"] == 1) {
-        $fid = $_POST["fid"];
-        $fnid = "f$fid";
-    
-        if($cart[$fnid]) $cart[$fnid][1] += 1;
-        else {
-            $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-            $conn -> set_charset("utf8");
-            $query = "SELECT Name, Price FROM food WHERE ID = ".$fid;
-            $result = $conn->query($query) or die("-2");
-            $result = $result->fetch_assoc();
-            $name = $result["Name"];
-            $price = $result["Price"];
-            $conn->close();
-            $cart += array($fnid => array($fid, 1, $price, $name));
-        }
-        $_SESSION["cart"] = $cart;
-        echo json_encode($cart, JSON_NUMERIC_CHECK);
-    } else if($_POST["action"] == 2) {
-        echo json_encode($cart, JSON_NUMERIC_CHECK);
-    } else if($_POST["action"] == 3) {
-        $fid = $_POST["fid"];
-        $fnid = "f$fid";
-        $fcount = $_POST["count"];
-        
-        if($fcount <= 0) unset($cart[$fnid]);
-        else {
-            if($cart[$fnid]) $cart[$fnid][1] = $fcount;
+            if($account->UCart[$fnid]) $account->UCart[$fnid][1] += 1;
             else {
-                $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-                $conn -> set_charset("utf8");
-                $query = "SELECT Name, Price FROM food WHERE ID = ".$fid;
-                $result = $conn->query($query) or die("-2");
+                $result = $conn->callQuery("SELECT Name, Price FROM food WHERE ID = ".$fid);
                 $result = $result->fetch_assoc();
-                $name = $result["Name"];
-                $price = $result["Price"];
-                $conn->close();
-                $cart += array($fnid => array($fid, 1, $price, $name));
+                $account->UCart += array($fnid => array($fid, 1, $result["Price"], $result["Name"]));
             }
-        }
-        $_SESSION["cart"] = $cart;
-        echo json_encode($cart, JSON_NUMERIC_CHECK);
+            $account->updateUserCart();
+            $conn->finishConnection(json_encode($account->UCart, JSON_NUMERIC_CHECK));
+            break;
+        case 2:
+            $conn->finishConnection(json_encode($account->UCart, JSON_NUMERIC_CHECK));
+            break;
+        case 3:
+            $fid = $_POST["fid"];
+            $fnid = "f$fid";
+            $fcount = $_POST["count"];
+
+            if($fcount <= 0) unset($account->UCart[$fnid]);
+            else {
+                if($account->UCart[$fnid]) $account->UCart[$fnid][1] = $fcount;
+                else {
+                    $result = $conn->callQuery("SELECT Name, Price FROM food WHERE ID = ".$fid);
+                    $result = $result->fetch_assoc();
+                    $account->UCart += array($fnid => array($fid, 1, $result["Price"], $result["Name"]));
+                }
+            }
+            $account->updateUserCart();
+            $conn->finishConnection(json_encode($account->UCart, JSON_NUMERIC_CHECK));
+            break;
     }
+    $conn->finishConnection('{"error_code":-3,"error_message":"Unknown Action Required"}');
 ?>
