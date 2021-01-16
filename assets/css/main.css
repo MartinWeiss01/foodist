@@ -8,6 +8,7 @@ a{text-decoration:none}
 .flex.vcenter{justify-content:center}
 .flex.justify-content-between{justify-content:space-between}
 .flex.justify-content-around{justify-content:space-around}
+.flex.justify-content-evenly{justify-content:space-evenly}
 .flex.justify-content-end{justify-content:flex-end}
 .flex.wrap{flex-wrap:wrap}
 
