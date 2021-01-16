@@ -11,12 +11,12 @@
         }
 
         public function callQuery($query) {
-            $result = $this->connection->query($query) or $this->exitScript('{"error_code":-2,"error_message":"Invalid Query","mysql_error":"'.$this->connection->error.'"}');
+            $result = $this->connection->query($query) or $this->exitScript('{"error_code":-2,"error_message":"Invalid Query"}');
             return $result;
         }
 
         public function callMultiQuery($query) {
-            $result = $this->connection->multi_query($query) or $this->exitScript('{"error_code":-2,"error_message":"Invalid Query","mysql_error":"'.$this->connection->error.'"}');
+            $result = $this->connection->multi_query($query) or $this->exitScript('{"error_code":-2,"error_message":"Invalid Query"}');
             return $result;
         }
 
