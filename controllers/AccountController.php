@@ -5,6 +5,7 @@
     class UserAccountHandler {
         public $authorized = false;
         public $DisplayName = "Přihlásit se";
+        public $UCart = array();
 
         public $UID;
         public $UEmail;
@@ -12,7 +13,6 @@
         public $ULastName;
         public $UProfilePicture = "default.svg";
         public $UAdmin;
-        public $UCart = array();
 
         public function __construct($arr) {
             if(isset($arr["FoodistID"])) {
@@ -51,10 +51,14 @@
             if(!($this->authorized)) return die(header("Location: ".SSL_APP_PATH));
         }
         public function disableUnauthorized() {
-            if(!($this->authorized)) return die('{"error_code":-666,"error_message":"Access Denied"}');
+            if(!($this->authorized)) return die('{"error_code":-664,"error_message":"Access Denied"}');
         }
         public function updateUserCart() {
             $_SESSION["FoodistCart"] = $this->UCart;
+        }
+        public function disableDirect($serverHeaders) {
+            if(!$serverHeaders["HTTP_ORIGIN"]) return die('{"error_code":-665,"error_message":"Access Denied"}');
+            else if($serverHeaders["HTTP_ORIGIN"] != APP_ORIGIN) return die('{"error_code":-666,"error_message":"Access Denied"}');
         }
     }
 ?>
