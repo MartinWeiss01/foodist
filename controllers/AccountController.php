@@ -76,4 +76,58 @@
             else if($serverHeaders["HTTP_ORIGIN"] != APP_ORIGIN) return die('{"error_code":-666,"error_message":"Access Denied"}');
         }
     }
+
+    class CompanyAccountHandler {
+        public $authenticated = false;
+
+        public $CID;
+        public $CName;
+        public $CIN;
+        public $CEmail;
+
+        public function __construct($arr) {
+            if(isset($arr["CompanyID"])) {
+                $this->CID = $arr["CompanyID"];
+                $this->CName = $arr["CompanyName"];
+                $this->CIN = $arr["CompanyIN"];
+                $this->CEmail = $arr["CompanyEmail"];
+
+                $this->authenticated = true;
+            }
+            return 1;
+        }
+
+        public function logout(string $urlRedirect) {
+            session_destroy();
+            die(header("Location: $urlRedirect"));
+        }
+
+        public function fetchLogin($arr) {
+            if(!is_array($arr)) return 0;
+            $this->authenticated = true;
+            $this->CID = $arr["ID"];
+            $_SESSION["CompanyID"] = $this->CID;
+            $_SESSION["CompanyName"] = $arr["Name"];
+            $_SESSION["CompanyIN"] = $arr["IdentificationNumber"];
+            $_SESSION["CompanyEmail"] = $arr["Email"];
+            return 1;
+        }
+
+        public function isLoggedIn() {
+            return $this->authenticated;
+        }
+        public function redirectAuthenticated() {
+            if($this->isLoggedIn()) return die(header("Location: ".SSL_COMPANY_PATH));
+        }
+        public function redirectUnauthenticated() {
+            if(!$this->isLoggedIn()) return die(header("Location: ".SSL_APP_PATH));
+        }
+        public function disableUnauthenticated() {
+            if(!$this->isLoggedIn()) return die('{"error_code":-664,"error_message":"Access Denied"}');
+        }
+        public function disableDirect($serverHeaders) {
+            if(!$serverHeaders["HTTP_ORIGIN"]) return die(header("Location: ".SSL_APP_PATH));
+            else if($serverHeaders["HTTP_ORIGIN"] != APP_ORIGIN) return die('{"error_code":-666,"error_message":"Access Denied"}');
+        }
+    }
 ?>
