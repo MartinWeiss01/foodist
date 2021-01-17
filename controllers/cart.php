@@ -9,7 +9,6 @@
     header("Content-Type: application/json");
     require_once('../controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
-    $account->disableUnauthorized();
     require_once('ConnectionController.php');
     $conn = new ConnectionHandler();
 
@@ -22,6 +21,7 @@
             else {
                 $result = $conn->callQuery("SELECT Name, Price FROM food WHERE ID = ".$fid);
                 $result = $result->fetch_assoc();
+                if(!$result["Name"]) $conn->finishConnection('{"error_code":-4,"error_message":"Unknown Error"}');
                 $account->UCart += array($fnid => array($fid, 1, $result["Price"], $result["Name"]));
             }
             $account->updateUserCart();
@@ -41,6 +41,7 @@
                 else {
                     $result = $conn->callQuery("SELECT Name, Price FROM food WHERE ID = ".$fid);
                     $result = $result->fetch_assoc();
+                    if(!$result["Name"]) $conn->finishConnection('{"error_code":-4,"error_message":"Unknown Error"}');
                     $account->UCart += array($fnid => array($fid, 1, $result["Price"], $result["Name"]));
                 }
             }
