@@ -94,7 +94,18 @@
             </main>
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
-            <div id="shoppingCart"><div id="containerCart" class="flex empty-cart">Váš nákupní košík je prázdný</div></div>
+            
+            <div class="flex justify-content-between" id="shoppingCart">
+                <div class="flex">
+                    <h1 style="text-align:center;margin:0 0 2rem 0;padding:1rem 0;">Váš košík</h1>
+                    <div id="containerCart" class="flex"><span class="emptyAgent">Váš nákupní košík je prázdný</span></div>
+                </div>
+
+                <div class="cartTotal">
+                    <span id="totalPrice">Celkem: 0 Kč</span>
+                    <div class="orderStep" data-role="button">Objednat</div>
+                </div>
+            </div>
         </div>
 
         <div class="toastBox">
@@ -112,10 +123,11 @@
         function hideMenu(caller) {document.getElementById("menubody").style.visibility = "visible";caller.parentElement.removeAttribute("active");window.setTimeout(() => {document.getElementById("menubody").style.visibility = "hidden";}, 300);}
 
         document.addEventListener("DOMContentLoaded", () => {checkCart();});
-        const shoppingCartBox = document.getElementById("shoppingCart");
-        const cartContainer = document.getElementById("containerCart");
-        const mainContainer = document.getElementById("root");
-        const DEBUG = false;
+        const DEBUG = false,
+                shoppingCartBox = document.getElementById("shoppingCart"),
+                cartContainer = document.getElementById("containerCart"),
+                mainContainer = document.getElementById("root"),
+                totalPrice = document.getElementById("totalPrice");
 
         function addToCart(e) {actionCart(1, `&fid=${e}`);}
         function checkCart() {actionCart(2);}
@@ -133,12 +145,15 @@
 
         function parseCart(cart){
             cartContainer.innerHTML = null;
+            totalPriceInt = 0;
             if(Object.keys(cart).length != 0) {
-                let newContent = `<h1 id="cartTitle">Váš košík</h1><div id="containerCart" class="flex">`;
-                for(let i = 0; i < Object.keys(cart).length; i++) newContent += `<div class="flex row hcenter justify-content-between cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="flex"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="flex row hcenter"><icon class="remove" data-role="button" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" data-role="button" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
-                newContent += `</div>`;
-                shoppingCartBox.innerHTML = newContent;
-            } else shoppingCartBox.innerHTML = `<div id="containerCart" class="flex empty-cart">Váš nákupní košík je prázdný</div>`;
+                let updatedContent = "";
+                for(let i = 0; i < Object.keys(cart).length; i++) updatedContent += `<div class="flex row hcenter justify-content-between cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="flex"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="flex row hcenter"><icon class="remove" data-role="button" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" data-role="button" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
+                totalPriceInt = Object.keys(cart).map((k) => cart[k]).reduce((r, a) => r+(a[1]*a[2]), 0);
+                cartContainer.innerHTML = updatedContent;
+            } else cartContainer.innerHTML = `<span class="emptyAgent">Váš nákupní košík je prázdný</span>`;
+
+            totalPrice.innerText = `Celkem: ${totalPriceInt} Kč`;
         }
 
         function itemCountChange(e, i = 0) {

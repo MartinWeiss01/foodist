@@ -27,7 +27,7 @@ body {margin:0;padding:0;background:var(--background-default)}
 main {grid-area:main}
 footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13px;letter-spacing:-1px;text-align:center}
 #shoppingCart {grid-area:cart;display:none;color:var(--color-primary)}
-#shoppingCart.active {display:flex;flex-direction:column;align-items:center}
+#shoppingCart.active {display:flex}
 @media only screen and (max-width: 986px) {
     .container {grid-template-columns:auto;grid-template-rows:5rem auto 5rem;
         grid-template-areas:
@@ -44,8 +44,9 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 .nav-agent {gap:20px}
 
 #containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
-.empty-cart {display:flex;justify-content:center;align-items:center;height:100%}
 .cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--shadowTop), inset -5px -5px 10px var(--shadowBottom)}
+.cartTotal {background:var(--add-bg);padding:2rem 20px}
+.emptyAgent {text-align:center}
 
 .item {margin:1rem 0;border-radius:6px;box-shadow:22px 22px 44px var(--shadowTop), -22px -22px 44px var(--shadowBottom)}
 .itemHeader {position:relative;height:150px}
