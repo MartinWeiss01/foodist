@@ -1,14 +1,14 @@
 <?php
-    session_start();
-    if(!isset($_SESSION["RestaurantAccountID"])) return die(header("Location: login/"));
-    require_once('../config/.config.inc.php');
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-    if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
-    $conn -> set_charset("utf8");
-    $query = "SELECT * FROM restaurant_accounts WHERE ID = ".$_SESSION["RestaurantAccountID"];
-    $result_info = $conn->query($query);
-    $query = "SELECT * FROM restaurants WHERE accountID = ".$_SESSION["RestaurantAccountID"];
-    $result_list = $conn->query($query);
+    require_once(dirname(__DIR__).'/controllers/AccountController.php');
+    $account = new CompanyAccountHandler($_SESSION);
+    $account->redirectUnauthenticated();
+    
+    require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
+    $conn = new ConnectionHandler();
+    $result_info = $conn->callQuery("SELECT * FROM restaurant_accounts WHERE ID = $account->CID");
+    $result_list = $conn->callQuery("SELECT * FROM restaurants WHERE accountID = $account->CID");
+    $citiesString = "let citiesList = -1;";
+    $cuisinesString = "let cuisinesList = -1;";
 ?>
 
 <!DOCTYPE html>
@@ -133,14 +133,13 @@
                 return Promise.reject(response);
             })
             .then(data => {
-                if(DEBUG) console.log(data);
-                let content = `<span>Toto je obsah restaurace s ID: ${j}</span><div data-restaurant-id="${j}" id="addNewFoodButton-${j}" onclick="addNewFood(this)">Přidat nové jídlo</div>`;
-                content += `<div id="foodlistRestaurantID-${j}" class="foodlist">`;
-                if(parseInt(data) == -2) console.log(`[!] Restaurant ${j} nemá žádné jídlo.`);
-                else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${j}.`);
-                else for(let i = 0; i < data.length; i++) content += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="edit">edit</icon><icon class="delete" onclick="modalMode_Deleting(${data[i][0]})">delete_outline</icon></div></div>`;
-                content += '</div>';
-                document.getElementById("restaurantBodyID-"+j).innerHTML = content;
+                if(data["error_code"]) console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`);
+                else {
+                    let content = `<span>Toto je obsah restaurace s ID: ${j}</span><div data-restaurant-id="${j}" id="addNewFoodButton-${j}" onclick="addNewFood(this)">Přidat nové jídlo</div><div id="foodlistRestaurantID-${j}" class="foodlist">`;
+                    if(!data["emptylist"]) for(let i = 0; i < data.length; i++) content += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="food-record"><div class="foodInfo"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice">${data[i][2]}</span><span> Kč</span></div></div><div class="row"><icon class="edit">edit</icon><icon class="delete" onclick="modalMode_Deleting(${data[i][0]})">delete_outline</icon></div></div>`;
+                    content += `</div>`;
+                    document.getElementById("restaurantBodyID-"+j).innerHTML = content;
+                }
             })
             .catch(err => {console.log(`[!][downloadingFoodList] ${err}`);});
         }
@@ -168,10 +167,7 @@
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {
-                            if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFA${data}.`);
-                            else appendFoodToList(rID, parseInt(data), foodName, foodPrice);
-                        })
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendFoodToList(rID, data["insert_id"], foodName, foodPrice);})
                         .catch(err => {console.log(`[!][overlayModalBox.mode ${overlayModalBox.dataset.mode}] ${err}`);});
                     } else console.log("[!] Webová aplikace se nachází v debuging módu, jídlo nebylo přidán.");
                 }
@@ -186,8 +182,11 @@
                         return Promise.reject(response);
                     })
                     .then(data => {
-                        if(parseInt(data) == 1) deleteRecord(currentFood);
-                        else console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | fid=${overlayModalBox.dataset.obj}.`);
+                        if(data["error_code"]) console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`);
+                        else {
+                            if(data["success"] == true) deleteRecord(currentFood);
+                            else console.log("[!] Při mazání záznamu došlo k chybě");
+                        }
                     })
                     .catch(err => {console.log(`[!][overlayModalBox.mode ${overlayModalBox.dataset.mode}] ${err}`);});
                 }

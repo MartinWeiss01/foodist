@@ -1,25 +1,22 @@
 <?php
-    session_start();
-    if(isset($_SESSION["RestaurantAccountID"])) header("Location: ..");
-
+    require_once(dirname(dirname(__DIR__)).'/controllers/AccountController.php');
+    $account = new CompanyAccountHandler($_SESSION);
+    $account->redirectAuthenticated();
+    
     $rep = false;
     if(count($_POST) > 0) {
-        require_once('../../config/.config.inc.php');
-        $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
-        if($conn->connect_error) die("Connection failed: ".$conn->connect_error);
+        require_once(dirname(dirname(__DIR__)).'/controllers/ConnectionController.php');
+        $conn = new ConnectionHandler();
     
-        $sql = "SELECT ID, Email FROM restaurant_accounts WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)";
-        $result = $conn->query($sql);
-        $x = $result->fetch_assoc();
-        if(is_array($x)) {
-            $_SESSION["RestaurantAccountID"] = $x["ID"];
-            $_SESSION["RestaurantAccountEmail"] = $x["Email"];
-            $sql = "UPDATE restaurant_accounts SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = ".$_SESSION["FoodistID"];
-            $result = $conn->query($sql);
-            $conn->close();
-            header("Location: ..");
-        } else $rep = true;
-        $conn->close();
+        $result = $conn->callQuery("SELECT * FROM restaurant_accounts WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)");
+        $fetched = $account->fetchLogin($result->fetch_assoc());
+
+        if(!$fetched) $rep = true;
+        else {
+            $conn->callQuery("UPDATE restaurant_accounts SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = $account->CID");
+            $conn->finishConnection(header("Location: ".SSL_COMPANY_PATH));
+        }
+        $conn->closeConnection();
     }
 ?>
 
