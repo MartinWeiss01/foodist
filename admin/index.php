@@ -492,18 +492,18 @@
                     return Promise.reject(response);
                 })
                 .then(data => {
-                    let rName = document.getElementById("company-restaurant-"+j).dataset.restaurantName,
-                        content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
-                    
-                    if(parseInt(data) == -2) console.log(`[!] Restaurade ${rID} nemá žádné jídlo.`);
-                    else if(parseInt(data) < 0) console.log(`[!] Při přidávání záznamu došlo k chybě 0xFD${data} | rid=${rID}.`);
+                    if(data["error_code"]) console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`);
                     else {
-                        let foodList = '<div id="foodlist-editable" class="foodlist">';
-                        for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="flex row hcenter justify-content-between food-record"><div class="flex"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="flex row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
-                        foodList += '</div>';
-                        content += foodList;
+                        let rName = document.getElementById("company-restaurant-"+j).dataset.restaurantName,
+                            content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
+                        if(!data["emptylist"]) {
+                            let foodList = '<div id="foodlist-editable" class="foodlist">';
+                            for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="flex row hcenter justify-content-between food-record"><div class="flex"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="flex row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
+                            foodList += '</div>';
+                            content += foodList;
+                        }
+                        showModal(content, j, "Uložit", 2);
                     }
-                    showModal(content, j, "Uložit", 2);
                 })
                 .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
             } else {

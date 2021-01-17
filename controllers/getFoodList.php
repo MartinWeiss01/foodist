@@ -7,24 +7,23 @@
  * Located in   \admin\index.php
  *              \restaurant\index.php
  */
-    session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
+    header("Content-Type: application/json");
+    require_once(__DIR__.'/AccountController.php');
+    $account = new CompanyAccountHandler($_SESSION);
+    if(!$account->isLoggedIn()) {
+        $account = new UserAccountHandler($_SESSION);
+        $account->disableUnauthorized();
+        $account->disableDirect($_SERVER);
+    } else $account->disableDirect($_SERVER);
 
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
+    require_once(__DIR__.'/ConnectionController.php');
+    $conn = new ConnectionHandler();
 
     $rID = $_POST["rid"];
-    $query = "SELECT ID, Name, Price FROM food WHERE restaurantID = $rID";
-    $result = $conn->query($query) or die("-2");
+    $result = $conn->callQuery("SELECT ID, Name, Price FROM food WHERE restaurantID = $rID");
+    if($result->num_rows <= 0) $conn->finishConnection('{"success":true,"emptylist":true}');
     
-    $foodArray = null;
-    if($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $foodArray[] = array($row["ID"], $row["Name"], $row["Price"]);
-        }
-    }
-    $conn->close();
-    if($foodArray == null) echo "-2";
-    else echo json_encode($foodArray);    
+    $foodarr = array();
+    while($row = $result->fetch_assoc()) $foodarr[] = array($row["ID"], $row["Name"], $row["Price"]);
+    $conn->finishConnection(json_encode($foodarr));
 ?>
