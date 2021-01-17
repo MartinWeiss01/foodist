@@ -10,6 +10,7 @@
     require_once('../controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
     $account->disableUnauthorized();
+    $account->disableDirect($_SERVER);
     require_once('ConnectionController.php');
     $conn = new ConnectionHandler();
     
