@@ -3,7 +3,7 @@
     session_start();
 
     class UserAccountHandler {
-        public $authorized = false;
+        public $authenticated = false;
         public $DisplayName = "Přihlásit se";
         public $UCart = array();
 
@@ -12,7 +12,7 @@
         public $UFirstName;
         public $ULastName;
         public $UProfilePicture = "default.svg";
-        public $UAdmin;
+        private $UAdmin;
 
         public function __construct($arr) {
             if(isset($arr["FoodistID"])) {
@@ -23,7 +23,7 @@
                 $this->UProfilePicture = $arr["FoodistImage"];
                 $this->UAdmin = $arr["FoodistAdmin"];
 
-                $this->authorized = true;
+                $this->authenticated = true;
                 $this->DisplayName = "$this->UFirstName $this->ULastName";
             }
 
@@ -31,9 +31,14 @@
             return 1;
         }
 
+        public function logout(string $urlRedirect) {
+            session_destroy();
+            die(header("Location: $urlRedirect"));
+        }
+
         public function fetchLogin($arr) {
             if(!is_array($arr)) return 0;
-            $this->authorized = true;
+            $this->authenticated = true;
             $this->UID = $arr["ID"];
             $_SESSION["FoodistID"] = $this->UID;
             $_SESSION["FoodistEmail"] = $arr["Email"];
@@ -44,20 +49,30 @@
             return 1;
         }
 
-        public function redirectAuthorized() {
-            if($this->authorized) return die(header("Location: ".SSL_APP_PATH));
-        }
-        public function redirectUnauthorized() {
-            if(!($this->authorized)) return die(header("Location: ".SSL_APP_PATH));
-        }
-        public function disableUnauthorized() {
-            if(!($this->authorized)) return die('{"error_code":-664,"error_message":"Access Denied"}');
-        }
         public function updateUserCart() {
             $_SESSION["FoodistCart"] = $this->UCart;
         }
+
+        public function isLoggedIn() {
+            return $this->authenticated;
+        }
+        public function isAdmin() {
+            return ($this->UAdmin > 0);
+        }
+        public function redirectAuthenticated() {
+            if($this->isLoggedIn()) return die(header("Location: ".SSL_APP_PATH));
+        }
+        public function redirectUnauthenticated() {
+            if(!$this->isLoggedIn()) return die(header("Location: ".SSL_APP_PATH));
+        }
+        public function redirectUnauthorized() {
+            if(!$this->isAdmin()) return die(header("Location: ".SSL_APP_PATH));
+        }
+        public function disableUnauthorized() {
+            if(!$this->isAdmin()) return die('{"error_code":-664,"error_message":"Access Denied"}');
+        }
         public function disableDirect($serverHeaders) {
-            if(!$serverHeaders["HTTP_ORIGIN"]) return die('{"error_code":-665,"error_message":"Access Denied"}');
+            if(!$serverHeaders["HTTP_ORIGIN"]) return die(header("Location: ".SSL_APP_PATH));
             else if($serverHeaders["HTTP_ORIGIN"] != APP_ORIGIN) return die('{"error_code":-666,"error_message":"Access Denied"}');
         }
     }

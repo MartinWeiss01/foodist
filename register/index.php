@@ -1,7 +1,7 @@
 <?php
     require_once('../controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
-    $account->redirectAuthorized();
+    $account->redirectAuthenticated();
     
     $fail = NULL;
     if(count($_POST) > 0) {

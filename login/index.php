@@ -1,8 +1,7 @@
 <?php
-    require_once('../config/defines.inc.php');
-    require_once('../controllers/AccountController.php');
+    require_once(dirname(__DIR__).'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
-    $account->redirectAuthorized();
+    $account->redirectAuthenticated();
     
     $rep = false;
     if(count($_POST) > 0) {
