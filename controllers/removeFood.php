@@ -6,18 +6,16 @@
  * -----------------
  * Located in   \restaurant\index.php
  */
-    session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
-
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
+    header("Content-Type: application/json");
+    require_once(__DIR__.'/AccountController.php');
+    $account = new CompanyAccountHandler($_SESSION);
+    $account->disableUnauthenticated();
+    $account->disableDirect($_SERVER);
+    require_once(__DIR__.'/ConnectionController.php');
+    $conn = new ConnectionHandler();
 
     $fID = $_POST["fid"];
-
-    $query = "DELETE FROM food WHERE ID = $fID";
-    $conn->query($query) or die("-2");
-    echo "1";
-
-    $conn->close();
+    $result = $conn->callQuery("DELETE FROM food WHERE ID = $fID");
+    if($result) $conn->finishConnection('{"success":true}');
+    else $conn->finishConnection('{"success":false}');
 ?>

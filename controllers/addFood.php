@@ -6,19 +6,17 @@
  * -----------------
  * Located in   \restaurant\index.php
  */
-    session_start();
-    require_once('../config/.config.inc.php');
-    if(!isset($_SESSION["FoodistID"])) return die("-666");
-
-    $conn = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB) or die("-1");
-    $conn -> set_charset("utf8");
+    header("Content-Type: application/json");
+    require_once(__DIR__.'/AccountController.php');
+    $account = new CompanyAccountHandler($_SESSION);
+    $account->disableUnauthenticated();
+    $account->disableDirect($_SERVER);
+    require_once(__DIR__.'/ConnectionController.php');
+    $conn = new ConnectionHandler();
 
     $rid = $_POST["rid"];
     $foodname = htmlspecialchars($_POST["foodname"]);
     $foodprice = htmlspecialchars($_POST["foodprice"]);
-
-    $query = "INSERT INTO food (Name, Price, restaurantID) VALUES ('$foodname', '$foodprice', $rid)";
-    $conn->query($query);
-    echo $conn->insert_id;
-    $conn->close();
+    $conn->callQuery("INSERT INTO food (Name, Price, restaurantID) VALUES ('$foodname', '$foodprice', $rid)");
+    $conn->finishConnection('{"insert_id":'.$conn->connection->insert_id.'}');
 ?>
