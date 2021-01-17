@@ -77,13 +77,12 @@
             </nav>
 
             <main>
-                <div class="restaurant-details">
+                <div class="flex restaurant-details">
                     <?php echo "<div class='flex hcenter vcenter restaurant-detailed-header' style='background:url(/images/restaurants/bg/$imagebg) no-repeat center center fixed;background-size:cover;'>$name</div>"; ?>
                     <div class="restaurant-detailed-body">
                         <?php
                             echo $name." - ".$address." - ".$rID." - ".$city."<br>";
                             echo "<div class='flex row justify-content-evenly wrap'>";
-                            $row = $foodlist->fetch_assoc();
                             if($foodlist->num_rows > 0) {
                                 while($row = $foodlist->fetch_assoc()) echo '<div class="flex justify-content-between item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/restaurants/food/'.($row["ImageID"] == "default" ? rand(1,19) : $row["ImageID"]).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex itemInfo"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].' Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg width="18px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
                             }
@@ -95,15 +94,16 @@
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
             
-            <div class="flex justify-content-between" id="shoppingCart">
+            <div class="flex" id="shoppingCart">
                 <div class="flex">
-                    <h1 style="text-align:center;margin:0 0 2rem 0;padding:1rem 0;">Váš košík</h1>
+                    <span style="text-align:right;font-size:33px;padding:1rem 2rem 0" data-role="button" onclick="hideShoppingCart()">&times;</span>
+                    <h1 style="text-align:center;margin:0 0 2rem 0;padding-bottom:1rem">Váš košík</h1>
                     <div id="containerCart" class="flex"><span class="emptyAgent">Váš nákupní košík je prázdný</span></div>
                 </div>
 
                 <div class="cartTotal">
-                    <span id="totalPrice">Celkem: 0 Kč</span>
-                    <div class="orderStep" data-role="button">Objednat</div>
+                    <div class="flex row justify-content-between">Celkem:<span id="totalPrice">0 Kč</span></div>
+                    <div id="orderButton" data-role="button" disabled>Objednat</div>
                 </div>
             </div>
         </div>
@@ -127,11 +127,28 @@
                 shoppingCartBox = document.getElementById("shoppingCart"),
                 cartContainer = document.getElementById("containerCart"),
                 mainContainer = document.getElementById("root"),
+                orderButton = document.getElementById("orderButton"),
                 totalPrice = document.getElementById("totalPrice");
+
+        orderButton.addEventListener("click", () => {
+            if(!orderButton.hasAttribute("disabled")) {
+                fetch("../controllers/placeOrder.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+                .then(response => {
+                    if(response.ok) return response.json();
+                    return Promise.reject(response);
+                })
+                .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : finishOrder();})
+                .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
+            }
+        });
 
         function addToCart(e) {actionCart(1, `&fid=${e}`);}
         function checkCart() {actionCart(2);}
         function updateCart(e, c) {actionCart(3, `&fid=${e}&count=${c}`);}
+        function finishOrder() {
+            checkCart();
+            showToast("Objednávka byla úspěšně odeslána");
+        }
 
         function actionCart(actionid, params = "") {
             fetch("../controllers/cart.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `action=${actionid}${params}`})
@@ -151,9 +168,13 @@
                 for(let i = 0; i < Object.keys(cart).length; i++) updatedContent += `<div class="flex row hcenter justify-content-between cartItem" data-fid="${cart[Object.keys(cart)[i]][0]}" data-fcount="${cart[Object.keys(cart)[i]][1]}" data-fprice="${cart[Object.keys(cart)[i]][2]}"><div class="flex"><span class="cartItemName">${cart[Object.keys(cart)[i]][3]}</span><span class="cartItemPrice">${(cart[Object.keys(cart)[i]][2]*cart[Object.keys(cart)[i]][1]).toFixed(2)} Kč</span></div><div class="flex row hcenter"><icon class="remove" data-role="button" onclick="itemCountChange(this, 0)">remove</icon><span style="padding:0 10px;" class="cartItemCount">${cart[Object.keys(cart)[i]][1]}</span><icon class="add" data-role="button" onclick="itemCountChange(this, 1)">add</icon></div></div>`;
                 totalPriceInt = Object.keys(cart).map((k) => cart[k]).reduce((r, a) => r+(a[1]*a[2]), 0);
                 cartContainer.innerHTML = updatedContent;
-            } else cartContainer.innerHTML = `<span class="emptyAgent">Váš nákupní košík je prázdný</span>`;
+                orderButton.removeAttribute("disabled");
+            } else {
+                cartContainer.innerHTML = `<span class="emptyAgent">Váš nákupní košík je prázdný</span>`;
+                orderButton.setAttribute("disabled", "");
+            }
 
-            totalPrice.innerText = `Celkem: ${totalPriceInt} Kč`;
+            totalPrice.innerText = `${totalPriceInt} Kč`;
         }
 
         function itemCountChange(e, i = 0) {

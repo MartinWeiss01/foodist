@@ -1,5 +1,5 @@
 /* Menu | Dropdown Menu | Minified (32.34% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
-.menuParent{position:relative}.menu{position:absolute;top:52px;border-radius:3px;padding:15px;min-width:260px;background:var(--menu-background);box-shadow:0 0 6px var(--nav-shadow)}.menu.align-right{right:0}.menuParent[active] .menuItem span,.menuParent[active] .menuItem icon,.menuParent[active] .menu{animation:menuIn .5s;visibility:visible}.menu,.menuItem span,.menuItem icon{visibility:hidden;animation:menuOut .5s}.menuItem span{font-size:14px;color:var(--color-primary)}.menuItem icon:not([theme-listener]){font-size:22px;color:var(--color-primary);background:var(--menu-icon-background);padding:10px;border-radius:20px;margin-right:8px}.menuItem icon[theme-listener]{font-size:22px;color:var(--color-primary);padding:10px;margin-right:8px}.menuItem{padding:7px;border-radius:3px}.menuItem:hover{background:var(--menu-item-focus)}.menuDivider{width:100%;height:1px;border:0;border-top:1px solid var(--menu-divider);margin:0}.menu > :not(:last-child){margin-bottom:10px!important}@keyframes menuIn{from{opacity:0;top:0}to{opacity:1;top:52px}}@keyframes menuOut{from{opacity:1;top:52px}to{opacity:0;top:0}}
+.menuParent{position:relative}.menu{position:absolute;top:52px;border-radius:3px;padding:15px;min-width:260px;z-index:1;background:var(--menu-background);box-shadow:0 0 6px var(--nav-shadow)}.menu.align-right{right:0}.menuParent[active] .menuItem span,.menuParent[active] .menuItem icon,.menuParent[active] .menu{animation:menuIn .5s;visibility:visible}.menu,.menuItem span,.menuItem icon{visibility:hidden;animation:menuOut .5s}.menuItem span{font-size:14px;color:var(--color-primary)}.menuItem icon:not([theme-listener]){font-size:22px;color:var(--color-primary);background:var(--menu-icon-background);padding:10px;border-radius:20px;margin-right:8px}.menuItem icon[theme-listener]{font-size:22px;color:var(--color-primary);padding:10px;margin-right:8px}.menuItem{padding:7px;border-radius:3px}.menuItem:hover{background:var(--menu-item-focus)}.menuDivider{width:100%;height:1px;border:0;border-top:1px solid var(--menu-divider);margin:0}.menu > :not(:last-child){margin-bottom:10px!important}@keyframes menuIn{from{opacity:0;top:0}to{opacity:1;top:52px}}@keyframes menuOut{from{opacity:1;top:52px}to{opacity:0;top:0}}
 /* accountMenu | Account Styling | Minified (28.92% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
 .account{padding:7px 10px;border-radius:3px;transition:.3s}.account:hover,.menuParent[active] > .account{background:var(--account-background);transition:.3s}.account > span{font-size:14px}.accountImage{--size:26px;width:var(--size);height:var(--size);border-radius:25px;margin-right:8px}
 /* Toast | Minified (40.38% bytes saved) | © Copyright 2020 Martin Weiss (martinweiss.cz) */
@@ -10,7 +10,7 @@
     * © Copyright 2021 Martin Weiss (martinWeiss.cz)
 */
 * {box-sizing:border-box}
-.container {display:grid;width:100vw;min-height:100vh;grid-template-columns:auto 20rem;grid-template-rows:5rem auto 5rem;
+.container {display:grid;width:100vw;min-height:100vh;grid-template-columns:auto 23rem;grid-template-rows:5rem auto 5rem;
     grid-template-areas:
         "nav nav"
         "main main"
@@ -35,7 +35,7 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
             "main"
             "footer"
     }
-    .container[carton] > #shoppingCart {position:absolute}
+    .container[carton] > #shoppingCart {position:absolute;width:100vw;height:100vh;background:var(--background-default)}
 }
 
 .header-logo {height:35px;fill:var(--logo-color)}
@@ -45,8 +45,11 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
 
 #containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
 .cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--shadowTop), inset -5px -5px 10px var(--shadowBottom)}
-.cartTotal {background:var(--add-bg);padding:2rem 20px}
+.cartTotal {border-top: 1px solid var(--border-primary);padding:2rem 20px;margin-top:2rem}
 .emptyAgent {text-align:center}
+#orderButton {color:white;background:#1a1a1a;text-align:center;padding:0.75rem 2.75rem;border-radius:6px;margin-top:20px;transition:.3s}
+#orderButton:not([disabled]):hover {background:var(--add);transition:.3s}
+#orderButton[disabled] {color:var(--muted-col);cursor:not-allowed}
 
 .item {margin:1rem 0;border-radius:6px;box-shadow:22px 22px 44px var(--shadowTop), -22px -22px 44px var(--shadowBottom)}
 .itemHeader {position:relative;height:150px}
@@ -73,16 +76,9 @@ icon.remove:hover {background-color:var(--delete)}
 
 .restaurant-details {
     height: 100%;
-    display: grid;
-    grid-template-columns: auto 21rem;
-    grid-template-rows: 21rem auto;
-    grid-template-areas:
-        "rdHeader rdHeader"
-        "rdBody rdBody";
 }
 
 .restaurant-detailed-header {
-    grid-area: rdHeader;
     color: white;
     font-size: 5rem;
     text-transform: uppercase;
@@ -90,6 +86,5 @@ icon.remove:hover {background-color:var(--delete)}
 }
 
 .restaurant-detailed-body {
-    grid-area: rdBody;
     padding: 2rem;
 }
