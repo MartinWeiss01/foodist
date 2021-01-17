@@ -1,5 +1,5 @@
 <?php
-    require_once('../controllers/AccountController.php');
+    require_once(dirname(__DIR__).'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
     $account->redirectAuthenticated();
     
@@ -20,7 +20,7 @@
         $local_sexValue -= 1;
         
         if($fail == NULL) {
-            require_once('../controllers/ConnectionController.php');
+            require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
             $conn = new ConnectionHandler();
             $conn->callQuery("INSERT INTO users(Email, Password, First_name, Last_Name, Sex, Telephone, Birth, Register_IP) VALUE ('$local_email', SHA2('$local_password', 256), '$local_firstName', '$local_lastName', $local_sexValue, '$local_telephone', '$local_date', '".$_SERVER["REMOTE_ADDR"]."')");
             $conn->finishConnection(header("Location: ../login/"));

@@ -5,7 +5,7 @@
     
     $rep = false;
     if(count($_POST) > 0) {
-        require_once('../controllers/ConnectionController.php');
+        require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
         $conn = new ConnectionHandler();
     
         $result = $conn->callQuery("SELECT * FROM users WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)");
