@@ -1,9 +1,10 @@
 <?php
-    require_once('../controllers/AccountController.php');
+    require_once(dirname(__DIR__).'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
+    $account->redirectUnauthenticated();
     $account->redirectUnauthorized();
     
-    require_once('../controllers/ConnectionController.php');
+    require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
     $citiesList = $conn->callQuery("SELECT * FROM cities");
     $cuisinesList = $conn->callQuery("SELECT * FROM cuisines");

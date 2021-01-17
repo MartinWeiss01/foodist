@@ -7,10 +7,10 @@
  * Located in   \viewDetailed\index.php
  */
     header("Content-Type: application/json");
-    require_once('../controllers/AccountController.php');
+    require_once(__DIR__.'/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
     $account->disableDirect($_SERVER);
-    require_once('ConnectionController.php');
+    require_once(__DIR__.'/ConnectionController.php');
     $conn = new ConnectionHandler();
     
     if(!$account->UCart) $conn->finishConnection('{"response_message":"Empty cart"}');
