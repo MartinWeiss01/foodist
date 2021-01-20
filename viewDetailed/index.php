@@ -27,9 +27,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Foodist | <?php echo $name; ?> </title>
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
+        <script defer src="/assets/js/managerly.min.js"></script>
         
         <!-- Styles -->
-        <link rel="stylesheet" href="../assets/css/main.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/main.css"></noscript>
+        <link rel="stylesheet" href="../assets/css/main.css">
         <link rel="stylesheet" href="../assets/css/viewDetail.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/viewDetail.css"></noscript>
 
         <!-- Icons & OG -->
@@ -78,16 +79,20 @@
 
             <main>
                 <div class="flex restaurant-details">
-                    <?php echo "<div class='flex hcenter vcenter restaurant-detailed-header' style='background:url(/images/restaurants/bg/$imagebg) no-repeat center center fixed;background-size:cover;'>$name</div>"; ?>
-                    <div class="restaurant-detailed-body">
-                        <?php
-                            echo $name." - ".$address." - ".$rID." - ".$city."<br>";
-                            echo "<div class='flex row justify-content-evenly wrap'>";
-                            if($foodlist->num_rows > 0) {
-                                while($row = $foodlist->fetch_assoc()) echo '<div class="flex justify-content-between item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/restaurants/food/'.($row["ImageID"] == "default" ? rand(1,19) : $row["ImageID"]).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex itemInfo"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].' Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg width="18px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
-                            }
-                            echo "</div>";
-                        ?>
+                    <?php echo "<div class='flex hcenter vcenter restaurant-detailed-header' style='height:19rem;background:url(/images/restaurants/bg/$imagebg) no-repeat center center fixed;background-size:cover;'>$name</div>"; ?>
+                    <div class="flex row">
+                        <div class="flex restaurantMenu">
+                            <span class="restaurantMenu-item">Přehled</span>
+                            <span class="restaurantMenu-item">Nabídka</span>
+                            <span class="restaurantMenu-item">Recenze</span>
+                        </div>
+                        <div class="restaurant-detailed-body">
+                            <?php
+                                echo "<div class='flex row justify-content-evenly wrap'>";
+                                if($foodlist->num_rows > 0) while($row = $foodlist->fetch_assoc()) echo '<div class="flex justify-content-between item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/restaurants/food/'.($row["ImageID"] == "default" ? rand(1,19) : $row["ImageID"]).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex itemInfo"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].' Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg width="18px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
+                                echo "</div>";
+                            ?>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -108,20 +113,10 @@
             </div>
         </div>
 
-        <div class="toastBox">
-            <div id="toast" class="toast"></div>
-        </div>
+        <div class="toastBox"><div id="toast" class="toast"></div></div>
     </body>
 
     <script>
-        const themeListenerIcon = document.querySelector("icon[theme-listener]"), toastElement = document.getElementById("toast");
-        window.matchMedia('(prefers-color-scheme: dark)').matches ? changeTheme(1, false) : changeTheme(0, false);
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => event.matches ? changeTheme(1) : changeTheme(0));
-        function changeTheme(j = -1, animations = true) {let doc = document.documentElement;if(animations) doc.classList.add("theme-transition");if((j === 0) || (doc.hasAttribute("dark"))) {doc.removeAttribute("dark");themeListenerIcon.innerText = "toggle_off";} else {doc.setAttribute("dark", "");themeListenerIcon.innerText = "toggle_on";}if(animations) window.setTimeout(() => doc.classList.remove("theme-transition"), 1000);}
-        function showToast(message) {toastElement.innerText = message;toastElement.parentElement.setAttribute("active", "");window.setTimeout(() => {toastElement.innerText = "";toastElement.parentElement.removeAttribute("active");}, 2800);}
-        function menuHandler(caller) {caller.parentElement.hasAttribute("active") ? caller.parentElement.removeAttribute("active") : caller.parentElement.setAttribute("active", "");}
-        function hideMenu(caller) {document.getElementById("menubody").style.visibility = "visible";caller.parentElement.removeAttribute("active");window.setTimeout(() => {document.getElementById("menubody").style.visibility = "hidden";}, 300);}
-
         document.addEventListener("DOMContentLoaded", () => {checkCart();});
         const DEBUG = false,
                 shoppingCartBox = document.getElementById("shoppingCart"),
