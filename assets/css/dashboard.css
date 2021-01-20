@@ -34,6 +34,10 @@ footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13p
     color:var(--color-primary);
 }
 
+.header-logo {
+    height: 35px;
+    fill: var(--logo-color);
+}
 .account {
     padding: 7px 10px;
     border-radius: 3px;

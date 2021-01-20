@@ -66,6 +66,11 @@ main{background: #fbfbfb;} /* DEL */
     font-size: 9px;
 }
 
+.header-logo {
+    fill: var(--logo-color);
+    height:35px;
+}
+
 /* 
     * Layout
     * © Copyright 2020 Martin Weiss (martinweiss.cz) 

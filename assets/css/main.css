@@ -105,12 +105,13 @@ html[dark] {
     --decline-border-focus: hsl(0, 77%, 48%);
 }
 
-html.theme-transition, html.theme-transition *, html.theme-transition *:before, html.theme-transition *:after {transition: all 750ms !important;transition-delay: 0 !important}
+html.theme-transition, html.theme-transition *, html.theme-transition *:before, html.theme-transition *:after {transition: all 750ms !important}
 
 ::-webkit-scrollbar {width:7px;height:7px}
 ::-webkit-scrollbar-thumb {background-color:var(--scrollbar-thumb);border-radius:50rem}
 ::-webkit-scrollbar-corner {background:var(--background-default)}
 
+.header-logo {height:35px;fill:var(--logo-color)}
 *{font-family:'Open Sans',sans-serif}
 @font-face{font-family:'Open Sans';src:url(../fonts/OpenSansBold.woff2) format("woff2");font-weight:700;font-style:normal}@font-face{font-family:'Open Sans';src:url(../fonts/OpenSansSemiBold.woff2) format("woff2");font-weight:600;font-style:normal}@font-face{font-family:'Open Sans';src:url(../fonts/OpenSansRegular.woff2) format("woff2");font-weight:400;font-style:normal}
 
