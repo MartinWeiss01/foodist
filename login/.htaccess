@@ -1,3 +1,3 @@
-ErrorDocument 403 https://foodist.store/login/
-ErrorDocument 404 https://foodist.store/login/
-ErrorDocument 500 https://foodist.store/login/
+ErrorDocument 403 /login/
+ErrorDocument 404 /login/
+ErrorDocument 500 /login/
