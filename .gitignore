@@ -2,3 +2,7 @@
 !.gitignore
 !.htaccess
 config/.htaccess
+**/*.jpg
+**/*.png
+**/*.svg
+!uploads/**/default*
