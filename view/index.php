@@ -52,7 +52,7 @@
                 
                 <div class="menuParent">
                     <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                        <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
+                        <img class="accountImage" src="/uploads/profiles/<?php echo $account->UProfilePicture; ?>">
                         <span class="flex row hcenter accountDetails"><?php echo $account->DisplayName; ?> <icon>arrow_drop_down</icon></span>
                     </div>
                     <div id="menubody" class="flex menu align-right">

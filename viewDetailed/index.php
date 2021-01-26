@@ -59,7 +59,7 @@
 
                     <div class="menuParent">
                         <div id="hidenseek" class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                            <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
+                            <img class="accountImage" src="/uploads/profiles/<?php echo $account->UProfilePicture; ?>">
                             <span class="flex row hcenter accountDetails"><?php echo $account->DisplayName; ?> <icon>arrow_drop_down</icon></span>
                         </div>
                         <div id="menubody" class="flex menu align-right">
@@ -79,7 +79,7 @@
 
             <main>
                 <div class="flex restaurant-details">
-                    <?php echo "<div class='flex hcenter vcenter restaurant-detailed-header' style='height:19rem;background:url(/images/restaurants/bg/$imagebg) no-repeat center center fixed;background-size:cover;'>$name</div>"; ?>
+                    <?php echo "<div class='flex hcenter vcenter restaurant-detailed-header' style='height:19rem;background:url(/uploads/mbotron/$imagebg) no-repeat center center fixed;background-size:cover;'>$name</div>"; ?>
                     <div class="flex row">
                         <div class="flex restaurantMenu">
                             <span class="restaurantMenu-item">Přehled</span>
@@ -89,7 +89,7 @@
                         <div class="restaurant-detailed-body">
                             <?php
                                 echo "<div class='flex row justify-content-evenly wrap'>";
-                                if($foodlist->num_rows > 0) while($row = $foodlist->fetch_assoc()) echo '<div class="flex justify-content-between item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="../images/restaurants/food/'.($row["ImageID"] == "default" ? rand(1,19) : $row["ImageID"]).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex itemInfo"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].' Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg width="18px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
+                                if($foodlist->num_rows > 0) while($row = $foodlist->fetch_assoc()) echo '<div class="flex justify-content-between item"><div class="flex hcenter itemHeader"><img class="itemPreview" src="/uploads/restoffer/'.($row["ImageID"] == "default" ? rand(1,19) : $row["ImageID"]).'.png"></div><div class="flex row justify-content-between itemBody"><div class="flex itemInfo"><span class="itemName">'.$row['Name'].'</span><span class="itemPrice">'.$row['Price'].' Kč</span></div><div class="flex justify-content-end"><span class="flex hcenter vcenter itemAdd" data-role="button" onclick="addToCart('.$row['ID'].')"><svg width="18px" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg></span></div></div></div>';
                                 echo "</div>";
                             ?>
                         </div>

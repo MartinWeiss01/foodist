@@ -55,7 +55,7 @@
 
                     <div class="menuParent">
                         <div class="flex row hcenter account" onclick="menuHandler(this)" data-role="button">
-                            <img class="accountImage" src="/images/users/<?php echo $account->UProfilePicture; ?>">
+                            <img class="accountImage" src="/uploads/profiles/<?php echo $account->UProfilePicture; ?>">
                             <span class="flex row hcenter accountDetails"><?php echo "$account->DisplayName";?> <icon>arrow_drop_down</icon></span>
                         </div>
                         <div id="menubody" class="flex menu align-right">
@@ -72,7 +72,7 @@
                     <?php
                         if($citiesList->num_rows > 0) {
                             $citiesString = 'let citiesList = `<select name="cities" id="cities">';
-                            while($row = $citiesList->fetch_assoc()) {echo '<div class="flex cardItem" data-city-id="'.$row['ID'].'" style="background: url(/images/cities/'.$row['Image'].') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>';}
+                            while($row = $citiesList->fetch_assoc()) {echo '<div class="flex cardItem" data-city-id="'.$row['ID'].'" style="background: url(/uploads/cities/'.$row['Image'].') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$citiesString .= '<option value='.$row['ID'].'>'.$row['Name'].'</option>';}
                             $citiesString .= '</select>`;';
                         }
                     ?>
@@ -82,7 +82,7 @@
                     <?php
                         if($cuisinesList->num_rows > 0) {
                             $cuisinesString = 'let cuisinesList = `<div id="checkboxesCuisines" class="flex cuisines-checkboxes">';
-                            while($row = $cuisinesList->fetch_assoc()) {echo '<div class="flex cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url(/images/cuisines/'.$row['Image'].') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$cuisinesString .= '<input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'"><label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>';}
+                            while($row = $cuisinesList->fetch_assoc()) {echo '<div class="flex cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url(/uploads/cuisines/'.$row['Image'].') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$cuisinesString .= '<input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'"><label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>';}
                             $cuisinesString .= '</div>`;';
                         }
                     ?>
@@ -307,7 +307,7 @@
             let newRecord = document.createElement("div");
             newRecord.classList.add("flex", "cardItem");
             newRecord.setAttribute("data-city-id", cityID);
-            newRecord.setAttribute('style', 'background: url(/images/cities/default.jpg) no-repeat center center;background-size:cover;');
+            newRecord.setAttribute('style', 'background: url(/uploads/cities/default.jpg) no-repeat center center;background-size:cover;');
             newRecord.innerHTML = `<span class="cardTitle">${cityName}</span>`;
             document.getElementById("citiesBox").appendChild(newRecord);
 
@@ -326,7 +326,7 @@
             let newRecord = document.createElement("div");
             newRecord.classList.add("flex", "cardItem");
             newRecord.setAttribute("data-cuisine-id", cuisineID);
-            newRecord.setAttribute('style', 'background: url(/images/cuisines/default.jpg) no-repeat center center;background-size:cover;');
+            newRecord.setAttribute('style', 'background: url(/uploads/cuisines/default.jpg) no-repeat center center;background-size:cover;');
             newRecord.innerHTML = `<span class="cardTitle">${cuisineName}</span>`;
             document.getElementById("cuisinesBox").appendChild(newRecord);
 
