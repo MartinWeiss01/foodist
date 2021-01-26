@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /uploads/
+Disallow: /assets/
+Disallow: /images/
+Disallow: /admin/
+Disallow: /restaurant/
+Disallow: /config/
+Disallow: /controllers/
