@@ -1,0 +1,16 @@
+.account{padding:10px;border-radius:3px;transition:.3s}
+.account:hover,.ddm-menu-parent[active] > .account{background:var(--account-background);transition:.3s}
+.account > span{font-size:14px}
+.accountImage{--size:26px;width:var(--size);height:var(--size);border-radius:25px}
+.accountDetails{margin-left:8px}
+@media only screen and (max-width: 425px) {.accountDetails{display:none}.account{border-radius:25px}}
+
+* {box-sizing:border-box;color:var(--color-primary)}
+#root {display:grid;min-height:100vh;grid-template-columns:auto;grid-template-rows:5rem auto 10rem;grid-template-areas:"nav" "main" "footer"}
+body {margin:0;padding:0;background:var(--background-default)}
+nav {grid-area:nav;padding:0 4rem;box-shadow:0 0 6px var(--nav-shadow)}
+main {grid-area:main}
+footer {grid-area:footer}
+@media only screen and (max-width: 425px) {
+    nav{padding:0 1rem}
+}
