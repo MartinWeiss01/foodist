@@ -38,22 +38,22 @@
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
         <!-- Styles -->
-        <link rel="stylesheet" href="../assets/css/main.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/main.css"></noscript>
-        <link rel="stylesheet" href="../assets/css/auth.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/auth.css"></noscript>
-        <link rel="stylesheet" href="../assets/css/register.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/register.css"></noscript>
+        <link rel="stylesheet" href="/assets/css/main.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
+        <link rel="stylesheet" href="/assets/css/auth.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/auth.css"></noscript>
+        <link rel="stylesheet" href="/assets/css/register.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/register.css"></noscript>
 
         <!-- Icons & OG -->
-        <link rel="apple-touch-icon" sizes="180x180" href="../images/brand/icons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../images/brand/icons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="194x194" href="../images/brand/icons/favicon-194x194.png">
-        <link rel="icon" type="image/png" sizes="192x192" href="../images/brand/icons/android-chrome-192x192.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../images/brand/icons/favicon-16x16.png">
-        <link rel="manifest" href="../images/brand/icons/site.webmanifest">
-        <link rel="mask-icon" href="../images/brand/icons/safari-pinned-tab.svg" color="#d5ac5b">
-        <link rel="shortcut icon" href="../images/brand/icons/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="194x194" href="/assets/brand/favicon-194x194.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
+        <link rel="manifest" href="/assets/brand/site.webmanifest">
+        <link rel="mask-icon" href="/assets/brand/safari-pinned-tab.svg" color="#d5ac5b">
+        <link rel="shortcut icon" href="/assets/brand/favicon.ico">
         <meta name="msapplication-TileColor" content="#ffc40d">
-        <meta name="msapplication-TileImage" content="../images/brand/icons/mstile-144x144.png">
-        <meta name="msapplication-config" content="../images/brand/icons/browserconfig.xml">
+        <meta name="msapplication-TileImage" content="/assets/brand/mstile-144x144.png">
+        <meta name="msapplication-config" content="/assets/brand/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
     </head>
 
