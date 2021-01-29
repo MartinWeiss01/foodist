@@ -50,7 +50,9 @@ html {
     --menu-divider: hsl(0, 0%, 89%);
     --shadowTop: hsl(0, 0%, 93%);
     --shadowBottom: hsl(0, 0%, 100%);
-    
+    --option-bg: hsl(0, 0%, 100%);
+    --option-bg-hover: hsl(0, 0%, 94%);
+
     --accept-color: #3AB54A;
     --accept-color-focus: #FFFFFF;
     --accept-bgcol: hsla(0, 0%, 100%, 0);
@@ -71,6 +73,8 @@ html {
     --delete: hsl(0, 77%, 48%);
     --collapse: hsl(163, 100%, 33%);
 
+    --input-border-hover: hsl(200, 100%, 49%);
+
     --nav-shadow: hsla(0, 0%, 0%, 0.129);
 }
 
@@ -90,6 +94,8 @@ html[dark] {
     --menu-divider: hsla(0, 0%, 100%, 0.149);
     --shadowTop: hsl(213, 27%, 6%);
     --shadowBottom: hsl(218, 28%, 8%);
+    --option-bg: hsl(216, 28%, 7%);
+    --option-bg-hover: hsl(216, 28%, 13%);
 
     --accept-color: hsl(127, 70%, 44%);
     --accept-color-focus: hsl(0, 0%, 100%);

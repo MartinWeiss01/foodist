@@ -23,22 +23,22 @@
         <script defer src="/assets/js/managerly.min.js"></script>
         
         <!-- Styles -->
-        <link rel="stylesheet" href="../assets/css/main.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/main.css"></noscript>
-        <link rel="stylesheet" href="../assets/css/dashboard.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="../assets/css/dashboard.css"></noscript>
+        <link rel="stylesheet" href="/assets/css/main.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
+        <link rel="stylesheet" href="/assets/css/dashboard.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/dashboard.css"></noscript>
 
         <!-- Icons & OG -->
         <script>(function(b,c,d,e,f,g){b.hj=b.hj||function(){(b.hj.q=b.hj.q||[]).push(arguments)},b._hjSettings={hjid:2115839,hjsv:6},f=c.getElementsByTagName("head")[0],g=c.createElement("script"),g.async=1,g.src=d+b._hjSettings.hjid+e+b._hjSettings.hjsv,f.appendChild(g)})(window,document,"https://static.hotjar.com/c/hotjar-",".js?sv=");</script>
-        <link rel="apple-touch-icon" sizes="180x180" href="../images/brand/icons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../images/brand/icons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="194x194" href="../images/brand/icons/favicon-194x194.png">
-        <link rel="icon" type="image/png" sizes="192x192" href="../images/brand/icons/android-chrome-192x192.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../images/brand/icons/favicon-16x16.png">
-        <link rel="manifest" href="../images/brand/icons/site.webmanifest">
-        <link rel="mask-icon" href="../images/brand/icons/safari-pinned-tab.svg" color="#d5ac5b">
-        <link rel="shortcut icon" href="../images/brand/icons/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="194x194" href="/assets/brand/favicon-194x194.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png">
+        <link rel="manifest" href="/assets/brand/site.webmanifest">
+        <link rel="mask-icon" href="/assets/brand/safari-pinned-tab.svg" color="#d5ac5b">
+        <link rel="shortcut icon" href="/assets/brand/favicon.ico">
         <meta name="msapplication-TileColor" content="#ffc40d">
-        <meta name="msapplication-TileImage" content="../images/brand/icons/mstile-144x144.png">
-        <meta name="msapplication-config" content="../images/brand/icons/browserconfig.xml">
+        <meta name="msapplication-TileImage" content="/assets/brand/mstile-144x144.png">
+        <meta name="msapplication-config" content="/assets/brand/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
     </head>
 
@@ -81,8 +81,16 @@
                     <div class="flex cardItem" onclick="addNewCuisine()" data-role="button"><icon>add</icon><span class="cardTitle">Kuchyně</span></div>
                     <?php
                         if($cuisinesList->num_rows > 0) {
-                            $cuisinesString = 'let cuisinesList = `<div id="checkboxesCuisines" class="flex cuisines-checkboxes">';
-                            while($row = $cuisinesList->fetch_assoc()) {echo '<div class="flex cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url(/uploads/cuisines/'.$row['Image'].') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';$cuisinesString .= '<input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'"><label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>';}
+                            $cuisinesString = 'let cuisinesList = `<div id="checkboxesCuisines" class="flex row hcenter vcenter justify-content-evenly wrap cuisines-checkboxes">';
+                            while($row = $cuisinesList->fetch_assoc()) {
+                                echo '<div class="flex cardItem" data-cuisine-id="'.$row['ID'].'" style="background: url(/uploads/cuisines/'.$row['Image'].') no-repeat center center;background-size:cover;"><span class="cardTitle">'.$row['Name'].'</span></div>';
+                                $cuisinesString .= '
+                                    <div class="flex hcenter vcenter cuisineCBOption">
+                                    <input type="checkbox" name="cuisineOption'.$row['ID'].'" value="'.$row['ID'].'">
+                                    <label for="cuisineOption'.$row['ID'].'">'.$row['Name'].'</label>
+                                    </div>
+                                ';
+                            }
                             $cuisinesString .= '</div>`;';
                         }
                     ?>
@@ -125,8 +133,9 @@
         <div id="overlayModal" class="overlay-modal">
             <div class="container-modal">
                 <div class="flex hcenter vcenter modal-box">
+                    <div id="modalContentHeader" class="flex hcenter vcenter modal-header"></div>
                     <div id="modalContentBox" class="flex hcenter modal-content"></div>
-                    <div class="flex row wrap">
+                    <div class="flex row hcenter vcenter wrap modal-footer">
                         <button id="modalConfirm" class="modalController confirm" data-role="button"></button>
                         <button id="modalCancel" class="modalController cancel" data-role="button">Zrušit</button>
                     </div>
@@ -146,6 +155,7 @@
             citiesBox = document.getElementById("citiesBox"),
             cuisinesBox = document.getElementById("cuisinesBox"),
             overlayModalBox = document.getElementById("overlayModal"),
+            modalContentHeader = document.getElementById("modalContentHeader"),
             modalContentBox = document.getElementById("modalContentBox"),
             modalConfirmInput = document.getElementById("modalConfirm"),
             modalCancelInput = document.getElementById("modalCancel");
@@ -254,32 +264,41 @@
                 }
             } else if(overlayModalBox.dataset.mode == 5) {
                 let cuisineName = document.getElementById("inserCuisineName").value,
-                    cuisineIcon = document.getElementById("insertCuisineIcon").value;
-                
-                if(cuisineName != "" && cuisineIcon != "") {
+                    cuisineImage = document.getElementById("insertCuisineImage").files[0];
+
+                if(cuisineName != "" && (cuisineImage !== undefined && cuisineImage.size < 1086000) || (cuisineImage === undefined)) {
                     if(!DEBUG) {
-                        fetch("../controllers/addCuisine.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cuisineName}&icon=${cuisineIcon}`})
+                        const formdatas = new FormData();
+                        formdatas.append("name", cuisineName);
+                        formdatas.append("image", cuisineImage);
+
+                        fetch("../controllers/addCuisine.php", {method: 'POST', credentials: 'same-origin', body: formdatas})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCuisine(data["insert_id"], cuisineName);})
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCuisine(data["insert_id"], cuisineName, data["imagename"]);})
                         .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
-                    } else appendNewCuisine(DEBUG_RANDOM_NUMBER, cuisineName);
+                    } else appendNewCuisine(DEBUG_RANDOM_NUMBER, cuisineName, undefined);
                 }
             } else if(overlayModalBox.dataset.mode == 6) {
-                let cityName = document.getElementById("inserCityName").value;
+                let cityName = document.getElementById("inserCityName").value,
+                    cityImage = document.getElementById("insertCityImage").files[0];
                 
-                if(cityName != "") {
+                if(cityName != "" && (cityImage !== undefined && cityImage.size < 1086000) || (cityImage === undefined)) {
                     if(!DEBUG) {
-                        fetch("../controllers/addCity.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `name=${cityName}`})
+                        const formdatas = new FormData();
+                        formdatas.append("name", cityName);
+                        formdatas.append("image", cityImage);
+
+                        fetch("../controllers/addCity.php", {method: 'POST', credentials: 'same-origin', body: formdatas})
                         .then(response => {
                             if(response.ok) return response.json();
                             return Promise.reject(response);
                         })
-                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCity(data["insert_id"], cityName);})
+                        .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendNewCity(data["insert_id"], cityName, data["imagename"]);})
                         .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
-                    } else appendNewCity(DEBUG_RANDOM_NUMBER, cityName);
+                    } else appendNewCity(DEBUG_RANDOM_NUMBER, cityName, undefined);
                 }
             } else if(overlayModalBox.dataset.mode == 7) {
                 let cID = overlayModalBox.dataset.obj,
@@ -299,15 +318,15 @@
         });
 
         function addNewCity() {
-            let content = '<h1>Přidat nové město</h1><input id="inserCityName" placeholder="Název města">';
-            showModal(content, -1, "Přidat", 6);
+            showModal("Přidat nové město", '<input id="inserCityName" placeholder="Název města"><input id="insertCityImage" type="file" accept=".jpeg, .jpg, .png, .webp, .avif">', -1, "Přidat", 6);
         }
 
-        function appendNewCity(cityID, cityName) {
+        function appendNewCity(cityID, cityName, cityImage) {
+            if(cityImage === undefined) cityImage = "default.min.jpg";
             let newRecord = document.createElement("div");
             newRecord.classList.add("flex", "cardItem");
             newRecord.setAttribute("data-city-id", cityID);
-            newRecord.setAttribute('style', 'background: url(/uploads/cities/default.jpg) no-repeat center center;background-size:cover;');
+            newRecord.setAttribute('style', `background: url(/uploads/cities/${cityImage}) no-repeat center center;background-size:cover;`);
             newRecord.innerHTML = `<span class="cardTitle">${cityName}</span>`;
             document.getElementById("citiesBox").appendChild(newRecord);
 
@@ -318,15 +337,15 @@
         }
 
         function addNewCuisine() {
-            let content = '<h1>Přidat novou kuchyni</h1><input id="inserCuisineName" placeholder="Název kuchyně"><input id="insertCuisineIcon" placeholder="Jméno ikonky">';
-            showModal(content, -1, "Přidat", 5);
+            showModal("Přidat novou kuchyni", '<input id="inserCuisineName" placeholder="Název kuchyně"><input id="insertCuisineImage" type="file" accept=".jpeg, .jpg, .png, .webp, .avif">', -1, "Přidat", 5);
         }
 
-        function appendNewCuisine(cuisineID, cuisineName) {
+        function appendNewCuisine(cuisineID, cuisineName, cuisineImage) {
+            if(cuisineImage === undefined) cuisineImage = "default.min.jpg";
             let newRecord = document.createElement("div");
             newRecord.classList.add("flex", "cardItem");
             newRecord.setAttribute("data-cuisine-id", cuisineID);
-            newRecord.setAttribute('style', 'background: url(/uploads/cuisines/default.jpg) no-repeat center center;background-size:cover;');
+            newRecord.setAttribute('style', `background: url(/uploads/cuisines/${cuisineImage}) no-repeat center center;background-size:cover;`);
             newRecord.innerHTML = `<span class="cardTitle">${cuisineName}</span>`;
             document.getElementById("cuisinesBox").appendChild(newRecord);
 
@@ -337,8 +356,7 @@
         }
 
         function addNewCompany() {
-            let content = '<h1>Přidat novou firmu</h1><input id="insertAccountName" placeholder="Název účtu"><input id="insertAccountIN" placeholder="IČO společnosti"><input id="insertAccountEmail" placeholder="E-mailová adresa"><input type="password" id="insertAccountPassword" placeholder="Heslo">';
-            showModal(content, -1, "Přidat", 4);
+            showModal("Přidat novou firmu", '<input id="insertAccountName" placeholder="Název účtu"><input id="insertAccountIN" placeholder="IČO společnosti"><input id="insertAccountEmail" placeholder="E-mailová adresa"><input type="password" id="insertAccountPassword" placeholder="Heslo">', -1, "Přidat", 4);
         }
 
         function appendNewCompany(companyID, companyName, companyIN, companyEmailAddress) {
@@ -354,10 +372,10 @@
         }
 
         function addNewRestaurant(companyID) {
-            let content = '<h1>Přidat restauraci</h1><input id="insertRecordName" placeholder="Název restaurace"><input id="insertRecordAddress" placeholder="Ulice">';
+            let content = '<input id="insertRecordName" placeholder="Název restaurace"><input id="insertRecordAddress" placeholder="Ulice">';
             if(citiesList != -1) content += citiesList;
             if(cuisinesList != -1) content += cuisinesList;
-            showModal(content, companyID, "Přidat", 1);
+            showModal("Přidat restauraci", content, companyID, "Přidat", 1);
         }
 
         function appendNewRestaurant(companyID, rID, rName, rAddress, rCity) {
@@ -382,13 +400,8 @@
         }
 
         function removeRecord(recordID, isRecordCompany = false) {
-            if(!isRecordCompany) {
-                let content = `<h1>Smazat restauraci</h1>${document.getElementById("company-restaurant-"+recordID).dataset.restaurantName}`;
-                showModal(content, recordID, "Potvrdit", 3);
-            } else {
-                let content = `<h1>Smazat společnost</h1>${document.getElementById("company-"+recordID).dataset.companyName}`;
-                showModal(content, recordID, "Potvrdit", 7);
-            }
+            if(!isRecordCompany) showModal("Smazat restauraci", document.getElementById("company-restaurant-"+recordID).dataset.restaurantName, recordID, "Potvrdit", 3);
+            else showModal("Smazat restauraci", document.getElementById("company-"+recordID).dataset.companyName, recordID, "Potvrdit", 7);
         }
 
         function removeRecordFromList(element, isRecordCompany = false) {
@@ -403,7 +416,8 @@
             element.remove();
         }
 
-        function showModal(modalContent, objectID, confirmButtonText, modalMode) {
+        function showModal(modalHeader, modalContent, objectID, confirmButtonText, modalMode) {
+            modalContentHeader.innerHTML = modalHeader;
             modalContentBox.innerHTML = modalContent;
             modalConfirmInput.innerText = confirmButtonText;
             overlayModalBox.setAttribute('data-obj', objectID);
@@ -453,14 +467,14 @@
                     if(data["error_code"]) console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`);
                     else {
                         let rName = document.getElementById("company-restaurant-"+j).dataset.restaurantName,
-                            content = `<h1 id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</h1>`;
+                            content = `<span id="restaurantName" data-default="${rName}" contenteditable="true" oninput="foodrecordChanging(this)">${rName}</span>`;
                         if(!data["emptylist"]) {
                             let foodList = '<div id="foodlist-editable" class="foodlist">';
                             for(let i = 0; i < data.length; i++) foodList += `<div id="foodID-${data[i][0]}" data-fid="${data[i][0]}" class="flex row hcenter justify-content-between food-record"><div class="flex"><span id="foodName-${data[i][0]}" data-default="${data[i][1]}" class="foodName" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][1]}</span><div class="foodPriceRow"><span id="foodPrice-${data[i][0]}" data-default="${data[i][2]}" class="foodPrice" contenteditable="true" oninput="foodrecordChanging(this)">${data[i][2]}</span><span> Kč</span></div></div><div class="flex row"><icon class="restore" onclick="modalMode_Editing_Restore(this)">restore</icon><icon class="delete" onclick="modalMode_Editing_Delete(this)">delete_outline</icon></div></div>`;
                             foodList += '</div>';
                             content += foodList;
                         }
-                        showModal(content, j, "Uložit", 2);
+                        showModal("Úprava restaurace", content, j, "Uložit", 2);
                     }
                 })
                 .catch(err => {console.log(`[!] Při komunikaci se serverem došlo k chybě.`);});
