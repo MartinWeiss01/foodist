@@ -29,10 +29,15 @@
         <title>Foodist | Přihlášení</title>
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
-        <!-- Styles -->
-        <link rel="stylesheet" href="/assets/css/main.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
-        <link rel="stylesheet" href="/assets/css/auth.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/auth.css"></noscript>
-        <link rel="stylesheet" href="/assets/css/login.css" media="none" onload="if(media!='all')media='all'"><noscript><link rel="stylesheet" href="/assets/css/login.css"></noscript>
+        <!-- Resources -->
+        <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
+        <link rel="preload" href="/assets/css/auth.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/auth.css"></noscript>
+        <link rel="preload" href="/assets/css/login.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/login.css"></noscript>
+
+        <link rel="preload" href="/assets/fonts/OpenSansRegular.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansRegular.woff2"></noscript>
+        <link rel="preload" href="/assets/fonts/OpenSansSemiBold.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansSemiBold.woff2"></noscript>
+        <link rel="preload" href="/assets/fonts/OpenSansBold.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansBold.woff2"></noscript>
+        <link rel="preload" href="/assets/fonts/MaterialIcons.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/MaterialIcons.woff2"></noscript>
 
         <!-- Icons & OG -->
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
