@@ -17,8 +17,6 @@
     view.css
     © Copyright 2020 Martin Weiss (martinweiss.cz)
 */
-* {box-sizing: border-box;}
-a {text-decoration: none;}
 main{background: #fbfbfb;} /* DEL */
 
 .restaurant-list {
@@ -89,18 +87,14 @@ body {margin:0;padding:0;}
         "footer";
 }
 
-nav {grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;box-shadow: 0px 1px 20px 0px #0000001a;position: relative;}
-main {grid-area:main;}
-footer {grid-area:footer;display:flex;justify-content:center;align-items:center;color:#1a1a1a2e;font-weight:700;font-size:13px;letter-spacing:-1px;text-align:center;}
+nav {grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;box-shadow: 0px 1px 20px 0px #0000001a;position:relative}
+main {grid-area:main}
+footer {grid-area:footer}
 
 @media only screen and (max-width: 671px) {
-    #userprofile {
-        display:none;
-    }
+    #userprofile {display:none}
 }
 
 @media only screen and (max-width: 401px) {
-    .restaurant-list {
-        padding: 3rem 0;
-    }
+    .restaurant-list {padding:3rem 0}
 }

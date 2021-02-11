@@ -9,13 +9,12 @@
     * viewDetail.css
     * © Copyright 2021 Martin Weiss (martinWeiss.cz)
 */
-* {box-sizing:border-box}
 .container {display:grid;width:100vw;min-height:100vh;grid-template-columns:auto 23rem;grid-template-rows:5rem auto 5rem;grid-template-areas:"nav nav" "main main" "footer footer"}
 .container[carton] {grid-template-areas:"nav nav" "main cart" "footer footer"}
 nav {grid-area:nav;color:var(--color-primary);padding:0 5rem;box-shadow:0 0 6px var(--nav-shadow)}
 body {margin:0;padding:0;background:var(--background-default)}
 main {grid-area:main}
-footer {grid-area:footer;color:(--color-secondary);font-weight:700;font-size:13px;letter-spacing:-1px;text-align:center}
+footer {grid-area:footer}
 #shoppingCart {grid-area:cart;display:none;color:var(--color-primary)}
 #shoppingCart.active {display:flex}
 @media only screen and (max-width: 986px) {
