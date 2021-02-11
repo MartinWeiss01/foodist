@@ -76,7 +76,7 @@
                 <?php if($x) echo $x; ?>
             </div>
 
-            <footer>Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
         </div>
 
         <div id="overlayModal" class="overlay-modal">
