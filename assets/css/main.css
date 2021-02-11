@@ -47,6 +47,7 @@ html {
     --option-bg: hsl(0, 0%, 100%);
     --option-bg-hover: hsl(0, 0%, 94%);
     --muted-color:hsla(0, 0%, 0%, 0.302);
+    --nav-shadow: hsla(0, 0%, 0%, 0.129);
 
     --accept-color: #3AB54A;
     --accept-color-focus: #FFFFFF;
@@ -69,8 +70,6 @@ html {
     --collapse: hsl(163, 100%, 33%);
 
     --input-border-hover: hsl(200, 100%, 49%);
-
-    --nav-shadow: hsla(0, 0%, 0%, 0.129);
 }
 
 html[dark] {
@@ -92,6 +91,7 @@ html[dark] {
     --option-bg: hsl(216, 28%, 7%);
     --option-bg-hover: hsl(216, 28%, 13%);
     --muted-color: hsla(0, 0%, 100%, 0.122);
+    --nav-shadow: hsla(0, 0%, 0%, 0.451);
 
     --accept-color: hsl(127, 70%, 44%);
     --accept-color-focus: hsl(0, 0%, 100%);
