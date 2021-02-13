@@ -11,6 +11,7 @@ a{text-decoration:none}
 .flex.justify-content-evenly{justify-content:space-evenly}
 .flex.justify-content-end{justify-content:flex-end}
 .flex.wrap{flex-wrap:wrap}
+.flex.grow{flex-grow:1}
 
 html {
     --main-col: #FFC400;
