@@ -70,9 +70,14 @@
                     if($orders->num_rows > 0) {
                         $lastID = 0;
                         while($row = $orders->fetch_assoc()) {
+                            if($lastID != $row['orderID']) {
+                                $lastID = $row['orderID'];
+                                echo "Objednávka ID: ".$row['orderID']."<br>";
+                            }
                             print_r($row);
+                            echo "<br>";
                         }
-                    }
+                    } else echo "Nepodařilo se nám žádnou objednávku najít. Co takhle se mrknout na něco na zub?";
                 ?>
             </main>
 
