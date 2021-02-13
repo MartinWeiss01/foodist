@@ -47,6 +47,11 @@ input[type="text"]:focus {
     color:var(--save);border-color:var(--save)
 }
 
+label {
+    color:var(--muted-col);
+    font-size:15px
+}
+
 .profile-controller.save {color:var(--save);border-color:var(--save)}
 .profile-controller.save:hover {color:white;border-color:var(--save);background:var(--save)}
 .profile-controller.decline {color:var(--muted-col)}
