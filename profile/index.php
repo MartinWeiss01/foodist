@@ -18,6 +18,7 @@
         
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
+        <script defer src="/assets/js/profile.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
         <link rel="preload" href="/assets/css/profile.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/profile.css"></noscript>
 
@@ -52,7 +53,7 @@
                         <div id="menubody" class="flex ddm-menu-body align-right">
                             <?php
                                 if($account->isAdmin()) echo '<a href="/admin"><div class="flex row hcenter ddm-menu-item"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>';
-                                if($account->isLoggedIn()) echo '<a href="/profile"><div class="flex row hcenter ddm-menu-item"><icon>settings</icon><span>Nastavení</span></div></a><hr class="ddm-menu-divider">';
+                                if($account->isLoggedIn()) echo '<a href="/orders"><div class="flex row hcenter ddm-menu-item"><icon>receipt_long</icon><span>Objednávky</span></div></a><hr class="ddm-menu-divider">';
                             ?>
                             <div class="flex row hcenter justify-content-between ddm-menu-item" data-role="button" onclick="changeTheme()"><div class="flex row hcenter"><icon>nights_stay</icon><span>Tmavý režim</span></div><div><icon theme-listener>toggle_on</icon></div></div><hr class="ddm-menu-divider">
                             <?php
@@ -72,62 +73,83 @@
                         <button class="profile-controller decline" data-role="button">Smazat</button>
                     </div>
 
-                    <div class="flex profile-content">
-                        <div class="flex">
-                            <label>Vaše uživatelské ID</label>
-                            <input id="userID" class="profile-controller" placeholder="Vaše ID:" value="<?php echo $account->UID; ?>" disabled>
-                        </div>
-                        
-                        <div class="flex row wrap group">
-                            <div class="flex grow">
-                                <label>Jméno</label>
-                                <input id="userFName" class="profile-controller" placeholder="Jméno" value="<?php echo $account->UFirstName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                    <div class="flex profile-blocks">
+                        <div class="flex profile-content">
+                            <span class="block-title">Váš profil</span>
+                            <div class="flex">
+                                <label>Vaše uživatelské ID</label>
+                                <input id="userID" class="profile-controller" placeholder="Vaše ID:" value="<?php echo $account->UID; ?>" disabled>
                             </div>
                             
-                            <div class="flex grow">
-                                <label>Příjmení</label>
-                                <input id="userLName" class="profile-controller" placeholder="Příjmení" value="<?php echo $account->ULastName; ?>" data-lookup-basic="true" data-basic-changed="false">
-                            </div>                                
+                            <div class="flex row wrap group">
+                                <div class="flex grow">
+                                    <label>Jméno</label>
+                                    <input id="userFName" class="profile-controller" placeholder="Jméno" data-default="<?php echo $account->UFirstName;?>" value="<?php echo $account->UFirstName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+                                
+                                <div class="flex grow">
+                                    <label>Příjmení</label>
+                                    <input id="userLName" class="profile-controller" placeholder="Příjmení" data-default="<?php echo $account->ULastName;?>" value="<?php echo $account->ULastName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="flex">
-                            <label>Telefon</label>
-                            <input id="userTelephone" class="profile-controller" placeholder="Telefonní číslo" value="<?php echo $account->UTelephone; ?>" data-lookup-basic="true" data-basic-changed="false">
-                        </div>
+                        <div class="flex profile-content">
+                            <span class="block-title">Informace k doručení</span>
+                            <div class="flex row wrap group">
+                                <div class="flex grow">
+                                    <label>E-mail</label>
+                                    <input id="userMail" class="profile-controller" placeholder="E-mailová adresa" data-default="<?php echo $account->UEmail;?>" value="<?php echo $account->UEmail; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
 
-                        <div class="flex">
-                            <label>E-mail</label>
-                            <input id="userMail" class="profile-controller" placeholder="E-mailová adresa" value="<?php echo $account->UEmail; ?>" data-lookup-basic="true" data-basic-changed="false">
-                        </div>
+                                <div class="flex grow">
+                                    <label>Telefon</label>
+                                    <input id="userTelephone" class="profile-controller" placeholder="+420 XXXXXXXXX" data-default="<?php echo $account->UTelephone;?>" value="<?php echo $account->UTelephone; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+                            </div>
 
-                        <div class="flex">
+                            <div class="flex">
                                 <label>Adresa</label>
-                                <input id="userAddress" class="profile-controller" placeholder="Adresa pro doručení" value="<?php echo $account->UAddress; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                <input id="userAddress" class="profile-controller" placeholder="Adresa pro doručení" data-default="<?php echo $account->UAddress;?>" value="<?php echo $account->UAddress; ?>" data-lookup-basic="true" data-basic-changed="false">
                             </div>
 
-                        <div class="flex row wrap group">
-                            <div class="flex grow">
-                                <label>Město</label>
-                                <input id="userCity" class="profile-controller" placeholder="Město" value="<?php echo $account->UCity; ?>" data-lookup-basic="true" data-basic-changed="false">
-                            </div>
+                            <div class="flex row wrap group">
+                                <div class="flex grow">
+                                    <label>Město</label>
+                                    <input id="userCity" class="profile-controller" placeholder="Město" data-default="<?php echo $account->UCity;?>" value="<?php echo $account->UCity; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
 
-                            <div class="flex grow">
-                                <label>Poštovní směrovací číslo</label>
-                                <input id="userPC" class="profile-controller" placeholder="Poštovní směrovací číslo" value="<?php echo $account->UPostalCode; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                <div class="flex grow">
+                                    <label>Poštovní směrovací číslo</label>
+                                    <input id="userPC" class="profile-controller" placeholder="Poštovní směrovací číslo" data-default="<?php echo $account->UPostalCode;?>" value="<?php echo $account->UPostalCode; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex">
-                            <label>Datum narození</label>
-                            <input type="date" id="userBirth" class="profile-controller" placeholder="Poštovní směrovací číslo" value="<?php echo $account->UBirth; ?>" data-lookup-basic="true" data-basic-changed="false">
+                        <div class="flex profile-content">
+                            <span class="block-title">Změna hesla</span>
+                            <div class="flex">
+                                <label>Aktuální heslo</label>
+                                <input type="password" id="userCurrentPassword" class="profile-controller">
+                            </div>
+
+                            <div class="flex">
+                                <label>Nové heslo</label>
+                                <input type="password" id="userNewPassword" class="profile-controller" data-basic-changed="false">
+                                <span id="passwordChangeError" class="message-warning">Obě hesla musí být vyplněná</span>
+                            </div>
                         </div>
 
-                        <div class="flex">
-                            <button class="profile-controller save" data-role="button">Uložit změny</button>
-                        </div>
+                        <hr class="ddm-menu-divider">
 
-                        <div class="flex">
-                            <button class="profile-controller decline" data-role="button">Smazat účet</button>
+                        <div class="flex profile-content">
+                            <div class="flex">
+                                <button class="profile-controller save" data-role="button">Uložit změny</button>
+                            </div>
+
+                            <div class="flex">
+                                <button class="profile-controller decline" data-role="button">Smazat účet</button>
+                            </div>
                         </div>
                     </div>
                 </div>
