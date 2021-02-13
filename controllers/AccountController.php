@@ -1,4 +1,4 @@
-<?php
+ <?php
     require_once(dirname(__DIR__).'/config/defines.inc.php');
     session_start();
 
@@ -11,6 +11,11 @@
         public $UEmail;
         public $UFirstName;
         public $ULastName;
+        public $UTelephone;
+        public $UBirth;
+        public $UCity;
+        public $UAddress;
+        public $UPostalCode;
         public $UProfilePicture = "default.svg";
         private $UAdmin;
 
@@ -20,11 +25,18 @@
                 $this->UEmail = $arr["FoodistEmail"];
                 $this->UFirstName = $arr["FoodistFirstName"];
                 $this->ULastName = $arr["FoodistLastName"];
+                $this->UTelephone = $arr["FoodistTelephone"];
+                $this->UBirth = $arr["FoodistBirth"];
+                $this->UCity = $arr["FoodistCity"];
+                $this->UAddress = $arr["FoodistAddress"];
+                $this->UPostalCode = $arr["FoodistPostalCode"];
                 $this->UProfilePicture = $arr["FoodistImage"];
                 $this->UAdmin = $arr["FoodistAdmin"];
 
                 $this->authenticated = true;
                 $this->DisplayName = "$this->UFirstName $this->ULastName";
+
+                if($this->UPostalCode == 0) $this->UPostalCode = null;
             }
 
             if(isset($arr["FoodistCart"])) $this->UCart = $arr["FoodistCart"];
@@ -44,6 +56,11 @@
             $_SESSION["FoodistEmail"] = $arr["Email"];
             $_SESSION["FoodistFirstName"] = $arr["First_Name"];
             $_SESSION["FoodistLastName"] = $arr["Last_Name"];
+            $_SESSION["FoodistTelephone"] = $arr["Telephone"];
+            $_SESSION["FoodistBirth"] = $arr["Birth"];
+            $_SESSION["FoodistCity"] = $arr["City"];
+            $_SESSION["FoodistAddress"] = $arr["Address"];
+            $_SESSION["FoodistPostalCode"] = $arr["Postal_Code"];
             $_SESSION["FoodistImage"] = $arr["Image"];
             $_SESSION["FoodistAdmin"] = $arr["Admin"];
             return 1;
