@@ -8,8 +8,10 @@
     $conn = new ConnectionHandler();
     $citiesList = $conn->callQuery("SELECT * FROM cities");
     $cuisinesList = $conn->callQuery("SELECT * FROM cuisines");
+    $result = $conn->callQuery("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
     $citiesString = "let citiesList = -1;";
     $cuisinesString = "let cuisinesList = -1;";
+    $conn->closeConnection();
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +106,6 @@
 
                 <div id="companiesList" class="flex">
                 <?php
-                    $result = $conn->callQuery("SELECT ra.ID, ra.Name, ra.IdentificationNumber, ra.Email, r.ID as rID, r.Name as rName, r.Address, r.City FROM restaurant_accounts as ra LEFT JOIN restaurants as r ON ra.ID = r.accountID ORDER BY ra.ID ASC, r.ID ASC");
                     if($result->num_rows > 0) {
                         $lastID = 0;
                         $lastList = false;
