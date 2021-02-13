@@ -63,7 +63,8 @@
                     <div id="menubody" class="flex menu align-right">
                         <?php
                             if($account->isAdmin()) echo '<a href="/admin"><div class="flex row hcenter menuItem"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>';
-                            if($account->isLoggedIn()) echo '<a href="/profile"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a><hr class="menuDivider">';
+                            if($account->isLoggedIn()) echo '<a href="/profile"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a>';
+                            if($account->isLoggedIn()) echo '<a href="/orders"><div class="flex row hcenter menuItem"><icon>receipt_long</icon><span>Objednávky</span></div></a><hr class="menuDivider">';
                         ?>
                         <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()"><div class="flex row hcenter"><icon>nights_stay</icon><span>Tmavý režim</span></div><div><icon theme-listener>toggle_on</icon></div></div><hr class="menuDivider">
                         <?php

@@ -64,7 +64,8 @@
                             <span class="flex row hcenter accountDetails"><?php echo "$account->DisplayName";?> <icon>arrow_drop_down</icon></span>
                         </div>
                         <div id="menubody" class="flex menu align-right">
-                            <a href="/profile"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a><hr class="menuDivider">
+                            <a href="/profile"><div class="flex row hcenter menuItem"><icon>settings</icon><span>Nastavení</span></div></a>
+                            <a href="/orders"><div class="flex row hcenter menuItem"><icon>receipt_long</icon><span>Objednávky</span></div></a><hr class="menuDivider">
                             <div class="flex row hcenter justify-content-between menuItem" data-role="button" onclick="changeTheme()"><div class="flex row hcenter"><icon>nights_stay</icon><span>Tmavý režim</span></div><div><icon theme-listener>toggle_on</icon></div></div><hr class="menuDivider">
                             <a href="/logout"><div class="flex row hcenter menuItem"><icon>exit_to_app</icon><span>Odhlásit se</span></div></a>
                         </div>
