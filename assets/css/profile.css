@@ -9,6 +9,48 @@
 #root {display:grid;min-height:100vh;grid-template-columns:auto;grid-template-rows:5rem auto 5rem;grid-template-areas:"nav" "main" "footer"}
 body {margin:0;padding:0;background:var(--background-default)}
 nav {grid-area:nav;padding:0 4rem;box-shadow:0 0 6px var(--nav-shadow)}
-main {grid-area:main}
+main {grid-area:main;padding:2rem}
 footer {grid-area:footer}
 @media only screen and (max-width: 425px) {nav{padding:0 1rem}}
+
+
+/* Custom */
+.profile-settings-tab {gap:20px}
+.profile-container {gap: 2rem}
+.profile-header {gap:10px}
+.profile-basic-img {
+    width:200px;
+    height:200px
+}
+
+.profile-controller:focus {outline:none}
+.profile-controller, .profile-controller:hover {transition:.15s}
+
+.profile-controller {
+    border: 1px solid var(--muted-col-border);
+    padding: 0.6rem 1.65rem;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    background: none
+}
+
+input:disabled {
+    color: var(--muted-col);
+    cursor: not-allowed;
+    border-color: var(--muted-col-border)
+}
+
+input:not([type]):focus,
+input[type="text"]:focus {
+    color:var(--save);border-color:var(--save)
+}
+
+.profile-controller.save {color:var(--save);border-color:var(--save)}
+.profile-controller.save:hover {color:white;border-color:var(--save);background:var(--save)}
+.profile-controller.decline {color:var(--muted-col)}
+.profile-controller.decline:hover {color:white;border-color:var(--delete);background:var(--delete)}
+
+.profile-controller.save:active {box-shadow: inset 5px 5px 10px #005eeb,
+    inset -5px -5px 10px #006eff;}

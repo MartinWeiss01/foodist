@@ -1,15 +1,10 @@
 <?php
     require_once(dirname(__DIR__).'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
+    $account->redirectUnauthenticated();
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
     $conn->closeConnection();
-/*
-    $args = explode('/', $_SERVER['QUERY_STRING']);
-    print_r($args);
-    foreach ($args as $el => $value) {
-        echo "$el $value </br>";
-    }*/
 ?>
 
 <!DOCTYPE html>
@@ -69,8 +64,43 @@
                 </div>
             </nav>
 
-            <main>
-                Obsah
+            <main class="flex hcenter">
+                <div class="flex row profile-container wrap">
+                    <div class="flex profile-header">
+                        <img class="profile-basic-img" src="/uploads/profiles/<?php echo $account->UProfilePicture; ?>">
+                        <button class="profile-controller save" data-role="button">Nahrát</button>
+                        <button class="profile-controller decline" data-role="button">Smazat</button>
+                    </div>
+
+                    <div class="profile-content">
+                        <div class="flex profile-settings-tab">
+                            <div class="flex">
+                                <label>Vaše uživatelské ID</label>
+                                <input id="userID" class="profile-controller" placeholder="Vaše ID:" value="<?php echo $account->UID; ?>" disabled>
+                            </div>
+                            
+                            <div class="flex row wrap">
+                                <div class="flex">
+                                    <label>Jméno</label>
+                                    <input id="userFName" class="profile-controller" placeholder="Jméno" value="<?php echo $account->UFirstName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+                                
+                                <div class="flex">
+                                    <label>Příjmení</label>
+                                    <input id="userLName" class="profile-controller" placeholder="Příjmení" value="<?php echo $account->ULastName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>                                
+                            </div>
+
+                            <div class="flex">
+                                <label>E-mail</label>
+                                <input id="userMail" class="profile-controller" placeholder="E-mailová adresa" value="<?php echo $account->UEmail; ?>" data-lookup-basic="true" data-basic-changed="false">
+                            </div>
+                        </div>
+                        <div class="profile-orders-tab">
+                            ...
+                        </div>
+                    </div>
+                </div>
             </main>
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
