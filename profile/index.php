@@ -92,12 +92,36 @@
                             </div>
 
                             <div class="flex">
+                                <label>Telefon</label>
+                                <input id="userTelephone" class="profile-controller" placeholder="Telefonní číslo" value="<?php echo $account->UTelephone; ?>" data-lookup-basic="true" data-basic-changed="false">
+                            </div>
+
+                            <div class="flex">
                                 <label>E-mail</label>
                                 <input id="userMail" class="profile-controller" placeholder="E-mailová adresa" value="<?php echo $account->UEmail; ?>" data-lookup-basic="true" data-basic-changed="false">
                             </div>
-                        </div>
-                        <div class="profile-orders-tab">
-                            ...
+
+                            <div class="flex">
+                                    <label>Adresa</label>
+                                    <input id="userAddress" class="profile-controller" placeholder="Adresa pro doručení" value="<?php echo $account->UAddress; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+
+                            <div class="flex row wrap">
+                                <div class="flex">
+                                    <label>Město</label>
+                                    <input id="userCity" class="profile-controller" placeholder="Město" value="<?php echo $account->UCity; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+
+                                <div class="flex">
+                                    <label>Poštovní směrovací číslo</label>
+                                    <input id="userPC" class="profile-controller" placeholder="Poštovní směrovací číslo" value="<?php echo $account->UPostalCode; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                </div>
+                            </div>
+
+                            <div class="flex">
+                                <label>Datum narození</label>
+                                <input type="date" id="userBirth" class="profile-controller" placeholder="Poštovní směrovací číslo" value="<?php echo $account->UBirth; ?>" data-lookup-basic="true" data-basic-changed="false">
+                            </div>
                         </div>
                     </div>
                 </div>
