@@ -66,7 +66,14 @@
             </nav>
 
             <main>
-                Obsah
+                <?php
+                    if($orders->num_rows > 0) {
+                        $lastID = 0;
+                        while($row = $orders->fetch_assoc()) {
+                            print_r($row);
+                        }
+                    }
+                ?>
             </main>
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
