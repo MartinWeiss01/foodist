@@ -2,9 +2,6 @@
     require_once(dirname(__DIR__).'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
     $account->redirectUnauthenticated();
-    require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
-    $conn = new ConnectionHandler();
-    $conn->closeConnection();
 ?>
 
 <!DOCTYPE html>
