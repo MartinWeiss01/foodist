@@ -4,6 +4,7 @@
     $account->redirectUnauthenticated();
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
+    $orders = $conn->callQuery("SELECT order_food.orderID, food.Name, order_food.foodPrice, order_food.itemCount, orders.Sent, food.ImageID FROM orders INNER JOIN order_food ON orders.ID = order_food.orderID INNER JOIN food ON order_food.foodID = food.ID WHERE orders.userID = ".$account->UID);
     $conn->closeConnection();
 ?>
 
@@ -19,7 +20,7 @@
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
-        <link rel="preload" href="/assets/css/profile.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/profile.css"></noscript>
+        <link rel="preload" href="/assets/css/orders.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/orders.css"></noscript>
 
         <link rel="preload" href="/assets/fonts/OpenSansRegular.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansRegular.woff2"></noscript>
         <link rel="preload" href="/assets/fonts/OpenSansSemiBold.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansSemiBold.woff2"></noscript>
