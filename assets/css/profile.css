@@ -55,6 +55,3 @@ label {
 .profile-controller.save:hover {color:white;border-color:var(--save);background:var(--save)}
 .profile-controller.decline {color:var(--muted-col)}
 .profile-controller.decline:hover {color:white;border-color:var(--delete);background:var(--delete)}
-
-.profile-controller.save:active {box-shadow: inset 5px 5px 10px #005eeb,
-    inset -5px -5px 10px #006eff;}
