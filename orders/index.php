@@ -53,7 +53,8 @@
                         <div id="menubody" class="flex ddm-menu-body align-right">
                             <?php
                                 if($account->isAdmin()) echo '<a href="/admin"><div class="flex row hcenter ddm-menu-item"><icon>admin_panel_settings</icon><span>Administrace</span></div></a>';
-                                if($account->isLoggedIn()) echo '<a href="/profile"><div class="flex row hcenter ddm-menu-item"><icon>settings</icon><span>Nastavení</span></div></a><hr class="ddm-menu-divider">';
+                                if($account->isLoggedIn()) echo '<a href="/profile"><div class="flex row hcenter ddm-menu-item"><icon>settings</icon><span>Nastavení</span></div></a>';
+                                if($account->isLoggedIn()) echo '<a href="/orders"><div class="flex row hcenter ddm-menu-item"><icon>receipt_long</icon><span>Objednávky</span></div></a><hr class="ddm-menu-divider">';
                             ?>
                             <div class="flex row hcenter justify-content-between ddm-menu-item" data-role="button" onclick="changeTheme()"><div class="flex row hcenter"><icon>nights_stay</icon><span>Tmavý režim</span></div><div><icon theme-listener>toggle_on</icon></div></div><hr class="ddm-menu-divider">
                             <?php
@@ -66,19 +67,23 @@
             </nav>
 
             <main>
+                <div class="flex hcenter orders">
                 <?php
                     if($orders->num_rows > 0) {
                         $lastID = 0;
+                        $rowid = 0;
                         while($row = $orders->fetch_assoc()) {
                             if($lastID != $row['orderID']) {
+                                if($lastID != 0) echo "</div>";
+                                $rowid++;
+                                echo "<div class='orderPackage' data-orderID='".$row['orderID']."' data-timestamp='".$row['Sent']."'><span>Objednávka #$rowid</span>";
                                 $lastID = $row['orderID'];
-                                echo "Objednávka ID: ".$row['orderID']."<br>";
                             }
-                            print_r($row);
-                            echo "<br>";
+                            echo "<div class='orderItem' data-name='".$row['Name']."' data-price='".$row['foodPrice']."' data-pieces='".$row['itemCount']."' data-image='".$row['ImageID']."'>".$row['Name']."</div>";
                         }
                     } else echo "Nepodařilo se nám žádnou objednávku najít. Co takhle se mrknout na něco na zub?";
                 ?>
+                </div>
             </main>
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
