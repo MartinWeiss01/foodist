@@ -80,11 +80,11 @@
                 <div class="menuParent">
                     <span>Vybrat město</span>
                     <div class="flex row hcenter" onclick="menuHandler(this)" data-role="button">
-                        <span id="selectedCity" data-city-id="-1" data-city-name="" class="flex row hcenter"></span><icon>expand_more</icon>
+                        <span id="selectedCity" data-city-id="-1" data-city-name="" class="flex row hcenter citySelector"></span><icon style="font-size:2rem">expand_more</icon>
                     </div>
 
                     <p>Máš chuť na něco speicálního?</p>
-                    <p>Zvol si konkrétní kuchyni!</p>
+                    <p style="margin-bottom:1rem">Zvol si konkrétní kuchyni!</p>
                     <div id="menubody" class="flex menu">
                         <?php
                             if($citiesList->num_rows > 0) {
@@ -94,7 +94,7 @@
                     </div>
                 </div>
 
-                <button onclick="searchForRestaurants()">Najít restauraci</button>
+                <button class="submitButton" onclick="searchForRestaurants()" data-role="button">Najít restauraci</button>
             </div>
         </main>
         <div class="toastBox"><div id="toast" class="toast"></div></div>
