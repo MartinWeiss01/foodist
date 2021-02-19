@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        <div class="toastBox"><div id="toast" class="toast"></div></div>
+        <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
 
     <script>
@@ -148,6 +148,7 @@
         function updateCart(e, c) {actionCart(3, `&fid=${e}&count=${c}`);}
         function finishOrder() {
             checkCart();
+            hideShoppingCart();
             showToast("Objednávka byla úspěšně odeslána");
         }
 
