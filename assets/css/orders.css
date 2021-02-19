@@ -16,3 +16,5 @@ footer {grid-area:footer}
 
 /* Custom */
 .orders {gap:2rem}
+.orderPackage {border:1px solid var(--border-primary)}
+.orderItem {padding-left:2rem}
