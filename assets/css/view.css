@@ -17,7 +17,7 @@
     view.css
     © Copyright 2020 Martin Weiss (martinweiss.cz)
 */
-main{background: #fbfbfb;} /* DEL */
+body{background:var(--background-default);} /* DEL */
 
 .restaurant-list {
     display: flex;
@@ -29,7 +29,7 @@ main{background: #fbfbfb;} /* DEL */
 }
 
 .restaurant {
-    background:white;
+    background:#ff00f717;
     min-width: 17rem;
     max-width: 20rem;
 }
@@ -53,11 +53,11 @@ main{background: #fbfbfb;} /* DEL */
 
 .rating-star {
     width: 17px;
-    filter: grayscale(1);
+    fill:#FAFAFB;
 }
 
 .rating-star.active {
-    filter: grayscale(0);
+    fill:url(#a);
 }
 
 .raco {

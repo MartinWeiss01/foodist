@@ -82,20 +82,23 @@
                         if($result->num_rows < 1) echo "Nenalezena žádná restaurace splňující tyto podmínky!";
                         else {
                             while($row = $result->fetch_assoc()) {
-                                echo "<a href='../viewDetailed/?rID=".$row['ID']."'>
-                                    <div class='restaurant' id='resta".$row['ID']."'>
-                                        <div class='restaurant-header'></div>
-                                        <div class='restaurant-details'>
-                                            <span class='restaurantName'>".$row['Name']."</span>
-                                            <span class='restaurantAddress'>".$row['Address']."</span>
-                                            <div class='rating' data-rating='".$row["RA"]."' data-rating-count='".$row["CO"]."'>
-                                                <img class='rating-star' src='../images/icons/starfull.png'>
-                                                <img class='rating-star' src='../images/icons/starfull.png'>
-                                                <img class='rating-star' src='../images/icons/starfull.png'>
-                                                <img class='rating-star' src='../images/icons/starfull.png'>
-                                                <img class='rating-star' src='../images/icons/starfull.png'>
-                                                <span class='raco'>(".($row["CO"] ? $row["CO"] : "0").")</span>
-                                    </div></div></div></a>";
+                                echo "<a href='/viewDetailed/?rID=".$row['ID']."'>
+                                        <div class='restaurant' id='resta".$row['ID']."'>
+                                            <div class='restaurant-header' style='background:url(/uploads/mbotron/".$row['ImageBG'].") no-repeat center center fixed;background-size:cover;'></div>
+                                            <div class='restaurant-details'>
+                                                <span class='restaurantName'>".$row['Name']."</span>
+                                                <span class='restaurantAddress'>".$row['Address']."</span>
+                                                <div class='rating' data-rating='".$row["RA"]."' data-rating-count='".$row["CO"]."'>
+                                                    <svg class='rating-star' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><defs/><linearGradient id='a' gradientUnits='userSpaceOnUse' x1='-.1913' y1='55.1364' x2='28.8917' y2='16.2304' gradientTransform='matrix(1.0417 0 0 -1.0417 9.5833 63.75)'><stop offset='0' stop-color='#ffda1c'/><stop offset='1' stop-color='#feb705'/></linearGradient><path d='M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z'/></svg>
+                                                    <svg class='rating-star' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><defs/><linearGradient id='a' gradientUnits='userSpaceOnUse' x1='-.1913' y1='55.1364' x2='28.8917' y2='16.2304' gradientTransform='matrix(1.0417 0 0 -1.0417 9.5833 63.75)'><stop offset='0' stop-color='#ffda1c'/><stop offset='1' stop-color='#feb705'/></linearGradient><path d='M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z'/></svg>
+                                                    <svg class='rating-star' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><defs/><linearGradient id='a' gradientUnits='userSpaceOnUse' x1='-.1913' y1='55.1364' x2='28.8917' y2='16.2304' gradientTransform='matrix(1.0417 0 0 -1.0417 9.5833 63.75)'><stop offset='0' stop-color='#ffda1c'/><stop offset='1' stop-color='#feb705'/></linearGradient><path d='M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z'/></svg>
+                                                    <svg class='rating-star' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><defs/><linearGradient id='a' gradientUnits='userSpaceOnUse' x1='-.1913' y1='55.1364' x2='28.8917' y2='16.2304' gradientTransform='matrix(1.0417 0 0 -1.0417 9.5833 63.75)'><stop offset='0' stop-color='#ffda1c'/><stop offset='1' stop-color='#feb705'/></linearGradient><path d='M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z'/></svg>
+                                                    <svg class='rating-star' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><defs/><linearGradient id='a' gradientUnits='userSpaceOnUse' x1='-.1913' y1='55.1364' x2='28.8917' y2='16.2304' gradientTransform='matrix(1.0417 0 0 -1.0417 9.5833 63.75)'><stop offset='0' stop-color='#ffda1c'/><stop offset='1' stop-color='#feb705'/></linearGradient><path d='M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z'/></svg>
+                                                    <span class='raco'>(".($row["CO"] ? $row["CO"] : "0").")</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </a>";
                             }
                         }
                     ?>
