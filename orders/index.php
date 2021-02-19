@@ -76,10 +76,10 @@
                             if($lastID != $row['orderID']) {
                                 if($lastID != 0) echo "</div>";
                                 $rowid++;
-                                echo "<div class='orderPackage' data-orderID='".$row['orderID']."' data-timestamp='".$row['Sent']."'><span>Objednávka #$rowid</span>";
+                                echo "<div class='orderPackage' data-orderID='".$row['orderID']."' data-timestamp='".$row['Sent']."'><span>Objednávka #$rowid (".$row['Sent'].")</span>";
                                 $lastID = $row['orderID'];
                             }
-                            echo "<div class='orderItem' data-name='".$row['Name']."' data-price='".$row['foodPrice']."' data-pieces='".$row['itemCount']."' data-image='".$row['ImageID']."'>".$row['Name']."</div>";
+                            echo "<div class='orderItem' data-name='".$row['Name']."' data-price='".$row['foodPrice']."' data-pieces='".$row['itemCount']."' data-image='".$row['ImageID']."'>".$row['Name']." (".$row['foodPrice']." Kč x ".$row['itemCount']." ks)</div>";
                         }
                     } else echo "Nepodařilo se nám žádnou objednávku najít. Co takhle se mrknout na něco na zub?";
                 ?>
@@ -91,4 +91,16 @@
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
+
+    <script>
+        const orders = document.querySelectorAll(".orderPackage");
+        for(let i = 0; i < orders.length; i++) {
+            let tempPackages = orders[i].querySelectorAll(".orderItem"),
+                tempTotalPrice = 0;
+            for(let j = 0; j < tempPackages.length; j++) tempTotalPrice += (tempPackages[j].dataset.price*tempPackages[j].dataset.pieces);
+            const totalPriceElement = document.createElement("span");
+            totalPriceElement.innerText = `Cena celkem: ${tempTotalPrice} Kč`;
+            orders[i].appendChild(totalPriceElement);
+        }
+    </script>
 </html>
