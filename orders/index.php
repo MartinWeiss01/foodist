@@ -4,7 +4,7 @@
     $account->redirectUnauthenticated();
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
-    $orders = $conn->callQuery("SELECT order_food.orderID, food.Name, order_food.foodPrice, order_food.itemCount, orders.Sent, food.ImageID FROM orders INNER JOIN order_food ON orders.ID = order_food.orderID INNER JOIN food ON order_food.foodID = food.ID WHERE orders.userID = ".$account->UID);
+    $orders = $conn->callQuery("SELECT order_food.orderID, food.Name, order_food.foodPrice, order_food.itemCount, orders.Sent, food.ImageID FROM orders INNER JOIN order_food ON orders.ID = order_food.orderID INNER JOIN food ON order_food.foodID = food.ID WHERE orders.userID = $account->UID");
     $conn->closeConnection();
 ?>
 
@@ -19,6 +19,7 @@
         
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
+        <script defer src="/assets/js/orders.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
         <link rel="preload" href="/assets/css/orders.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/orders.css"></noscript>
 
@@ -71,15 +72,15 @@
                 <?php
                     if($orders->num_rows > 0) {
                         $lastID = 0;
-                        $rowid = 0;
+                        $ordersCount = 0;
                         while($row = $orders->fetch_assoc()) {
                             if($lastID != $row['orderID']) {
-                                if($lastID != 0) echo "</div>";
-                                $rowid++;
-                                echo "<div class='orderPackage' data-orderID='".$row['orderID']."' data-timestamp='".$row['Sent']."'><span>Objednávka #$rowid (".$row['Sent'].")</span>";
+                                if($lastID != 0) echo "</div></div>";
+                                $ordersCount++;
+                                echo '<div class="flex orderPackage" data-orderID="'.$row["orderID"].'"><span class="order-h1">Objednávka #'.$ordersCount.'</span><span class="order-h2">'.$row["Sent"].'</span><div class="flex order-items">';
                                 $lastID = $row['orderID'];
                             }
-                            echo "<div class='orderItem' data-name='".$row['Name']."' data-price='".$row['foodPrice']."' data-pieces='".$row['itemCount']."' data-image='".$row['ImageID']."'>".$row['Name']." (".$row['foodPrice']." Kč x ".$row['itemCount']." ks)</div>";
+                            echo '<div class="flex row justify-content-between orderItem" data-price="'.$row["foodPrice"].'" data-quantity="'.$row["itemCount"].'"><span class="order-h2 item-name">'.$row["Name"].'</span><div class="flex row item-detail"><span class="quantity">'.$row["itemCount"].' Ks</span><span class="order-h2">'.$row["foodPrice"].' Kč</span></div></div>';
                         }
                     } else echo "Nepodařilo se nám žádnou objednávku najít. Co takhle se mrknout na něco na zub?";
                 ?>
@@ -91,16 +92,4 @@
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
-
-    <script>
-        const orders = document.querySelectorAll(".orderPackage");
-        for(let i = 0; i < orders.length; i++) {
-            let tempPackages = orders[i].querySelectorAll(".orderItem"),
-                tempTotalPrice = 0;
-            for(let j = 0; j < tempPackages.length; j++) tempTotalPrice += (tempPackages[j].dataset.price*tempPackages[j].dataset.pieces);
-            const totalPriceElement = document.createElement("span");
-            totalPriceElement.innerText = `Cena celkem: ${tempTotalPrice} Kč`;
-            orders[i].appendChild(totalPriceElement);
-        }
-    </script>
 </html>

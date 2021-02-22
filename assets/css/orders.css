@@ -16,5 +16,14 @@ footer {grid-area:footer}
 
 /* Custom */
 .orders {gap:2rem}
-.orderPackage {border:1px solid var(--border-primary)}
-.orderItem {padding-left:2rem}
+.orderPackage {background:white;border-radius:6px;padding:3rem;width:60%}
+.order-h1, .order-h2 {color:black;font-weight:600}
+.order-h1 {font-size:22px}
+.order-h2 {font-size:15px}
+.order-items {margin:1rem 0;gap:2px}
+.orderItem {background:#00000012;border-radius:6px;padding:1rem}
+.item-detail {gap:5px}
+.orderSummary {border-top:2px solid var(--border-primary);padding-top:1rem}
+.quantity {background:var(--background-default);color:var(--color-primary);padding:3px;font-size:12px;font-weight:600;border-radius:6px;}
+@media only screen and (max-width: 768px) {.orderPackage {width:90%}}
+@media only screen and (max-width: 425px) {.orderPackage {width:100%;padding:1rem}.order-h1 {font-size:18px}.order-h2 {font-size:13px}}
