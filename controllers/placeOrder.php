@@ -9,6 +9,7 @@
     header("Content-Type: application/json");
     require_once(__DIR__.'/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
+    $account->disableUnauthenticated();
     $account->disableDirect($_SERVER);
     require_once(__DIR__.'/ConnectionController.php');
     $conn = new ConnectionHandler();
