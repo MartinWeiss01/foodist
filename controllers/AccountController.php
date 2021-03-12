@@ -1,4 +1,4 @@
- <?php
+<?php
     require_once(dirname(__DIR__).'/config/defines.inc.php');
     session_start();
 
@@ -84,6 +84,9 @@
         }
         public function redirectUnauthorized() {
             if(!$this->isAdmin()) return die(header("Location: ".SSL_APP_PATH));
+        }
+        public function disableUnauthenticated() {
+            if(!$this->isLoggedIn()) return die('{"error_code":-665,"error_message":"Access Denied"}');
         }
         public function disableUnauthorized() {
             if(!$this->isAdmin()) return die('{"error_code":-664,"error_message":"Access Denied"}');
