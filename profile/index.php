@@ -16,6 +16,7 @@
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
         <script defer src="/assets/js/profile.min.js"></script>
+
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
         <link rel="preload" href="/assets/css/profile.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/profile.css"></noscript>
 
@@ -82,12 +83,12 @@
                             <div class="flex row wrap group">
                                 <div class="flex grow">
                                     <label>Jméno</label>
-                                    <input id="userFName" class="profile-controller" placeholder="Jméno" data-default="<?php echo $account->UFirstName;?>" value="<?php echo $account->UFirstName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                    <input id="userFName" class="profile-controller" placeholder="Jan" data-default="<?php echo $account->UFirstName;?>" value="<?php echo $account->UFirstName; ?>" lookup data-state="false">
                                 </div>
                                 
                                 <div class="flex grow">
                                     <label>Příjmení</label>
-                                    <input id="userLName" class="profile-controller" placeholder="Příjmení" data-default="<?php echo $account->ULastName;?>" value="<?php echo $account->ULastName; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                    <input id="userLName" class="profile-controller" placeholder="Novák" data-default="<?php echo $account->ULastName;?>" value="<?php echo $account->ULastName; ?>" lookup data-state="false">
                                 </div>
                             </div>
                         </div>
@@ -97,29 +98,31 @@
                             <div class="flex row wrap group">
                                 <div class="flex grow">
                                     <label>E-mail</label>
-                                    <input id="userMail" class="profile-controller" placeholder="E-mailová adresa" data-default="<?php echo $account->UEmail;?>" value="<?php echo $account->UEmail; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                    <input type="email" id="userMail" class="profile-controller" placeholder="pan.novak@seznam.cz" data-default="<?php echo $account->UEmail;?>" value="<?php echo $account->UEmail; ?>" lookup data-state="false">
+                                    <span id="emailChangeError" class="message-warning">E-mail není správně zadán</span>
                                 </div>
 
                                 <div class="flex grow">
                                     <label>Telefon</label>
-                                    <input id="userTelephone" class="profile-controller" placeholder="+420 XXXXXXXXX" data-default="<?php echo $account->UTelephone;?>" value="<?php echo $account->UTelephone; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                    <input type="telephone" id="userTelephone" class="profile-controller" placeholder="+420 XXXXXXXXX" pattern="\+[0-9]{3} [0-9]{9}" data-default="<?php echo $account->UTelephone;?>" value="<?php echo $account->UTelephone; ?>" lookup data-state="false">
+                                    <span id="phoneChangeError" class="message-warning">Číslo není správně zadáno</span>
                                 </div>
                             </div>
 
                             <div class="flex">
                                 <label>Adresa</label>
-                                <input id="userAddress" class="profile-controller" placeholder="Adresa pro doručení" data-default="<?php echo $account->UAddress;?>" value="<?php echo $account->UAddress; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                <input id="userAddress" class="profile-controller" placeholder="Adresa pro doručení" data-default="<?php echo $account->UAddress;?>" value="<?php echo $account->UAddress; ?>" lookup data-state="false">
                             </div>
 
                             <div class="flex row wrap group">
                                 <div class="flex grow">
                                     <label>Město</label>
-                                    <input id="userCity" class="profile-controller" placeholder="Město" data-default="<?php echo $account->UCity;?>" value="<?php echo $account->UCity; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                    <input id="userCity" class="profile-controller" placeholder="Město" data-default="<?php echo $account->UCity;?>" value="<?php echo $account->UCity; ?>" lookup data-state="false">
                                 </div>
 
                                 <div class="flex grow">
                                     <label>Poštovní směrovací číslo</label>
-                                    <input id="userPC" class="profile-controller" placeholder="Poštovní směrovací číslo" data-default="<?php echo $account->UPostalCode;?>" value="<?php echo $account->UPostalCode; ?>" data-lookup-basic="true" data-basic-changed="false">
+                                    <input type="number" min="501" max="99950" id="userPC" class="profile-controller" placeholder="62500" data-default="<?php echo $account->UPostalCode;?>" value="<?php echo $account->UPostalCode; ?>" lookup data-state="false">
                                 </div>
                             </div>
                         </div>
@@ -133,8 +136,8 @@
 
                             <div class="flex">
                                 <label>Nové heslo</label>
-                                <input type="password" id="userNewPassword" class="profile-controller" data-basic-changed="false">
-                                <span id="passwordChangeError" class="message-warning">Obě hesla musí být vyplněná</span>
+                                <input type="password" id="userNewPassword" class="profile-controller" lookup data-state="false">
+                                <span id="passwordChangeError" class="message-warning">Změna nebude uložena, je potřeba zadat současné i nové heslo.<br>Hesla se nesmí shodovat.</span>
                             </div>
                         </div>
 
@@ -142,11 +145,11 @@
 
                         <div class="flex profile-content">
                             <div class="flex">
-                                <button class="profile-controller save" data-role="button">Uložit změny</button>
+                                <button id="updateprofile" class="profile-controller save" data-role="button">Uložit změny</button>
                             </div>
 
                             <div class="flex">
-                                <button class="profile-controller decline" data-role="button">Smazat účet</button>
+                                <button id="deleteprofile" class="profile-controller decline" data-role="button">Smazat účet</button>
                             </div>
                         </div>
                     </div>
