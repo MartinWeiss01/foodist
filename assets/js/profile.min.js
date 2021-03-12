@@ -16,6 +16,17 @@ const checkPassword = (old, newpass) => ((old.value !== "") && (newpass.value !=
 const checkMail = (val) => /^(.+)@(.+)\.(.+)$/g.test(val);
 const checkPhone = (val) => /^\+\d{3}\s(\d{3}){3}$/g.test(val);
 const passwordCheck = () => showError(passwordMessage, checkPassword(currentPassword, newPassword), newPassword);
+const reloadProfile = (data) => {
+    if(data["success"] === true) {
+        for(let i = 0; i < a.length; i++) {
+            if(a[i].dataset.default !== a[i].value) {
+                a[i].dataset.default = a[i].value;
+                a[i].dataset.state = false;
+            }
+        }
+        showToast("Změny byly úspěšně uloženy");
+    } else if(data["success"] === false) showToast(data["fail"]);
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     for(let i = 0; i < a.length; i++) a[i].addEventListener('keyup', () => {a[i].dataset.state = !(a[i].dataset.default === a[i].value);});
@@ -56,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return Promise.reject(response);
             })
             .then(data => {
-                data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : console.log(data);
+                data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : reloadProfile(data);
             })
             .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
             console.log(prep);
