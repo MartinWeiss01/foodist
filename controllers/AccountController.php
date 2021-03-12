@@ -63,6 +63,13 @@
             return 1;
         }
 
+        
+        public function sessionValue($parameter, $value) {
+            $arrKeys = array("UEmail" => "FoodistEmail", "UFirstName" => "FoodistFirstName", "ULastName" => "FoodistLastName", "UTelephone" => "FoodistTelephone", "UCity" => "FoodistCity", "UAddress" => "FoodistAddress", "UPostalCode" => "FoodistPostalCode", "UProfilePicture" => "FoodistImage");
+            $_SESSION[$arrKeys[$parameter]] = $value;
+            $this->$parameter = $value;
+        }
+
         public function updateUserCart() {
             $_SESSION["FoodistCart"] = $this->UCart;
         }
