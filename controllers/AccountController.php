@@ -12,7 +12,6 @@
         public $UFirstName;
         public $ULastName;
         public $UTelephone;
-        public $UBirth;
         public $UCity;
         public $UAddress;
         public $UPostalCode;
@@ -26,7 +25,6 @@
                 $this->UFirstName = $arr["FoodistFirstName"];
                 $this->ULastName = $arr["FoodistLastName"];
                 $this->UTelephone = $arr["FoodistTelephone"];
-                $this->UBirth = $arr["FoodistBirth"];
                 $this->UCity = $arr["FoodistCity"];
                 $this->UAddress = $arr["FoodistAddress"];
                 $this->UPostalCode = $arr["FoodistPostalCode"];
@@ -57,7 +55,6 @@
             $_SESSION["FoodistFirstName"] = $arr["First_Name"];
             $_SESSION["FoodistLastName"] = $arr["Last_Name"];
             $_SESSION["FoodistTelephone"] = $arr["Telephone"];
-            $_SESSION["FoodistBirth"] = $arr["Birth"];
             $_SESSION["FoodistCity"] = $arr["City"];
             $_SESSION["FoodistAddress"] = $arr["Address"];
             $_SESSION["FoodistPostalCode"] = $arr["Postal_Code"];

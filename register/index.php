@@ -9,20 +9,16 @@
         if(isset($_POST["lastName"]) && !empty($_POST["lastName"])) $local_lastName = htmlspecialchars($_POST["lastName"]); else $fail = "Chyba s příjmením";
         if(isset($_POST["email"]) && !empty($_POST["email"])) $local_email = htmlspecialchars($_POST["email"]); else $fail = "Chyba s emailem";
         if(isset($_POST["telephone"]) && !empty($_POST["telephone"])) $local_telephone = htmlspecialchars($_POST["telephone"]); else $fail = "Chyba s telefonem";
-        if(isset($_POST["date"]) && !empty($_POST["date"])) $local_date = htmlspecialchars($_POST["date"]); else $fail = "Chyba s datem";
         if(isset($_POST["password"]) && !empty($_POST["password"])) $local_password = htmlspecialchars($_POST["password"]); else $fail = "Chyba s heslem";
         if(isset($_POST["password_confirm"]) && !empty($_POST["password_confirm"])) $local_password_confirm = htmlspecialchars($_POST["password_confirm"]); else $fail = "Chyba s potvrzovacím heslem";
-        if(isset($_POST["sexValue"]) && !empty($_POST["sexValue"])) $local_sexValue = htmlspecialchars($_POST["sexValue"]); else $fail = "Chyba s pohlavím";
         if(!preg_match('/^(.+)@(.+)\.(.+)$/', $local_email)) $fail = "Chyba s emailem";
         if(!preg_match('/^\+\d{3}\s(\d{3}){3}$/', $local_telephone)) $fail = "Chyba s telefonem";
         if($local_password != $local_password_confirm) $fail = "Hesla se neshodují";
 
-        $local_sexValue -= 1;
-        
         if($fail == NULL) {
             require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
             $conn = new ConnectionHandler();
-            $conn->callQuery("INSERT INTO users(Email, Password, First_name, Last_Name, Sex, Telephone, Birth, Register_IP) VALUE ('$local_email', SHA2('$local_password', 256), '$local_firstName', '$local_lastName', $local_sexValue, '$local_telephone', '$local_date', '".$_SERVER["REMOTE_ADDR"]."')");
+            $conn->callQuery("INSERT INTO users(Email, Password, First_name, Last_Name, Telephone, Register_IP) VALUE ('$local_email', SHA2('$local_password', 256), '$local_firstName', '$local_lastName', '$local_telephone', '".$_SERVER["REMOTE_ADDR"]."')");
             $conn->finishConnection(header("Location: ../login/"));
         }
     } 
@@ -77,15 +73,8 @@
                     <input type="text" id="lastName" name="lastName" placeholder="Příjmení" autocomplete="off" required require/>
                     <input type="text" id="email" name="email" placeholder="E-mailová adresa" autocomplete="off" required require/>
                     <input type="text" id="telephone" name="telephone" placeholder="Telefonní číslo (ve tvaru +420 XXXXXXXXX)" autocomplete="off" required require/>
-                    <input type="date" id="date" name="date" min="1900-01-01" max="2018-12-31" placeholder="Datum narození" autocomplete="off" required require/>
                     <input type="password" id="password" name="password" placeholder="Heslo" autocomplete="off" required require/>
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="Zopakujte heslo" autocomplete="off" required require/>
-                    <input type="hidden" id="sexValue" name="sexValue" value="0">
-                    <div id="sexSwitchGroup" data-value="1" class="sexSwitchGroup">
-                        <span id="genderMale">Muž</span>
-                        <icon id="sexSwitch" class="sexSwitch">toggle_off</icon>
-                        <span id="genderFemale">Žena</span>
-                    </div>
                     <button type="submit" id="submitactor" value="Vytvořit účet">Vytvořit účet</button>
                     <button onclick="window.location.replace('../login/')" value="Již mám účet">Již mám účet</button>
                 </form>
@@ -99,7 +88,6 @@
         const lastNameInput = document.getElementById("lastName");
         const mailInput = document.getElementById("email");
         const telephoneInput = document.getElementById("telephone");
-        const birthInput = document.getElementById("date");
         const passInput = document.getElementById("password");
         const passConfirmInput = document.getElementById("password_confirm");
         const submitInput = document.getElementById("submitactor");
@@ -117,7 +105,6 @@
             "Vyplňte své příjmení",
             "E-mailová adresa chybí nebo má špatný tvar",
             "Vyplňte své tel. číslo ve tvaru +420 XXXXXXXXX",
-            "Chybí datum narození",
             "Chybí heslo",
             "Obě hesla musí být stejná"
         ];
@@ -137,7 +124,6 @@
         firstNameInput.addEventListener("change", function() {if(this.value != "") acceptInput(this, 1); else acceptInput(this, 0);});
         lastNameInput.addEventListener("change", function() {if(this.value != "") acceptInput(this, 1); else acceptInput(this, 0);});
         passInput.addEventListener("change", function() {if(this.value != "") acceptInput(this, 1); else acceptInput(this, 0);});
-        birthInput.addEventListener("change", function() {if(this.value != "") acceptInput(this, 1); else acceptInput(this, 0);});
 
         passConfirmInput.addEventListener("change", function() {
             if(this.value == passInput.value) acceptInput(this, 1);
@@ -154,29 +140,6 @@
             let telereg = /^\+\d{3}\s(\d{3}){3}$/g;
             if(telereg.test(this.value)) acceptInput(this, 1);
             else if(!this.hasAttribute("require")) acceptInput(this, 0);
-        });
-
-        document.getElementById("genderFemale").addEventListener("click", function() {
-            document.getElementById("sexSwitch").parentElement.dataset.value = 2;
-            document.getElementById("sexSwitch").innerHTML = "toggle_on";
-            document.getElementById("sexValue").value = document.getElementById("sexSwitch").parentElement.dataset.value;
-        });
-
-        document.getElementById("genderMale").addEventListener("click", function() {
-            document.getElementById("sexSwitch").parentElement.dataset.value = 1;
-            document.getElementById("sexSwitch").innerHTML = "toggle_off";
-            document.getElementById("sexValue").value = document.getElementById("sexSwitch").parentElement.dataset.value;
-        });
-
-        document.getElementById("sexSwitch").addEventListener("click", function() {
-            if(this.parentElement.dataset.value == 1) {
-                this.parentElement.dataset.value = 2;
-                this.innerHTML = "toggle_on";
-            } else {
-                this.parentElement.dataset.value = 1;
-                this.innerHTML = "toggle_off";
-            }
-            document.getElementById("sexValue").value = document.getElementById("sexSwitch").parentElement.dataset.value;
         });
     </script>
 </html>
