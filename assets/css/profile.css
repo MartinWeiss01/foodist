@@ -39,7 +39,8 @@ footer {grid-area:footer}
     background: none
 }
 
-input:disabled {
+input:disabled,
+button:disabled {
     color: var(--muted-col);
     cursor: not-allowed;
     border-color: var(--muted-col-border)
