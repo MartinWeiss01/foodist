@@ -3,13 +3,31 @@
     $account = new UserAccountHandler($_SESSION);
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
-    $conn->closeConnection();
-/*
+
+    $chosenCity = false;
+    $chosenCuisines = false;
+    $result_city = " | Objevujte nové restaurace";
+    if(isset($_POST["cities"]) && !empty($_POST["cities"])) $chosenCity = true;
+    if(isset($_POST["cuisines"]) && !empty($_POST["cuisines"])) $chosenCuisines = true;
+    if(($chosenCity == false) && ($chosenCuisines == false)) $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID ORDER BY RA DESC, CO DESC");
+    else if($chosenCity == true) {
+        $result_city = $conn->callQuery("SELECT Name FROM cities WHERE ID = ".$_POST['cities']);
+        $result_city = $result_city->fetch_assoc();
+        $result_city = " | ".$result_city["Name"];
+
+        if($chosenCuisines == true) $result = $conn->callQuery("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']." AND rc.cuisineID = ".$_POST['cuisines']);
+        else $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']);
+    } else if($chosenCuisines == true) {
+        $result = $conn->callQuery("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE rc.cuisineID = ".$_POST['cuisines']);
+    }
+    
+    /*
     $args = explode('/', $_SERVER['QUERY_STRING']);
     print_r($args);
     foreach ($args as $el => $value) {
         echo "$el $value </br>";
     }*/
+    $conn->closeConnection();
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +36,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Foodist</title>
+        <title>Foodist<?php echo $result_city;?></title>
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
         <!-- Resources -->
@@ -74,11 +92,38 @@
                 </div>
             </nav>
 
-            <main>
-                Obsah
+            <main class="flex row wrap">
+                <?php
+                    if($result->num_rows < 1) echo "Bohužel momentálně nemáme v systému žádnou restauraci.";
+                    else {
+                        while($row = $result->fetch_assoc()) {
+                            echo '<a href="/viewDetailed/?rID='.$row["ID"].'">
+                                <div class="restaurant">
+                                    <div class="restaurant-header" style="background:url(/uploads/mbotron/'.$row["ImageBG"].') no-repeat center center fixed;background-size:cover;"></div>
+                                    <div class="flex row justify-content-between">
+                                        <div class="flex">
+                                            <span>'.$row["Name"].'</span>
+                                            <span>'.$row["Address"].'</span>
+                                        </div>
+                                        <div class="flex">
+                                            <div class="flex row" data-rating="'.$row["RA"].'" data-rating-count="'.$row["CO"].'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="-.1913" y1="55.1364" x2="28.8917" y2="16.2304" gradientTransform="matrix(1.0417 0 0 -1.0417 9.5833 63.75)"><stop offset="0" stop-color="#ffda1c"/><stop offset="1" stop-color="#feb705"/></linearGradient><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                            </div>
+                                            <span>'.($row["CO"] ? $row["CO"] : 0).' recenzí</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>';
+                        }
+                    }
+                ?>
             </main>
 
-            <footer>Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
         </div>
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>

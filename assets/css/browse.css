@@ -5,12 +5,10 @@
 .accountDetails{margin-left:8px}
 @media only screen and (max-width: 425px) {.accountDetails{display:none}.account{border-radius:25px}}
 
-* {box-sizing:border-box;color:var(--color-primary)}
-#root {display:grid;min-height:100vh;grid-template-columns:auto;grid-template-rows:5rem auto 10rem;grid-template-areas:"nav" "main" "footer"}
+/* Layout */
+#root {display:grid;min-height:100vh;grid-template-columns:auto;grid-template-rows:5rem auto 5rem;grid-template-areas:"nav" "main" "footer"}
 body {margin:0;padding:0;background:var(--background-default)}
 nav {grid-area:nav;padding:0 4rem;box-shadow:0 0 6px var(--nav-shadow)}
-main {grid-area:main}
+main {grid-area:main;padding:2rem}
 footer {grid-area:footer}
-@media only screen and (max-width: 425px) {
-    nav{padding:0 1rem}
-}
+@media only screen and (max-width: 425px) {nav{padding:0 1rem}}
