@@ -67,9 +67,10 @@
             <main class="flex hcenter">
                 <div class="flex row profile-container wrap">
                     <div class="flex profile-header">
-                        <img class="profile-basic-img" src="/uploads/profiles/<?php echo $account->UProfilePicture; ?>">
-                        <button class="profile-controller save" data-role="button">Nahrát</button>
-                        <button class="profile-controller decline" data-role="button">Smazat</button>
+                        <img id="profileImage" class="profile-basic-img" src="/uploads/profiles/<?php echo $account->UProfilePicture; ?>">
+                        <input style="display:none" id="uploadImage" type="file" accept=".jpeg, .jpg, .png, .webp, .avif">
+                        <button id="uploadImageController" class="profile-controller save" data-role="button">Nahrát</button>
+                        <button id="deleteImageController" class="profile-controller decline" data-role="button">Smazat</button>
                     </div>
 
                     <div class="flex profile-blocks">

@@ -4,7 +4,11 @@ const a = document.querySelectorAll('[lookup]'),
     passwordMessage = document.getElementById('passwordChangeError'),
     emailMessage = document.getElementById('emailChangeError'),
     phoneMessage = document.getElementById('phoneChangeError'),
-    updateprofile = document.getElementById("updateprofile");
+    updateprofile = document.getElementById('updateprofile'),
+    profileImage = document.getElementById('profileImage'),
+    uploadImage = document.getElementById('uploadImage'),
+    uploadImageController = document.getElementById('uploadImageController'),
+    deleteImageController = document.getElementById('deleteImageController');
 
 const showError = (element, hide = true, elementState = null) => {
     const states = ["block", "none"];
@@ -27,8 +31,59 @@ const reloadProfile = (data) => {
         showToast("Změny byly úspěšně uloženy");
     } else if(data["success"] === false) showToast(data["fail"]);
 };
+const disableImageControllers = (state, msg = null) => {
+    uploadImageController.disabled = state;
+    deleteImageController.disabled = state;
+    if(msg !== null) showToast(msg);
+};
+const deleteImage = () => {
+    profileImage.src = '/uploads/profiles/default.svg';
+    disableImageControllers(false, "Profilový obrázek byl odstraněn");
+};
+const updateImage = (filename) => {
+    profileImage.src = `/uploads/profiles/${filename}`;
+    disableImageControllers(false, "Profilový obrázek byl změněn");
+};
+
+deleteImageController.addEventListener('click', () => {
+    disableImageControllers(true);
+    if(profileImage.src.includes("/uploads/profiles/default.svg")) return disableImageControllers(false, "Není nahraný žádný obrázek");
+    fetch('/controllers/UserImageUpdate.php', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `mode=2`})
+    .then(response => {
+      if(response.ok) return response.json();
+      return Promise.reject(response);
+    })
+    .then(data => {
+        data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : deleteImage();
+    })
+    .catch(err => console.error(`[!] An error occurred while processing the script.`));
+    disableImageControllers(false);
+});
+
+uploadImage.addEventListener('change', () => {
+    disableImageControllers(true);
+    let file = uploadImage.files[0];
+    if(file == undefined) return disableImageControllers(false, "Během nahrávání souboru došlo k chybě");
+    if(file.size >= 1086000) return disableImageControllers(false, "Nahraný soubor má více než 1 MB");
+
+    const form = new FormData();
+    form.append("mode", 1);
+    form.append("img", file);
+    fetch('/controllers/UserImageUpdate.php', {method: 'POST', credentials: 'same-origin', body: form})
+    .then(response => {
+      if(response.ok) return response.json();
+      return Promise.reject(response);
+    })
+    .then(data => {
+        data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : updateImage(data["img"]);
+    })
+    .catch(err => console.error(`[!] Webová aplikace nedokázala rozpoznat data.`));
+    disableImageControllers(false);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
+    uploadImageController.addEventListener('click', () => {uploadImage.click()});
+
     for(let i = 0; i < a.length; i++) a[i].addEventListener('keyup', () => {a[i].dataset.state = !(a[i].dataset.default === a[i].value);});
 
     currentPassword.addEventListener('keyup', passwordCheck);
