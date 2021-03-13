@@ -19,7 +19,7 @@
         
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
-        <script defer src="/assets/js/orders.js"></script>
+        <script defer src="/assets/js/orders.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
         <link rel="preload" href="/assets/css/orders.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/orders.css"></noscript>
 
