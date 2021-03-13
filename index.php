@@ -98,7 +98,7 @@
             </div>
         </main>
         <div class="toastBox"><div id="toast" class="toast"></div></div>
-        <form id="searchengine" action="view/" method="POST"><input type="hidden" id="cities" name="cities"></form>
+        <form id="searchengine" action="browse/" method="POST"><input type="hidden" id="cities" name="cities"></form>
     </body>
 
     <script>
