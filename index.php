@@ -78,13 +78,13 @@
         <main class="flex row justify-content-end">
             <div class="detailmanager">
                 <div class="menuParent">
-                    <span>Vybrat město</span>
+                    <span style="color:white">Vybrat město</span>
                     <div class="flex row hcenter" onclick="menuHandler(this)" data-role="button">
-                        <span id="selectedCity" data-city-id="-1" data-city-name="" class="flex row hcenter citySelector"></span><icon style="font-size:2rem">expand_more</icon>
+                        <span id="selectedCity" data-city-id="-1" data-city-name="" class="flex row hcenter citySelector" style="color:white"></span><icon style="font-size:2rem;color:white">expand_more</icon>
                     </div>
 
-                    <p>Máš chuť na něco speicálního?</p>
-                    <p style="margin-bottom:1rem">Zvol si konkrétní kuchyni!</p>
+                    <p style="color:white">Máš chuť na něco speicálního?</p>
+                    <p style="margin-bottom:1rem;color:white">Zvol si konkrétní kuchyni!</p>
                     <div id="menubody" class="flex menu">
                         <?php
                             if($citiesList->num_rows > 0) {
