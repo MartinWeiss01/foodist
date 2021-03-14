@@ -12,3 +12,56 @@ nav {grid-area:nav;padding:0 4rem;box-shadow:0 0 6px var(--nav-shadow)}
 main {grid-area:main;padding:2rem}
 footer {grid-area:footer}
 @media only screen and (max-width: 425px) {nav{padding:0 1rem}}
+
+.list {gap:2rem}
+.restaurant {gap:.75rem}
+.restaurant-header{
+    background-color: #eaeaea;
+    background-image: url(/uploads/mbotron/default.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border-radius: 6px;
+    height:7rem;
+    width:18rem
+}
+
+.overlay {
+    opacity: 0;
+    transition: .3s;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background: hsla(0, 0%, 100%, 0.91);
+}
+
+.overlay > span {
+    font-size: 18px;
+    font-weight: 600;
+    background: #00a879a1;
+    padding: 10px 30px;
+    border-radius: 6px;
+    color: white;
+    transition: .15s;
+}
+
+.overlay > span:hover {
+    background: #00a879;
+    transition: .15s;
+}
+
+.restaurant:hover .overlay {
+    opacity:1;
+    transition: .3s;
+}
+
+.address {font-style:italic}
+.reviews {align-items:flex-end;gap:4px}
+.rating-bar > svg {
+    height: 16px;
+    fill: lightgray
+}
+
+.rating-bar > svg.active {
+    fill: url(#a)
+}

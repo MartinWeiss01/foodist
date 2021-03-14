@@ -41,6 +41,7 @@
         
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
+        <script defer src="/assets/js/browse.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
         <link rel="preload" href="/assets/css/browse.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/browse.css"></noscript>
 
@@ -92,28 +93,31 @@
                 </div>
             </nav>
 
-            <main class="flex row wrap">
+            <main>
+                <div class="flex row wrap list">
                 <?php
                     if($result->num_rows < 1) echo "Bohužel momentálně nemáme v systému žádnou restauraci.";
                     else {
                         while($row = $result->fetch_assoc()) {
                             echo '<a href="/viewDetailed/?rID='.$row["ID"].'">
-                                <div class="restaurant">
-                                    <div class="restaurant-header" style="background:url(/uploads/mbotron/'.$row["ImageBG"].') no-repeat center center fixed;background-size:cover;"></div>
+                                <div class="flex restaurant">
+                                    <div class="restaurant-header" style="background-image:url(/uploads/mbotron/'.$row["ImageBG"].');">
+                                        <div class="flex hcenter vcenter overlay"><span>Nabídka</span></div>
+                                    </div>
                                     <div class="flex row justify-content-between">
                                         <div class="flex">
                                             <span>'.$row["Name"].'</span>
-                                            <span>'.$row["Address"].'</span>
+                                            <small class="address">'.$row["Address"].'</small>
                                         </div>
-                                        <div class="flex">
-                                            <div class="flex row" data-rating="'.$row["RA"].'" data-rating-count="'.$row["CO"].'">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="-.1913" y1="55.1364" x2="28.8917" y2="16.2304" gradientTransform="matrix(1.0417 0 0 -1.0417 9.5833 63.75)"><stop offset="0" stop-color="#ffda1c"/><stop offset="1" stop-color="#feb705"/></linearGradient><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="url(#a)" d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                        <div class="flex reviews">
+                                            <div class="flex row rating-bar" data-rating="'.$row["RA"].'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="-.1913" y1="55.1364" x2="28.8917" y2="16.2304" gradientTransform="matrix(1.0417 0 0 -1.0417 9.5833 63.75)"><stop offset="0" stop-color="#ffda1c"/><stop offset="1" stop-color="#feb705"/></linearGradient><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
                                             </div>
-                                            <span>'.($row["CO"] ? $row["CO"] : 0).' recenzí</span>
+                                            <small>'.($row["CO"] ? $row["CO"] : 0).' recenzí</small>
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +125,7 @@
                         }
                     }
                 ?>
+                </div>
             </main>
 
             <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
