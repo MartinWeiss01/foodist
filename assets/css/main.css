@@ -40,7 +40,7 @@ html {
     --scrollbar-thumb: hsla(0, 0%, 54%, 0.31);
     --account-background: hsl(0, 0%, 97%);
     --menu-background: hsl(0, 0%, 97%);
-    --menu-icon-background: hsl(0, 0%, 80%);
+    --menu-icon-background: hsla(0, 0%, 0%, 0.059);
     --menu-item-focus: hsla(0, 0%, 0%, 0.059);
     --menu-divider: hsl(0, 0%, 89%);
     --shadowTop: hsl(0, 0%, 93%);
@@ -86,7 +86,7 @@ html[dark] {
     --scrollbar-thumb: hsla(0, 0%, 0%, 0.31);
     --account-background: hsla(0, 0%, 44%, 0.161);
     --menu-background: hsl(0deg 0% 5%);
-    --menu-icon-background: hsl(0, 0%, 18%);
+    --menu-icon-background: hsla(0, 0%, 100%, 0.059);
     --menu-item-focus: hsl(0, 0%, 10%);
     --menu-divider: hsla(0, 0%, 100%, 0.149);
     --shadowTop: hsl(213, 27%, 6%);
