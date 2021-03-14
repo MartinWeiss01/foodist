@@ -20,6 +20,7 @@
 
         <!-- Resources -->
         <script defer src="/assets/js/managerly.min.js"></script>
+        <script defer src="/assets/js/landing.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
         <link rel="preload" href="/assets/css/landing.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/landing.css"></noscript>
 
@@ -97,30 +98,8 @@
                 <button class="submitButton" onclick="searchForRestaurants()" data-role="button">Najít restauraci</button>
             </div>
         </main>
-        <div class="toastBox"><div id="toast" class="toast"></div></div>
+        
+        <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
         <form id="searchengine" action="browse/" method="POST"><input type="hidden" id="cities" name="cities"></form>
     </body>
-
-    <script>
-        const selectedCity = document.getElementById("selectedCity"),
-                searcher = document.getElementById("searchengine"),
-                formCity = document.querySelector("input#cities");
-
-        document.addEventListener("DOMContentLoaded", () => {
-            let firstCity = document.querySelector(".menuItem[data-city-id]");
-            changeCity(firstCity);
-        });
-
-        function searchForRestaurants() {
-            searcher.submit();
-        }
-
-        function changeCity(e, hide = false) {
-            selectedCity.dataset.cityId = e.dataset.cityId;
-            selectedCity.dataset.cityName = e.dataset.cityName;
-            selectedCity.innerText = selectedCity.dataset.cityName;
-            formCity.value = selectedCity.dataset.cityId;
-            if(hide) menuHandler(e.parentElement);
-        }
-    </script>
 </html>
