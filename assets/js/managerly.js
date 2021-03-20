@@ -1,7 +1,12 @@
 /* (Modules Package) P R M | managerly.js | © Copyright 2021 Martin Weiss (martinweiss.cz) | PackageGeneratorV0.74f (martinWeiss.cz); Generated for project: Foodist.store) */
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.remove("preload");
+    document.body.classList.add("loaded");
+});
+
 /* Toast Module | © Copyright 2020 Martin Weiss (martinweiss.cz) */
-const toastElement = document.getElementById("toast");
+const toastElement = document.getElementById("mmb-toast-content");
 
 function showToast(message) {
     toastElement.innerText = message;
