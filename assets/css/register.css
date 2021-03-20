@@ -3,4 +3,78 @@
     © Copyright 2020 Martin Weiss (martinweiss.cz)
 */
 
-.sexSwitchGroup{display:flex;align-items:center;width:60%;display:flex;justify-content:space-between;font-size:21px}.sexSwitchGroup *{cursor:pointer}.sexSwitchGroup icon{font-size:43px}.sexSwitchGroup span{font-weight:700;text-transform:uppercase;letter-spacing:3px}.sexSwitchGroup[data-value='1'] > #genderMale,.sexSwitchGroup[data-value='1'] > #sexSwitch{color:var(--sex-male);text-shadow:0 0 5px var(--sex-male)}.sexSwitchGroup[data-value='2'] > #genderFemale,.sexSwitchGroup[data-value='2'] > #sexSwitch{color:var(--sex-female);text-shadow:0 0 5px var(--sex-female)}.sexSwitchGroup[data-value='1'] > #genderFemale,.sexSwitchGroup[data-value='2'] > #genderMale{color:#75757538}
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.header-logo {
+    fill: var(--logo-color);
+    height: 3rem;
+}
+
+.root {
+    gap: 2rem;
+}
+
+.register {
+    gap: .75rem;
+}
+
+input:focus, button:focus {outline:none}
+input, input:hover,
+button, button:hover {transition:.15s}
+
+
+input, button {
+    border: 1px solid var(--muted-col-border);
+    padding: 0.6rem 1.65rem;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    background: none
+}
+
+input:disabled,
+button:disabled {
+    color: var(--muted-col);
+    cursor: not-allowed;
+    border-color: var(--muted-col-border)
+}
+
+input:not([type]):focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="telephone"]:focus,
+input[type="date"]:focus,
+input[type="password"]:focus {
+    color:var(--edit);border-color:var(--edit)
+}
+
+label {color:var(--muted-col);font-size:13px}
+
+button {color:var(--save);border-color:var(--save)}
+button:hover {color:white;border-color:var(--save);background:var(--save)}
+
+.valid, .invalid {transition: border .3s}
+.valid {border-color:var(--success);color:var(--success)}
+.invalid {border-color:var(--fail);color:var(--fail)}
+
+.loglink {
+    color: var(--muted-color);
+    text-align: center;
+}
+
+.error {
+    color: #FF0000;
+    text-align: center;
+}
