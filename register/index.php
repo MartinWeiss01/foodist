@@ -2,26 +2,28 @@
     require_once(dirname(__DIR__).'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
     $account->redirectAuthenticated();
-    
+
     $fail = NULL;
     if(count($_POST) > 0) {
-        if(isset($_POST["firstName"]) && !empty($_POST["firstName"])) $local_firstName = htmlspecialchars($_POST["firstName"]); else $fail = "Chyba s křestním jménem";
-        if(isset($_POST["lastName"]) && !empty($_POST["lastName"])) $local_lastName = htmlspecialchars($_POST["lastName"]); else $fail = "Chyba s příjmením";
-        if(isset($_POST["email"]) && !empty($_POST["email"])) $local_email = htmlspecialchars($_POST["email"]); else $fail = "Chyba s emailem";
-        if(isset($_POST["telephone"]) && !empty($_POST["telephone"])) $local_telephone = htmlspecialchars($_POST["telephone"]); else $fail = "Chyba s telefonem";
-        if(isset($_POST["password"]) && !empty($_POST["password"])) $local_password = htmlspecialchars($_POST["password"]); else $fail = "Chyba s heslem";
-        if(isset($_POST["password_confirm"]) && !empty($_POST["password_confirm"])) $local_password_confirm = htmlspecialchars($_POST["password_confirm"]); else $fail = "Chyba s potvrzovacím heslem";
-        if(!preg_match('/^(.+)@(.+)\.(.+)$/', $local_email)) $fail = "Chyba s emailem";
-        if(!preg_match('/^\+\d{3}\s(\d{3}){3}$/', $local_telephone)) $fail = "Chyba s telefonem";
-        if($local_password != $local_password_confirm) $fail = "Hesla se neshodují";
+        require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
+        $conn = new ConnectionHandler();
+
+        $mail = $_POST["email"];
+        ($mail && sizeof($mail) > 0 && preg_match('/^(.+)@(.+)\.(.+)$/', $mail)) ? $mail = $conn->escape($mail) : $fail = "Špatný formát e-mailové adresy";
+        $phone = $_POST["telephone"];
+        ($phone && sizeof($phone) > 0 && preg_match('/^\+\d{3}\s(\d{3}){3}$/', $phone)) ? $phone = $conn->escape($phone) : $fail = "Špatný formát telefonního čísla";
+        $password = $_POST["password"];
+        ($password && sizeof($password) > 0) ? $password = $conn->escape($password) : $fail = "Špatně zadané heslo";
+        $password_confirm = $_POST["password_confirm"];
+        ($password_confirm && sizeof($password_confirm) > 0) ? $password_confirm = $conn->escape($password_confirm) : $fail = "Špatně zadané ověřovací heslo";
+        if($password != $password_confirm) $fail = "Hesla se neshodují";
 
         if($fail == NULL) {
-            require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
-            $conn = new ConnectionHandler();
-            $conn->callQuery("INSERT INTO users(Email, Password, First_name, Last_Name, Telephone, Register_IP) VALUE ('$local_email', SHA2('$local_password', 256), '$local_firstName', '$local_lastName', '$local_telephone', '".$_SERVER["REMOTE_ADDR"]."')");
+            $conn->prepare("INSERT INTO users (Email, Password, Telephone, Register_IP) VALUE (?, SHA2(?, 256), ?, ?)", "ssss", $mail, $password, $phone, $_SERVER["REMOTE_ADDR"]);
+            $conn->execute();
             $conn->finishConnection(header("Location: ../login/"));
         }
-    } 
+    }
 ?>
 
 <!DOCTYPE html>

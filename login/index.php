@@ -7,8 +7,11 @@
     if(count($_POST) > 0) {
         require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
         $conn = new ConnectionHandler();
-    
-        $result = $conn->callQuery("SELECT * FROM users WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)");
+
+        $mail = $conn->escape($_POST['email']);
+        $pass = $conn->escape($_POST['password']);
+        $conn->prepare("SELECT * FROM users WHERE Email = ? AND Password = SHA2(?, 256)", "ss", $mail, $pass);
+        $result = $conn->execute();
         $fetched = $account->fetchLogin($result->fetch_assoc());
 
         if(!$fetched) $rep = true;
