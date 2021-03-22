@@ -4,6 +4,8 @@
 
     class ConnectionHandler {
         public $connection;
+        public $statement;
+
         public function __construct() {
             $this->connection = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
             if($this->connection->connect_error) $this->exitScript('{"error_code":-308,"error_message":"Connection Error"}');
@@ -19,6 +21,20 @@
         public function callMultiQuery($query) {
             $result = $this->connection->multi_query($query) or $this->finishConnection('{"error_code":-310,"error_message":"Invalid Query"}');
             return $result;
+        }
+
+        public function escape($var) {
+            return $this->connection->real_escape_string($var);
+        }
+
+        public function prepare($stmnt, $bind, ...$vars) {
+            $this->statement = $this->connection->prepare($stmnt);
+            $this->statement->bind_param($bind, ...$vars);
+        }
+
+        public function execute() {
+            $this->statement->execute();
+            return $this->statement->get_result();
         }
 
         public function closeConnection() {
