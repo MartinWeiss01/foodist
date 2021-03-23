@@ -4,7 +4,7 @@
 
     class ConnectionHandler {
         public $connection;
-        public $statement;
+        private $statement;
 
         public function __construct() {
             $this->connection = new mysqli(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
@@ -33,7 +33,7 @@
         }
 
         public function execute() {
-            $this->statement->execute();
+            $this->statement->execute() or $this->finishConnection('{"error_code":-311,"error_message":"Invalid Statement"}');
             return $this->statement->get_result();
         }
 
