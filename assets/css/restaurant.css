@@ -9,11 +9,14 @@
 #root {display:grid;min-height:100vh;grid-template-columns:auto;grid-template-rows:5rem auto 5rem;grid-template-areas:"nav" "main" "footer"}
 body {margin:0;padding:0;background:var(--background-default)}
 nav {grid-area:nav;padding:0 4rem;box-shadow:0 0 6px var(--nav-shadow)}
-main {grid-area:main;padding:2rem}
+main {grid-area:main;padding:2rem;gap:2rem}
 footer {grid-area:footer}
 @media only screen and (max-width: 425px) {nav{padding:0 1rem}}
 
-.nav-controllers {gap: 1rem}
+.nav-controllers,
+.restaurant-controllers {
+    gap: 1rem
+}
 
 .carticon {
     fill: var(--color-primary);
@@ -29,3 +32,58 @@ footer {grid-area:footer}
     transition: .15s;
     background-color: var(--add-bg);
 }
+
+.restaurant-header {
+    background-color: #eaeaea;
+    background-image: url(/uploads/mbotron/default.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    height:19rem;
+    padding:0 2rem;
+    border-radius: 6px
+}
+
+.restaurant-controller {
+    background: white;
+    padding: .7rem 2rem;
+    border-radius: 6px 6px 0 0;
+    opacity: .8;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    transition: .3s;
+}
+
+.restaurant-controller.active,
+.restaurant-controller:hover {
+    background: white;
+    opacity: 1;
+    transition: .3s;
+}
+
+.content {
+    display:none;
+    gap: 0.75rem;
+}
+
+.content.active {
+    display:flex;
+}
+
+
+/* Menu */
+.item {
+    background: whitesmoke;
+    border-radius: 6px;
+}
+
+.detail {gap:1rem;margin:0.5rem 1rem}
+img.item-preview {height:5rem}
+.cart-span {
+    width: 8rem;
+    background: var(--add);
+    clip-path: polygon(23% 0, 100% 0, 100% 100%, 0% 100%);
+    padding-left: 1rem;
+}
+svg.addtocart {fill:white;height:2rem}

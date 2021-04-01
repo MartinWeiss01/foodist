@@ -33,6 +33,7 @@
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
         <!-- Resources -->
+        <script><?php echo "const restaurantID = $id;";?></script>
         <script defer src="/assets/js/managerly.min.js"></script>
         <script defer src="/assets/js/restaurant.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
@@ -88,8 +89,42 @@
                 </div>
             </nav>
 
-            <main>
-                <div class="flex">
+            <main class="flex">
+                <div class="flex justify-content-between restaurant-header" style="background-image:url(/uploads/mbotron/<?php echo $img; ?>);">
+                    <span><?php echo $name;?></span>
+                    <div class="flex row wrap restaurant-controllers">
+                        <span class="restaurant-controller active" data-content="menu" data-role="button">Nabídka</span>
+                        <span class="restaurant-controller" data-content="reviews" onclick="getExternalContent(this)" data-role="button">Recenze</span>
+                        <span class="restaurant-controller" data-content="about" data-role="button">O nás</span>
+                    </div>
+                </div>
+
+                <div id="restaurant-content">
+                    <div id="menu" class="flex content active">
+                    <?php
+                        if($foodlist->num_rows < 1) echo "Bohužel zatím nemáme v nabídce žádné jídlo 🥺";
+                        else {
+                            while($row = $foodlist->fetch_assoc()) {
+                                echo '
+                                <div class="flex row justify-content-between item">
+                                    <div class="flex row wrap hcenter detail">
+                                        <img class="item-preview" src="/uploads/restoffer/'.$row["ImageID"].'.png">
+                                        <div class="flex">
+                                            <span>'.$row["Name"].'</span>
+                                            <span>'.$row["Price"].' Kč</span>
+                                        </div>
+                                    </div>
+                                    <span class="flex hcenter vcenter cart-span" data-role="button" onclick="addToCart('.$row["ID"].')">
+                                        <svg class="addtocart" viewBox="0 0 50 50"><path d="M45.4 23.1v3.7c0 1-.8 1.9-1.9 1.9h-37c-1 0-1.9-.8-1.9-1.9v-3.7c0-1 .8-1.9 1.9-1.9h37.1c.9.1 1.8.9 1.8 1.9z"/><path d="M26.9 45.4h-3.7c-1 0-1.9-.8-1.9-1.9V6.4c0-1 .8-1.9 1.9-1.9h3.7c1 0 1.9.8 1.9 1.9v37.1c-.1 1-.9 1.9-1.9 1.9z"/></svg>
+                                    </span>
+                                </div>';
+                            }
+                        }
+                    ?>
+                    </div>
+
+                    <div id="reviews" class="flex content" ready>Reviews</div>
+                    <div id="about" class="flex content">About</div>
                 </div>
             </main>
 
