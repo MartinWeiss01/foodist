@@ -45,6 +45,7 @@ header {
 
 .header-control-item {
     height: 40px;
+    width: 40px;
     fill: white;
     transition: .15s;
     border-radius: 30px;
