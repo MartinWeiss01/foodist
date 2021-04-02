@@ -11,7 +11,14 @@ body {margin:0;padding:0;background:var(--background-default)}
 nav {grid-area:nav;padding:0 4rem;box-shadow:0 0 6px var(--nav-shadow)}
 main {grid-area:main;padding:2rem;gap:2rem}
 footer {grid-area:footer}
-@media only screen and (max-width: 425px) {nav{padding:0 1rem}}
+@media only screen and (max-width: 425px) {nav{padding:0 1rem}main{padding:1rem}}
+
+html {
+    --content-bg: #f3f3f3;
+}
+html[dark] {
+    --content-bg: #1e2835;
+}
 
 .nav-controllers,
 .restaurant-controllers {
@@ -74,16 +81,100 @@ footer {grid-area:footer}
 
 /* Menu */
 .item {
-    background: whitesmoke;
+    background: var(--content-bg);
     border-radius: 6px;
+}
+
+.cart-span {
+    width: 5rem;
 }
 
 .detail {gap:1rem;margin:0.5rem 1rem}
 img.item-preview {height:5rem}
-.cart-span {
-    width: 8rem;
+svg.addtocart {
+    fill: white;
+    height: 3rem;
     background: var(--add);
-    clip-path: polygon(23% 0, 100% 0, 100% 100%, 0% 100%);
-    padding-left: 1rem;
+    padding: 8px;
 }
-svg.addtocart {fill:white;height:2rem}
+
+@media only screen and (min-width: 768px) {
+    .cart-span {
+        width: 8rem;
+        background: var(--add);
+        clip-path: polygon(23% 0, 100% 0, 100% 100%, 0% 100%);
+        padding-left: 1rem;
+        border-radius: 0 6px 6px 0;
+    }
+
+    /*.cart-span:hover {--add:black;}*/
+    .cart-span:active {box-shadow: inset 5px 5px 12px #008ed5,
+        inset -5px -5px 12px #00c0ff;}
+}
+
+@media only screen and (max-width: 768px) {
+    .cart-span {
+        width: 5rem;
+        border-radius: 0 6px 6px 0;
+    }
+
+    svg.addtocart {border-radius: 50px;}
+    svg.addtocart:hover, svg.addtocart:active {box-shadow: inset 5px 5px 10px #0091d9, inset -5px -5px 10px #00c4ff;}
+}
+    
+/* Reviews */
+.review {
+    width: 25rem;
+}
+
+.profile-details {
+    gap: 1rem;
+}
+
+.review-val {
+    color: gold;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+p.comment {
+    background: var(--content-bg);
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    border-radius: 6px;
+    position: relative;
+    margin: 1rem 0 0 0;
+}
+
+p.comment:after {
+    content: " ";
+    --size: 10px;
+    position: absolute;
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+    border-bottom: var(--size) solid var(--content-bg);
+    top: -8px;
+    left: 1rem;
+}
+
+img.review-profile {
+    --size: 50px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 6px;
+}
+
+span.review-user {
+    font-weight: 600;
+    font-size: 17px;
+}
+
+span.review-date {
+    font-size: 14px;
+}
+
+.collapsed-content {
+    gap: 2rem;
+}
+
+@media only screen and (max-width: 768px) {.collapsed-content{width:100%;}.review{width:inherit;}}
