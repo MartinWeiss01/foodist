@@ -38,7 +38,7 @@
         }
 
         public function getAffectedRows() {
-            return $this->connection->affected_rows();
+            return $this->connection->affected_rows;
         }
 
         public function closeConnection() {
