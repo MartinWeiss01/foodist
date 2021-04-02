@@ -25,21 +25,6 @@ html[dark] {
     gap: 1rem
 }
 
-.carticon {
-    fill: var(--color-primary);
-    height: 40px;
-    width: 40px;
-    padding: 7px;
-    transition: .15s;
-    border-radius: 30px;
-}
-
-.carticon:hover {
-    fill: var(--add);
-    transition: .15s;
-    background-color: var(--add-bg);
-}
-
 .restaurant-header {
     background-color: #eaeaea;
     background-image: url(/uploads/mbotron/default.jpg);
@@ -80,6 +65,10 @@ html[dark] {
 
 
 /* Menu */
+.foodlist {
+    gap: .75rem;
+}
+
 .item {
     background: var(--content-bg);
     border-radius: 6px;
@@ -235,3 +224,17 @@ span.review-date {
 }
 
 @media only screen and (max-width: 768px) {.collapsed-content{width:100%;}.review{width:inherit;}}
+
+/* Cart */
+#containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
+.cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--shadowTop), inset -5px -5px 10px var(--shadowBottom)}
+.cartTotal {border-top: 1px solid var(--border-primary);padding:2rem 20px;margin-top:2rem}
+#orderButton {color:white;background:#1a1a1a;text-align:center;padding:0.75rem 2.75rem;border-radius:6px;margin-top:20px;transition:.3s}
+#orderButton:not([disabled]):hover {background:var(--add);transition:.3s}
+#orderButton[disabled] {color:var(--muted-col);cursor:not-allowed}
+icon.add, icon.remove {padding:4px;border:1px solid whitesmoke;border-radius:5px;transition:.3s}
+icon.add:hover, icon.remove:hover {color:white;transition:.3s}
+icon.add {border-color:var(--success);color:var(--success)}
+icon.remove {border-color:var(--delete);color:var(--delete)}
+icon.add:hover {background-color:var(--success)}
+icon.remove:hover {background-color:var(--delete)}

@@ -23,11 +23,16 @@
     if($type == 1) {
         $stars = $conn->escape($_POST['stars']);
         $comment = $conn->escape($_POST['comment']);
-        if($reviewID == 0) $conn->prepare("INSERT INTO reviews (stars, comment, userID, restaurantID) VALUES (?, ?, ?, ?)", "isii", $stars, $comment, $userID, $restaurantID);
-        else $conn->prepare("UPDATE reviews SET stars = ?, comment = ? WHERE ID = ? AND userID = ? AND restaurantID = ?", "isiii", $stars, $comment, $reviewID, $userID, $restaurantID);
-        $result = $conn->execute();
-        if($conn->getAffectedRows() != 0) $conn->finishConnection('{"success":true}');
-        else $conn->finishConnection('{"error_code":-895,"error_message":"API Header Error"}');
+        if($reviewID == 0) {
+            $conn->prepare("INSERT INTO reviews (stars, comment, userID, restaurantID) VALUES (?, ?, ?, ?)", "isii", $stars, $comment, $userID, $restaurantID);
+            $conn->execute();
+            $conn->finishConnection('{"success":true,"reviewid":'.$conn->connection->insert_id.'}');
+        } else {
+            $conn->prepare("UPDATE reviews SET stars = ?, comment = ? WHERE ID = ? AND userID = ? AND restaurantID = ?", "isiii", $stars, $comment, $reviewID, $userID, $restaurantID);
+            $conn->execute();
+            if($conn->connection->affected_rows != 0) $conn->finishConnection('{"success":true}');
+            else $conn->finishConnection('{"error_code":-895,"error_message":"API Header Error"}');
+        }
     } else if($type == 2) {
         $conn->prepare("DELETE FROM reviews WHERE ID = ? AND userID = ? AND restaurantID = ?", "iii", $reviewID, $userID, $restaurantID);
         $result = $conn->execute();
