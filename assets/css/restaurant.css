@@ -123,6 +123,63 @@ svg.addtocart {
 }
     
 /* Reviews */
+.comment-controller:focus {outline:none}
+.comment-controller, .comment-controller:hover {transition:.15s}
+
+.message-warning {
+    display:none;
+    font-size:12px;
+    color:var(--delete)
+}
+
+.comment-controller {
+    border: 1px solid var(--muted-col-border);
+    padding: 0.6rem 1.65rem;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    background: none
+}
+
+button:disabled {
+    color: var(--muted-col);
+    cursor: not-allowed;
+    border-color: var(--muted-col-border)
+}
+
+label {color:var(--muted-col);font-size:13px}
+.comment-controllers {gap:.75rem}
+.comment-controller.save {color:var(--save);border-color:var(--save)}
+.comment-controller.save:hover {color:white;border-color:var(--save);background:var(--save)}
+.comment-controller.decline {color:var(--muted-col)}
+.comment-controller.decline:hover {color:white;border-color:var(--delete);background:var(--delete)}
+
+.editable-review {
+    width: 100%;
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 2rem;
+    gap: 1rem;
+}
+
+.ta-star {width: 2rem;fill: lavender}
+
+.ta-star:hover, .ta-star.active,
+#s1:hover ~ .ta-star, #s1.active ~ .ta-star,
+#s2:hover ~ .ta-star, #s2.active ~ .ta-star,
+#s3:hover ~ .ta-star, #s3.active ~ .ta-star,
+#s4:hover ~ .ta-star, #s4.active ~ .ta-star,
+#s5:hover ~ .ta-star, #s5.active ~ .ta-star {fill: url(#a)}
+
+.ta-comment {
+    background: transparent;
+    border-radius: 6px;
+    padding: .5rem;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+}
+
 .review {
     width: 25rem;
 }

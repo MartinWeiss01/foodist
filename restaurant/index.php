@@ -33,7 +33,7 @@
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
         <!-- Resources -->
-        <script><?php echo "const restaurantID = $id;";?></script>
+        <script><?php echo "const restaurantID = $id, userID = ".($account->UID ? $account->UID : '0').", auth = ".($account->authenticated ? $account->authenticated : 'false').";"; ?></script>
         <script defer src="/assets/js/managerly.min.js"></script>
         <script defer src="/assets/js/restaurant.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
