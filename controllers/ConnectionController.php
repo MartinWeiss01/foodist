@@ -37,6 +37,10 @@
             return $this->statement->get_result();
         }
 
+        public function getAffectedRows() {
+            return $this->connection->affected_rows();
+        }
+
         public function closeConnection() {
             $this->connection->close();
         }
