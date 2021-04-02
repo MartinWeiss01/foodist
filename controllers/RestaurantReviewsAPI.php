@@ -14,7 +14,7 @@
     $conn = new ConnectionHandler();
 
     $rid = $conn->escape($_POST['rid']);
-    $conn->prepare("SELECT reviews.ID, reviews.userID, users.First_Name, reviews.stars, reviews.comment, reviews.Posted FROM reviews LEFT JOIN users ON users.ID = reviews.userID WHERE reviews.restaurantID = ?", "i", $rid);
+    $conn->prepare("SELECT reviews.ID, reviews.userID, users.First_Name, users.Image, reviews.stars, reviews.comment, reviews.Posted FROM reviews LEFT JOIN users ON users.ID = reviews.userID WHERE reviews.restaurantID = ?", "i", $rid);
     $result = $conn->execute();
     $json = array("total" => 0, "reviews" => array());
 
@@ -25,6 +25,7 @@
             $arr += ["ID" => $row['ID']];
             $arr += ["UID" => $row['userID']];
             $arr += ["Name" => ($row['First_Name'] ? $row['First_Name'] : "Uživatel")];
+            $arr += ["Image" => $row['Image']];
             $arr += ["Stars" => $row['stars']];
             $arr += ["Comment" => $row['comment']];
             $arr += ["Date" => $row['Posted']];
