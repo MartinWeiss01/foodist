@@ -99,7 +99,7 @@
                     if($result->num_rows < 1) echo "Bohužel momentálně nemáme v systému žádnou restauraci.";
                     else {
                         while($row = $result->fetch_assoc()) {
-                            echo '<a href="/viewDetailed/?rID='.$row["ID"].'">
+                            echo '<a href="/restaurant/?id='.$row["ID"].'">
                                 <div class="flex restaurant">
                                     <div class="restaurant-header" style="background-image:url(/uploads/mbotron/'.$row["ImageBG"].');">
                                         <div class="flex hcenter vcenter overlay"><span>Nabídka</span></div>
