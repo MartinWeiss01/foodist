@@ -155,7 +155,7 @@ function parseCart(cart){
         cartContainer.innerHTML = updatedContent;
         orderButton.removeAttribute("disabled");
     } else {
-        cartContainer.innerHTML = `<span style="text-align:center">Váš nákupní košík je prázdný</span>`;
+        cartContainer.innerHTML = `<span>Váš nákupní košík je prázdný</span>`;
         orderButton.setAttribute("disabled", "");
     }
 

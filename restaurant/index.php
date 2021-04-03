@@ -45,7 +45,6 @@
         <link rel="preload" href="/assets/fonts/MaterialIcons.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/MaterialIcons.woff2"></noscript>
 
         <!-- Icons & OG -->
-        <script>(function(b,c,d,e,f,g){b.hj=b.hj||function(){(b.hj.q=b.hj.q||[]).push(arguments)},b._hjSettings={hjid:2115839,hjsv:6},f=c.getElementsByTagName("head")[0],g=c.createElement("script"),g.async=1,g.src=d+b._hjSettings.hjid+e+b._hjSettings.hjsv,f.appendChild(g)})(window,document,"https://static.hotjar.com/c/hotjar-",".js?sv=");</script>
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="194x194" href="/assets/brand/favicon-194x194.png">
@@ -88,7 +87,7 @@
             </nav>
 
             <main class="flex">
-                <div class="flex justify-content-between restaurant-header" style="background-image:url(/uploads/mbotron/<?php echo $img; ?>);">
+                <div class="flex justify-content-between restaurant-header" style="background-image:url(/uploads/mbotron/<?php echo $img;?>);">
                     <h1><?php echo $name;?></h1>
                     <div class="flex row wrap restaurant-controllers">
                         <span class="restaurant-controller active" data-content="menu" data-role="button">Nabídka</span>
@@ -100,31 +99,17 @@
                 <div id="restaurant-content">
                     <div id="menu" class="flex row content active">
                         <div class="flex grow foodlist">
-                            <?php
+                        <?php
                             if($foodlist->num_rows < 1) echo "Bohužel zatím nemáme v nabídce žádné jídlo 🥺";
                             else {
-                                while($row = $foodlist->fetch_assoc()) {
-                                    echo '
-                                    <div class="flex row justify-content-between item">
-                                    <div class="flex row wrap hcenter detail">
-                                    <img class="item-preview" src="/uploads/restoffer/'.$row["ImageID"].'">
-                                    <div class="flex">
-                                    <span>'.$row["Name"].'</span>
-                                    <span>'.$row["Price"].' Kč</span>
-                                    </div>
-                                    </div>
-                                    <span class="flex hcenter vcenter cart-span" data-role="button" onclick="addToCart('.$row["ID"].')">
-                                    <svg class="addtocart" viewBox="0 0 48 48"><path d="M24 6.0097656c-1.243529 0-2.485678.4700535-3.425781 1.4101563L9.9921875 18H6.5019531c-1.047 0-2.0302656.462531-2.6972656 1.269531-.667.807-.9391875 1.857766-.7421875 2.884766l2.7734375 14.5625C6.4189375 39.777797 9.1046563 42 12.222656 42h11.822266c-.593-.926-1.072969-1.933-1.417969-3H12.222656c-1.679 0-3.1264529-1.196703-3.4394529-2.845703L6.0097656 21.59375c-.038-.2.0504688-.345109.1054688-.412109.056-.069.1817187-.181641.3867187-.181641H10.34375a1.50015 1.50015 0 00.490234 0h26.330078a1.50015 1.50015 0 00.492188 0h3.841797c.205 0 .330719.112641.386719.181641.056.067.144468.211109.105468.412109l-.417968 2.1875c.975.573 1.869156 1.270359 2.660156 2.068359l.705078-3.695312c.196-1.027-.075187-2.077766-.742188-2.884766-.667-.807-1.650265-1.269531-2.697265-1.269531h-3.490235L27.427734 7.4199219C26.487632 6.4798191 25.243529 6.0097656 24 6.0097656zm0 2.9804688c.469383 0 .939743.183884 1.306641.5507812L33.765625 18h-19.53125l8.460937-8.4589844c.366898-.3668972.835305-.5507812 1.304688-.5507812zM35 24c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm-21.480469.978516a1.50015 1.50015 0 00-1.515625 1.628906l.5 7a1.50015 1.50015 0 102.992188-.214844l-.5-7a1.50015 1.50015 0 00-1.476563-1.414062zm6.957031 0A1.50015 1.50015 0 0019 26.5v7a1.50015 1.50015 0 103 0v-7a1.50015 1.50015 0 00-1.523438-1.521484zM35 27c.552 0 1 .448 1 1v6h6c.552 0 1 .448 1 1s-.448 1-1 1h-6v6c0 .552-.448 1-1 1s-1-.448-1-1v-6h-6c-.552 0-1-.448-1-1s.448-1 1-1h6v-6c0-.552.448-1 1-1z"/></svg>    
-                                    </span>
-                                    </div>';
-                                }
+                                while($row = $foodlist->fetch_assoc()) echo '<div class="flex row justify-content-between item"><div class="flex row wrap hcenter detail"><img class="item-preview" src="/uploads/restoffer/'.$row["ImageID"].'"><div class="flex"><span>'.$row["Name"].'</span><span>'.$row["Price"].' Kč</span></div></div><span class="flex hcenter vcenter cart-span" data-role="button" onclick="addToCart('.$row["ID"].')"><svg class="addtocart" viewBox="0 0 48 48"><path d="M24 6.0097656c-1.243529 0-2.485678.4700535-3.425781 1.4101563L9.9921875 18H6.5019531c-1.047 0-2.0302656.462531-2.6972656 1.269531-.667.807-.9391875 1.857766-.7421875 2.884766l2.7734375 14.5625C6.4189375 39.777797 9.1046563 42 12.222656 42h11.822266c-.593-.926-1.072969-1.933-1.417969-3H12.222656c-1.679 0-3.1264529-1.196703-3.4394529-2.845703L6.0097656 21.59375c-.038-.2.0504688-.345109.1054688-.412109.056-.069.1817187-.181641.3867187-.181641H10.34375a1.50015 1.50015 0 00.490234 0h26.330078a1.50015 1.50015 0 00.492188 0h3.841797c.205 0 .330719.112641.386719.181641.056.067.144468.211109.105468.412109l-.417968 2.1875c.975.573 1.869156 1.270359 2.660156 2.068359l.705078-3.695312c.196-1.027-.075187-2.077766-.742188-2.884766-.667-.807-1.650265-1.269531-2.697265-1.269531h-3.490235L27.427734 7.4199219C26.487632 6.4798191 25.243529 6.0097656 24 6.0097656zm0 2.9804688c.469383 0 .939743.183884 1.306641.5507812L33.765625 18h-19.53125l8.460937-8.4589844c.366898-.3668972.835305-.5507812 1.304688-.5507812zM35 24c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm-21.480469.978516a1.50015 1.50015 0 00-1.515625 1.628906l.5 7a1.50015 1.50015 0 102.992188-.214844l-.5-7a1.50015 1.50015 0 00-1.476563-1.414062zm6.957031 0A1.50015 1.50015 0 0019 26.5v7a1.50015 1.50015 0 103 0v-7a1.50015 1.50015 0 00-1.523438-1.521484zM35 27c.552 0 1 .448 1 1v6h6c.552 0 1 .448 1 1s-.448 1-1 1h-6v6c0 .552-.448 1-1 1s-1-.448-1-1v-6h-6c-.552 0-1-.448-1-1s.448-1 1-1h6v-6c0-.552.448-1 1-1z"/></svg>    </span></div>';
                             }
-                            ?>
+                        ?>
                         </div>
-                        <div class="flex cart-index" style="width: 25rem;">
+                        <div class="flex cart-index">
                             <div class="flex">
-                                <h1 style="text-align:center;margin:0 0 2rem 0;padding-bottom:1rem">Váš košík</h1>
-                                <div id="containerCart" class="flex"><span style="text-align:center">Váš nákupní košík je prázdný</span></div>
+                                <h1 class="cart-title">Váš košík</h1>
+                                <div id="containerCart" class="flex"><span>Váš nákupní košík je prázdný</span></div>
                             </div>
 
                             <div class="cartTotal">
@@ -134,20 +119,18 @@
                         </div>
                     </div>
 
-                    <div id="reviews" class="flex hcenter content" ready>Reviews; loader</div>
+                    <div id="reviews" class="flex hcenter content" ready>.. Probíhá načítání recenzí ..</div>
                     
                     <div id="about" class="flex hcenter content">
                         <h1>Základní informace</h1>
                         <div class="flex hcenter collapsed-content">
-                            <span>Adresa: <?php echo $address.", ".$city; ?></span>
+                            <?php echo "<span>Adresa $address, $city</span>";?>
                         </div>
                     </div>
                 </div>
             </main>
-
-            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y");?></footer>
         </div>
-
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
 </html>

@@ -226,7 +226,10 @@ span.review-date {
 @media only screen and (max-width: 768px) {.collapsed-content{width:100%;}.review{width:inherit;}}
 
 /* Cart */
+.cart-title {text-align:center;padding-bottom:1rem;margin:0 0 2rem 0}
+.cart-index {width:25rem}
 #containerCart {width:100%;color:var(--color-primary);padding:0 16px;gap:16px}
+#containerCart > span {text-align:center}
 .cartItem {padding:1rem;border-radius:6px;box-shadow:inset 5px 5px 10px var(--shadowTop), inset -5px -5px 10px var(--shadowBottom)}
 .cartTotal {border-top: 1px solid var(--border-primary);padding:2rem 20px;margin-top:2rem}
 #orderButton {color:white;background:#1a1a1a;text-align:center;padding:0.75rem 2.75rem;border-radius:6px;margin-top:20px;transition:.3s}
