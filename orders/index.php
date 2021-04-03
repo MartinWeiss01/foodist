@@ -14,7 +14,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Foodist</title>
+        <title>Foodist | Vaše objednávky</title>
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
         <!-- Resources -->
@@ -82,12 +82,12 @@
                             }
                             echo '<div class="flex row justify-content-between orderItem" data-price="'.$row["foodPrice"].'" data-quantity="'.$row["itemCount"].'"><span class="order-h2 item-name">'.$row["Name"].'</span><div class="flex row item-detail"><span class="quantity">'.$row["itemCount"].' Ks</span><span class="order-h2">'.$row["foodPrice"].' Kč</span></div></div>';
                         }
-                    } else echo "Nepodařilo se nám žádnou objednávku najít. Co takhle se mrknout na něco na zub?";
+                    } else echo "Nepodařilo se nám žádnou objednávku najít. Co takhle se mrknout po něčem v široké nabídce našich restaurací?";
                 ?>
                 </div>
             </main>
 
-            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y");?></footer>
         </div>
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>

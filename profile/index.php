@@ -10,7 +10,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Foodist</title>
+        <title>Foodist | Profil</title>
         <meta name="author" content="Martin Weiss (martinWeiss.cz)">
         
         <!-- Resources -->
@@ -145,19 +145,14 @@
                         <hr class="ddm-menu-divider">
 
                         <div class="flex profile-content">
-                            <div class="flex">
-                                <button id="updateprofile" class="profile-controller save" data-role="button">Uložit změny</button>
-                            </div>
-
-                            <div class="flex">
-                                <button id="deleteprofile" class="profile-controller decline" data-role="button">Smazat účet</button>
-                            </div>
+                            <div class="flex"><button id="updateprofile" class="profile-controller save" data-role="button">Uložit změny</button></div>
+                            <div class="flex"><button id="deleteprofile" class="profile-controller decline" data-role="button">Smazat účet</button></div>
                         </div>
                     </div>
                 </div>
             </main>
 
-            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y");?></footer>
         </div>
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
