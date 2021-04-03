@@ -107,7 +107,7 @@
                                     echo '
                                     <div class="flex row justify-content-between item">
                                     <div class="flex row wrap hcenter detail">
-                                    <img class="item-preview" src="/uploads/restoffer/'.$row["ImageID"].'.png">
+                                    <img class="item-preview" src="/uploads/restoffer/'.$row["ImageID"].'">
                                     <div class="flex">
                                     <span>'.$row["Name"].'</span>
                                     <span>'.$row["Price"].' Kč</span>
