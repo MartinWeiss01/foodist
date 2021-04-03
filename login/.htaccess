@@ -1,3 +1,0 @@
-ErrorDocument 403 /login/
-ErrorDocument 404 /login/
-ErrorDocument 500 /login/
