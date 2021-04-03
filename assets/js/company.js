@@ -32,7 +32,7 @@ function loadContent(e) {
 
 function addNewFood(e) {
     let rID = e.dataset.restaurantId;
-    let content = '<h1>Přidat nové jídlo</h1><input id="insertFoodName" placeholder="Název jídla"><input id="insertFoodPrice" placeholder="Cena jídla">';
+    let content = '<h1>Přidat nové jídlo</h1><input id="insertFoodName" placeholder="Název jídla"><input id="insertFoodPrice" placeholder="Cena jídla"><input id="insertImage" type="file" accept=".jpeg, .jpg, .png, .webp, .avif">';
     showModal(content, rID, "Přidat", 1);
 }
 
@@ -68,11 +68,18 @@ modalConfirmInput.addEventListener("click", function(){
     if(overlayModalBox.dataset.mode == 1) {
         let rID = overlayModalBox.dataset.obj;
         let foodName = document.getElementById("insertFoodName").value;
-        let foodPrice = document.getElementById("insertFoodPrice").value;
+        let foodPrice = document.getElementById("insertFoodPrice").value,
+            foodImage = document.getElementById('insertImage').files[0];
 
-        if(foodName != "" && foodPrice != "") {
+        if(foodName != "" && foodPrice != "" && (foodImage !== undefined && foodImage.size < 1086000)) {
             if(!DEBUG) {
-                fetch("../controllers/addFood.php", {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: `rid=${rID}&foodname=${foodName}&foodprice=${foodPrice}`})
+                const form = new FormData();
+                form.append("rid", rID);
+                form.append("foodname", foodName);
+                form.append("foodprice", foodPrice);
+                form.append("img", foodImage);
+
+                fetch("../controllers/addFood.php", {method: 'POST', credentials: 'same-origin', body: form})
                 .then(response => {
                     if(response.ok) return response.json();
                     return Promise.reject(response);
@@ -80,7 +87,7 @@ modalConfirmInput.addEventListener("click", function(){
                 .then(data => {data["error_code"] ? console.warn(`[!] ${data["error_message"]} (code: ${data["error_code"]}) | ${data["mysql_error"]}`) : appendFoodToList(rID, data["insert_id"], foodName, foodPrice);})
                 .catch(err => {console.log(`[!][overlayModalBox.mode ${overlayModalBox.dataset.mode}] ${err}`);});
             } else console.log("[!] Webová aplikace se nachází v debuging módu, jídlo nebylo přidán.");
-        }
+        } else showToast("Chyba při přidávání nového jídla");
     } else if(overlayModalBox.dataset.mode == 2) {
         let currentFood = document.getElementById("foodID-"+overlayModalBox.dataset.obj);
 

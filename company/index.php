@@ -5,10 +5,8 @@
     
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
-    $result_info = $conn->callQuery("SELECT * FROM restaurant_accounts WHERE ID = $account->CID");
     $result_list = $conn->callQuery("SELECT * FROM restaurants WHERE accountID = $account->CID");
-    $citiesString = "let citiesList = -1;";
-    $cuisinesString = "let cuisinesList = -1;";
+    $conn->closeConnection();
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +22,7 @@
         <script defer src="/assets/js/managerly.min.js"></script>
         <script defer src="/assets/js/company.min.js"></script>
         <link rel="preload" href="/assets/css/main.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/main.css"></noscript>
-        <link rel="preload" href="/assets/css/dashboard.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/dashboard.css"></noscript>
+        <link rel="preload" href="/assets/css/company.css" as="style" onload="this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/dashboard.css"></noscript>
 
         <link rel="preload" href="/assets/fonts/OpenSansRegular.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansRegular.woff2"></noscript>
         <link rel="preload" href="/assets/fonts/OpenSansSemiBold.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/OpenSansSemiBold.woff2"></noscript>
@@ -53,12 +51,10 @@
 
             <main>
                 <div id="restaurantsContent" class="restaurantsContent">
-                    <div id="loader">... LOADING ...</div>
-                    <div id="dashboardBody" hidden>
+                    <div id="loader">... Probíhá načítání ...</div>
+                    
                     <?php
-                        $row = $result_info->fetch_assoc();
-                        echo 'Vaše ID: '.$row["ID"].' / Vaše e-mailová adresa: '.$row["Email"];
-                        echo '</div>';
+                        echo "<div id='dashboardBody' hidden><p>Název společnosti: $account->CName</p><p>ID: $account->CID</p><p>IČO: $account->CIN</p><p>E-mailová adresa: $account->CEmail</p></div>";
 
                         if($result_list->num_rows > 0) {
                             $x = '<div id="restaurantsList">';
@@ -92,5 +88,7 @@
                 </div>
             </div>
         </div>
+
+        <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
 </html>
