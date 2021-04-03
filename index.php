@@ -1,9 +1,9 @@
 <?php
     require_once(__DIR__.'/controllers/AccountController.php');
     $account = new UserAccountHandler($_SESSION);
-
     require_once(__DIR__.'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
+
     $cuisinesList = $conn->callQuery("SELECT * FROM cuisines");
     $citiesList = $conn->callQuery("SELECT * FROM cities");
     $conn->closeConnection();
@@ -85,7 +85,7 @@
                     </div>
 
                     <p style="color:white">Máš chuť na něco speicálního?</p>
-                    <p style="margin-bottom:1rem;color:white">Zvol si konkrétní kuchyni!</p>
+                    <p style="margin-bottom:1rem;color:white">V dalším kroku si budeš moct vybrat speciální kuchyni!</p>
                     <div id="menubody" class="flex menu">
                         <?php
                             if($citiesList->num_rows > 0) {
@@ -99,7 +99,7 @@
             </div>
         </main>
         
-        <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
         <form id="searchengine" action="browse/" method="POST"><input type="hidden" id="cities" name="cities"></form>
+        <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
 </html>
