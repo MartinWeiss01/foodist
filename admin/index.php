@@ -35,7 +35,6 @@
         <link rel="preload" href="/assets/fonts/MaterialIcons.woff2" as="font" type="font/woff2" crossorigin onload="this.rel='font'"><noscript><link rel="font" href="/assets/fonts/MaterialIcons.woff2"></noscript>
 
         <!-- Icons & OG -->
-        <script>(function(b,c,d,e,f,g){b.hj=b.hj||function(){(b.hj.q=b.hj.q||[]).push(arguments)},b._hjSettings={hjid:2115839,hjsv:6},f=c.getElementsByTagName("head")[0],g=c.createElement("script"),g.async=1,g.src=d+b._hjSettings.hjid+e+b._hjSettings.hjsv,f.appendChild(g)})(window,document,"https://static.hotjar.com/c/hotjar-",".js?sv=");</script>
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="194x194" href="/assets/brand/favicon-194x194.png">
@@ -135,7 +134,7 @@
                 ?>
                 </div>
             </main>
-            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y");?></footer>
         </div>
 
         <div id="overlayModal" class="overlay-modal">
