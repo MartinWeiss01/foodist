@@ -23,6 +23,7 @@
             $conn->execute();
             $conn->finishConnection(header("Location: ../login/?register"));
         }
+        $conn->closeConnection();
     }
 ?>
 
