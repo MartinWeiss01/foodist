@@ -7,10 +7,13 @@
     if(count($_POST) > 0) {
         require_once(dirname(dirname(__DIR__)).'/controllers/ConnectionController.php');
         $conn = new ConnectionHandler();
-    
-        $result = $conn->callQuery("SELECT * FROM restaurant_accounts WHERE Email = '".$_POST["email"]."' AND Password = SHA2('".$_POST["password"]."', 256)");
-        $fetched = $account->fetchLogin($result->fetch_assoc());
 
+        $mail = $conn->escape($_POST['email']);
+        $pass = $conn->escape($_POST['password']);
+        $conn->prepare("SELECT * FROM restaurant_accounts WHERE Email = ? AND Password = SHA2(?, 256)", "ss", $mail, $pass);
+        $result = $conn->execute();
+        $fetched = $account->fetchLogin($result->fetch_assoc());
+        
         if(!$fetched) $rep = true;
         else {
             $conn->callQuery("UPDATE restaurant_accounts SET Login_Date = now(), Login_IP = '".$_SERVER["REMOTE_ADDR"]."' WHERE ID = $account->CID");

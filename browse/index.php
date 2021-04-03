@@ -4,29 +4,25 @@
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
 
-    $chosenCity = false;
-    $chosenCuisines = false;
+    $chosenCity = NULL;
+    $chosenCuisines = NULL;
     $result_city = " | Objevujte nové restaurace";
-    if(isset($_POST["cities"]) && !empty($_POST["cities"])) $chosenCity = true;
-    if(isset($_POST["cuisines"]) && !empty($_POST["cuisines"])) $chosenCuisines = true;
-    if(($chosenCity == false) && ($chosenCuisines == false)) $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID ORDER BY RA DESC, CO DESC");
-    else if($chosenCity == true) {
-        $result_city = $conn->callQuery("SELECT Name FROM cities WHERE ID = ".$_POST['cities']);
+    if(isset($_POST['cities']) && !empty($_POST['cities'])) $chosenCity = $conn->escape($_POST['cities']);
+    if(isset($_POST['cuisines']) && !empty($_POST['cuisines'])) $chosenCuisines = $conn->escape($_POST['cuisines']);
+    if(($chosenCity == NULL) && ($chosenCuisines == NULL)) $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID ORDER BY RA DESC, CO DESC");
+    else if($chosenCity != NULL) {
+        $conn->prepare("SELECT Name FROM cities WHERE ID = ?", "i", $chosenCity);
+        $result_city = $conn->execute();
         $result_city = $result_city->fetch_assoc();
-        $result_city = " | ".$result_city["Name"];
+        $result_city = " | ".$result_city['Name'];
 
-        if($chosenCuisines == true) $result = $conn->callQuery("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']." AND rc.cuisineID = ".$_POST['cuisines']);
-        else $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ".$_POST['cities']);
-    } else if($chosenCuisines == true) {
-        $result = $conn->callQuery("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE rc.cuisineID = ".$_POST['cuisines']);
+        if($chosenCuisines != NULL) $conn->prepare("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ? AND rc.cuisineID = ?", "ii", $chosenCity, $chosenCuisines);
+        else $conn->prepare("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ?", "i", $chosenCity);
+        $result = $conn->execute();
+    } else if($chosenCuisines != NULL) {
+        $conn->prepare("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE rc.cuisineID = ?", "i", $chosenCuisines);
+        $result = $conn->execute();
     }
-    
-    /*
-    $args = explode('/', $_SERVER['QUERY_STRING']);
-    print_r($args);
-    foreach ($args as $el => $value) {
-        echo "$el $value </br>";
-    }*/
     $conn->closeConnection();
 ?>
 
@@ -128,7 +124,7 @@
                 </div>
             </main>
 
-            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y"); ?></footer>
+            <footer class="flex row hcenter vcenter">Vytvořil Martin Weiss (martinWeiss.cz) v rámci maturitní práce © Copyright <?php echo date("Y");?></footer>
         </div>
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
