@@ -2,6 +2,8 @@
 !.gitignore
 !.htaccess
 config/.htaccess
+/credentials
+credentials.css
 **/*.jpg
 **/*.png
 **/*.svg
