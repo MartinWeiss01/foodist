@@ -4,23 +4,18 @@
     require_once(dirname(__DIR__).'/controllers/ConnectionController.php');
     $conn = new ConnectionHandler();
 
+    $availableCuisines = $conn->callQuery("SELECT * FROM cuisines");
     $chosenCity = NULL;
-    $chosenCuisines = NULL;
     $result_city = " | Objevujte nové restaurace";
     if(isset($_POST['cities']) && !empty($_POST['cities'])) $chosenCity = $conn->escape($_POST['cities']);
-    if(isset($_POST['cuisines']) && !empty($_POST['cuisines'])) $chosenCuisines = $conn->escape($_POST['cuisines']);
-    if(($chosenCity == NULL) && ($chosenCuisines == NULL)) $result = $conn->callQuery("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID ORDER BY RA DESC, CO DESC");
-    else if($chosenCity != NULL) {
+    if(($chosenCity == NULL)) $result = $conn->callQuery("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID ORDER BY RA DESC, CO DESC");
+    else {
         $conn->prepare("SELECT Name FROM cities WHERE ID = ?", "i", $chosenCity);
         $result_city = $conn->execute();
         $result_city = $result_city->fetch_assoc();
         $result_city = " | ".$result_city['Name'];
 
-        if($chosenCuisines != NULL) $conn->prepare("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ? AND rc.cuisineID = ?", "ii", $chosenCity, $chosenCuisines);
-        else $conn->prepare("SELECT * FROM restaurants as r LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ?", "i", $chosenCity);
-        $result = $conn->execute();
-    } else if($chosenCuisines != NULL) {
-        $conn->prepare("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE rc.cuisineID = ?", "i", $chosenCuisines);
+        $conn->prepare("SELECT * FROM restaurants as r INNER JOIN restaurants_cuisines as rc ON r.ID = rc.restaurantID LEFT JOIN (SELECT restaurantID, AVG(stars) as RA, COUNT(stars) as CO FROM reviews GROUP BY restaurantID) as re ON r.ID = re.restaurantID WHERE r.City = ? ORDER BY RA DESC, CO DESC", "i", $chosenCity);
         $result = $conn->execute();
     }
     $conn->closeConnection();
@@ -89,34 +84,51 @@
             </nav>
 
             <main>
-                <div class="flex row wrap list">
                 <?php
+                    if($availableCuisines->num_rows > 0) {
+                        echo '<label for="cuisineSelect">Filtr</label> <select id="cuisineSelect" onchange="restaurantFilter()" data-role="button"><option value="-1">Zobrazit vše</option>';
+                        while($row = $availableCuisines->fetch_assoc()) {
+                            echo '<option value="'.$row["ID"].'">'.$row["Name"].'</option>';
+                        }
+                        echo '</select>';
+                    }
+                ?>
+                
+                <div id="restaurantList" class="flex row wrap list">
+                <?php
+                    $cuisines = [];
                     if($result->num_rows < 1) echo "Bohužel momentálně nemáme v systému žádnou restauraci.";
                     else {
+                        $lastID = -1;
                         while($row = $result->fetch_assoc()) {
-                            echo '<a href="/restaurant/?id='.$row["ID"].'">
-                                <div class="flex restaurant">
-                                    <div class="restaurant-header" style="background-image:url(/uploads/mbotron/'.$row["ImageBG"].');">
-                                        <div class="flex hcenter vcenter overlay"><span>Nabídka</span></div>
-                                    </div>
-                                    <div class="flex row justify-content-between">
-                                        <div class="flex">
-                                            <span>'.$row["Name"].'</span>
-                                            <small class="address">'.$row["Address"].'</small>
+                            if(!$cuisines[$row["cuisineID"]]) $cuisines[$row["cuisineID"]] = [];
+                            if($lastID != $row["ID"]) {
+                                echo '<a href="/restaurant/?id='.$row["ID"].'" data-rid="'.$row["ID"].'">
+                                    <div class="flex restaurant">
+                                        <div class="restaurant-header" style="background-image:url(/uploads/mbotron/'.$row["ImageBG"].');">
+                                            <div class="flex hcenter vcenter overlay"><span>Nabídka</span></div>
                                         </div>
-                                        <div class="flex reviews">
-                                            <div class="flex row rating-bar" data-rating="'.$row["RA"].'">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="-.1913" y1="55.1364" x2="28.8917" y2="16.2304" gradientTransform="matrix(1.0417 0 0 -1.0417 9.5833 63.75)"><stop offset="0" stop-color="#ffda1c"/><stop offset="1" stop-color="#feb705"/></linearGradient><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                        <div class="flex row justify-content-between">
+                                            <div class="flex">
+                                                <span>'.$row["Name"].'</span>
+                                                <small class="address">'.$row["Address"].'</small>
                                             </div>
-                                            <small>'.($row["CO"] ? $row["CO"] : 0).' recenzí</small>
+                                            <div class="flex reviews">
+                                                <div class="flex row rating-bar" data-rating="'.$row["RA"].'">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="-.1913" y1="55.1364" x2="28.8917" y2="16.2304" gradientTransform="matrix(1.0417 0 0 -1.0417 9.5833 63.75)"><stop offset="0" stop-color="#ffda1c"/><stop offset="1" stop-color="#feb705"/></linearGradient><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M26 5.1l5.7 12.8 13.9 1.5c.9.1 1.3 1.2.6 1.8l-10.4 9.4 2.9 13.7c.2.9-.8 1.6-1.5 1.1l-12.1-7-12.1 7c-.8.4-1.7-.2-1.5-1.1l2.9-13.7-10.6-9.4c-.7-.6-.3-1.7.6-1.8l13.9-1.5L24 5.1c.4-.8 1.6-.8 2 0z"/></svg>
+                                                </div>
+                                                <small>'.($row["CO"] ? $row["CO"] : 0).' recenzí</small>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>';
+                                </a>';
+                                $lastID = $row["ID"];
+                            }
+                            array_push($cuisines[$row["cuisineID"]], intval($row["ID"]));
                         }
                     }
                 ?>
@@ -128,4 +140,5 @@
 
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
+    <script>const cuislist = <?php echo json_encode($cuisines);?>;</script>
 </html>

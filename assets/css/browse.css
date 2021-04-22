@@ -65,3 +65,25 @@ footer {grid-area:footer}
 .rating-bar > svg.active {
     fill: url(#a)
 }
+.hide {display:none}
+
+label {color:var(--muted-col);font-size:13px}
+select {
+    border: 1px solid var(--muted-col-border);
+    padding: 0.6rem 1.65rem;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    background: none;
+    transition: .3s;
+    margin-bottom:1rem;
+}
+
+select:hover, select:focus {
+    color:var(--edit);border-color:var(--edit);transition: .3s
+}
+
+option {
+    background-color: var(--background-default);
+}
