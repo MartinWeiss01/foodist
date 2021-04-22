@@ -73,32 +73,101 @@
                 </div>
             </div>
 
-            <div class="jumbotron"></div>
+            <div class="flex row hcenter vcenter jumbotron">
+                <div class="detailmanager">
+                    <div class="menuParent">
+                        <span style="color:white">Vybrat město</span>
+                        <div class="flex row hcenter" onclick="menuHandler(this)" data-role="button">
+                            <span id="selectedCity" data-city-id="-1" data-city-name="" class="flex row hcenter citySelector" style="color:white"></span><icon style="font-size:2rem;color:white">expand_more</icon>
+                        </div>
+
+                        <p style="color:white">Máš chuť na něco speicálního?</p>
+                        <p style="margin-bottom:1rem;color:white">V dalším kroku si budeš moct vybrat speciální kuchyni!</p>
+                        <div id="menubody" class="flex menu">
+                            <?php
+                                if($citiesList->num_rows > 0) {
+                                    while($row = $citiesList->fetch_assoc()) echo '<div class="flex row menuItem" data-role="button" data-city-id="'.$row['ID'].'" data-city-name="'.$row['Name'].'" onclick="changeCity(this)"><span>'.$row['Name'].'</span></div>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+
+                    <button class="submitButton" onclick="searchForRestaurants()" data-role="button">Najít restauraci</button>
+                </div>
+            </div>
         </header>
 
-        <main class="flex row justify-content-end">
-            <div class="detailmanager">
-                <div class="menuParent">
-                    <span style="color:white">Vybrat město</span>
-                    <div class="flex row hcenter" onclick="menuHandler(this)" data-role="button">
-                        <span id="selectedCity" data-city-id="-1" data-city-name="" class="flex row hcenter citySelector" style="color:white"></span><icon style="font-size:2rem;color:white">expand_more</icon>
-                    </div>
-
-                    <p style="color:white">Máš chuť na něco speicálního?</p>
-                    <p style="margin-bottom:1rem;color:white">V dalším kroku si budeš moct vybrat speciální kuchyni!</p>
-                    <div id="menubody" class="flex menu">
-                        <?php
-                            if($citiesList->num_rows > 0) {
-                                while($row = $citiesList->fetch_assoc()) echo '<div class="flex row menuItem" data-role="button" data-city-id="'.$row['ID'].'" data-city-name="'.$row['Name'].'" onclick="changeCity(this, true)"><span>'.$row['Name'].'</span></div>';
-                            }
-                        ?>
-                    </div>
+        <main class="flex hcenter justify-content-start desc">
+            <div class="flex row hcenter justify-content-between container">
+                <icon class="title">nights_stay</icon>
+                <div>
+                    <h1>Tmavý režim</h1>
+                    <p>Tato aplikace nabízí tmavý i světlý režim. Změna se provádí automaticky při detekci tmavého režimu prohlížeče nebo po přepnutí v nabídce.</p>
                 </div>
+            </div>
 
-                <button class="submitButton" onclick="searchForRestaurants()" data-role="button">Najít restauraci</button>
+            <hr class="container-hr">
+            
+            <div class="flex row hcenter justify-content-between container">
+                <icon class="title">accessibility</icon>
+                <div>
+                    <h1>Cookies</h1>
+                    <p class="container-desc">Pro správné fungování celé aplikace jsou potřebné soubory cookies. Pomáhají tak aplikaci Vás identifikovat pro ušetření času při další návštěvě aplikace. Uživatel s použitím souborů cookies souhlasí používáním této aplikace.</p>
+                </div>
+            </div>
+
+            <hr class="container-hr">
+
+            <div class="flex row hcenter justify-content-between container">
+                <icon class="title">code</icon>
+                <div>
+                    <h1>Open-Source</h1>
+                    <p class="container-desc">Webová aplikace Foodist vznikla v rámci <a class="cont-link" href="https://martinWeiss.cz/" target="_blank">mé</a> maturitní práce. Kompletní zdrojový kód je umístěn na <a class="cont-link" href="https://github.com/MartinWeiss01/" target="_blank">GitHubu</a>.</p>
+                </div>
+            </div>
+
+            <hr class="container-hr">
+            
+            <div class="flex row hcenter justify-content-between container">
+                <icon class="title">smartphone</icon>
+                <div>
+                    <h1>Responzivita</h1>
+                    <p class="container-desc">Tato webová aplikace se přizpůsobí rozlišení Vašeho displeje a odpovídá tak standardům moderní webové aplikace.</p>
+                </div>
+            </div>
+            
+            <hr class="container-hr">
+
+            <div class="flex row hcenter justify-content-between container">
+                <icon class="title">devices</icon>
+                <div>
+                    <h1>Multi-platform</h1>
+                    <p class="container-desc">Foodist je možné také nainstalovat jako desktopovou či mobilní aplikaci skrze prohlížeč.</p>
+                </div>
+            </div>
+            
+            <hr class="container-hr">
+
+            <div class="flex row hcenter justify-content-between container">
+                <icon class="title">work_outline</icon>
+                <div>
+                    <h1>O aplikaci</h1>
+                    <p class="container-desc">
+                        Foodist běží na naprostém základu: JS, PHP, MySQL, CSS a HTML.
+                        Z důvodu ztížení vývoje této aplikace byly vynechány jakékoliv další frameworky typu React, jQuery či Bootstrap.
+                        Součásti zdrojového kódu nejsou data restaurací, společností či uživatelů (názvy, jména, obrázky apod.) ani obrázek na titulní straně.
+                        Tyto údaje a obrázky jsou pouze ilustrativní pro lepší prožitek z ukázky této aplikace.
+                        Veškeré tyto údaje a obrázky jsou použity v souladu s autorským zákonem a požadavky samotných autorů.
+                        I přes to vyjadřuji poděkování autorům všech těchto assetů:
+                        Font Open Sans <small>(Steve Matteson)</small>,
+                        Material Icons <small>(Google)</small>,
+                        <a href="https://www.freepngimg.com/png/10725-burger-png">Burger Png FreePNGImg.com</a>,
+                        <a href="https://www.freepngimg.com/png/10838-coca-cola-picture">Coca-Cola Picture FreePNGImg.com</a>.
+                    </p>
+                </div>
             </div>
         </main>
-        
+
         <form id="searchengine" action="browse/" method="POST"><input type="hidden" id="cities" name="cities"></form>
         <div class="mmb-toast-box"><div id="mmb-toast-content"></div></div>
     </body>
